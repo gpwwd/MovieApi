@@ -3,14 +3,17 @@ import Header from "../components/Header"
 
 function Home(props) {
   return (
-    <div>
+    <>
       <header className="header">
-        <Header/>
+        <Header name="мужик"/>
       </header>
       <main className="mainHome">
         <MoviesList />
       </main>
-    </div>
+      <footer>
+        Jopa        
+      </footer>
+    </>
   );
 }
 

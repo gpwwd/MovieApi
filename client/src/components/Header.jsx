@@ -7,7 +7,7 @@ export default function Header(props) {
                 <li>
                     <h1>Hello, {props.name}</h1>
                 </li>
-                <li>ващиващ</li>
+                <li>О сайте</li>
                 <li>Фильмы</li>
             </ul>
             <button className='login_button'></button>

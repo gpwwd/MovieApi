@@ -1,5 +1,6 @@
 bin/
 obj/
+.vs/
 
 *.nupkg
 packages/*
@@ -19,6 +20,5 @@ build/
 
 *.pdb
 
-.vs
 
 publish/
