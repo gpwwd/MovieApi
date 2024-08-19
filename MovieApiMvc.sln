@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieApiMvc", "MovieApiMvc\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Script", "..\Script\Script.csproj", "{528FFE8B-80C5-4F95-B1B0-63C9D13CCEAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest", "..\apitest\apitest.csproj", "{D20FD576-8A6A-4622-B31F-0786CE4D0B13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{528FFE8B-80C5-4F95-B1B0-63C9D13CCEAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{528FFE8B-80C5-4F95-B1B0-63C9D13CCEAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{528FFE8B-80C5-4F95-B1B0-63C9D13CCEAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D20FD576-8A6A-4622-B31F-0786CE4D0B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D20FD576-8A6A-4622-B31F-0786CE4D0B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D20FD576-8A6A-4622-B31F-0786CE4D0B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D20FD576-8A6A-4622-B31F-0786CE4D0B13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -6,7 +6,7 @@ namespace MovieApiMvc.DataBaseAccess.Entities
     {
         [JsonIgnore]
         public Guid Id { get; set; } = default;
-        public string? Name { get; set; } = String.Empty;
+        public string Name { get; set; } = String.Empty;
         public List<MovieEntity>? Movies { get; set; }
     }
 

@@ -52,7 +52,7 @@ public class MoviesController : Controller
             return new BadRequestResult();
         }
         await _moviesService.PutMovie(id, movie);
-        return Ok(movie);
+        return Ok(id);
     } 
     
     [HttpDelete("{id:guid}")]

@@ -5,6 +5,7 @@ using MovieApiMvc.Middleware;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services;
 using MovieApiMvc.Extensions;
+using ExternalAPIServiceSpace;
 
 public class Program
 {
@@ -14,6 +15,16 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddSwaggerGen();
@@ -32,8 +43,9 @@ public class Program
                 opt.UseSqlite(builder.Configuration.GetConnectionString("Data Source"));
             });
 
-        var app = builder.Build();
-        
+        var app = builder.Build();  
+
+        app.UseCors("AllowAll");
         app.UseMyExeptionHandling(builder.Environment);
 
         app.UseAuthentication();

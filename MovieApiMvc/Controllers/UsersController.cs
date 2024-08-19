@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Dtos;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Services.Interfaces;
 
 namespace MovieApiMvc.Controllers;
@@ -31,7 +32,7 @@ public class UsersController : Controller
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login([FromBody] UserDto userLoginDto)
+    public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {   
         var token = await _userService.Login(userLoginDto);
 
@@ -126,6 +127,7 @@ public class UsersController : Controller
     
     [HttpGet]
     [Route("{userId}/watchList")]
+    [Authorize]
     public async Task<ActionResult<List<MovieDto>>> GetWatchLaterList(Guid userId)
     {   
         try
