@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { fetchMovieById } from '../services/Api.js';
 
-export default function MovieDetail() {
-    const { id } = useParams();
+export default function MovieDetails(props) {
+    const id  = props.id;
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -23,16 +22,26 @@ export default function MovieDetail() {
         getMovie();
     }, [id]);
 
+    const formatMovieLength = (length) => {
+        const hours = Math.floor(length / 60);
+        const minutes = (length % 60)
+            .toString()
+            .padStart(2, '0');
+
+        return `${hours}ч ${minutes}мин`;
+    }
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div>
+        <div className='detailed_movie_container'>
             <h1>{movie.name}</h1>
-            <h4>Рейтинг: {movie.rating}</h4>
-            <h4>Год: {movie.year}</h4>
-            <h4>Жанры: {movie.genres.join(', ')}</h4>
-            {/* Добавьте другие детали фильма здесь */}
+            <p className='detailed_movie_description'><b>Рейтинг: </b> {movie.rating}</p>
+            <p className='detailed_movie_description'><b>Год: </b> {movie.year}</p>
+            <p className='detailed_movie_description'><b>Жанры: </b> {movie.genres.join(', ')}</p>
+            <p className='detailed_movie_description'><b>Длительность: </b> {formatMovieLength(movie.movieLength) }</p>
+            <p className='detailed_movie_description'><b>Страны: </b> {movie.countries}</p>
         </div>
     );
 }

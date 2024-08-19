@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Изменено
+import { useNavigate } from 'react-router-dom';
 import { fetchMovies } from "../services/Api.js";
 import Movie from './Movie';
 
@@ -25,7 +25,7 @@ export default function MoviesList(props) {
     }, []);
 
     const handleMovieClick = (id) => {
-        navigate(`/movie/${id}`); // Переход на страницу фильма
+        navigate(`/movie/${id}`); 
     };
 
     if (loading) return <div>Loading...</div>;

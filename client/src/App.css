@@ -1,15 +1,8 @@
 #root {
-  max-width: 80vw;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.card {
-    padding: 2em;
-}
-
-.read-the-docs {
-    color: #888;
+    align-items: center;
+    max-width: 80vw;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
 .header {
@@ -44,7 +37,6 @@
     right: 20px; /* Сдвигаем кнопку вправо НЕ РАБОТАЕТ */
 }
 
-
 .mainHome{
     margin-top: 100px;
     align-items: center;
@@ -53,6 +45,7 @@
 .movie_list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
     background-color: #443131;
     padding: 0;
     margin: 0;
@@ -87,3 +80,26 @@
 .movie h2 {
     text-align: center;
 }
+
+/* DETAILED MOVIE PART */
+
+.detailed_movie_container {
+    display: flex;
+    flex-direction: column;
+    background-color: #443131;
+    padding: 20px;
+}
+
+.detailed_movie_description {
+    font-size: 1.5rem;
+    color: hsl(0, 0%, 83%);
+}
+
+.detailed_movie_description b{
+    color: white;
+}
+
+.detailed_movie_container h1 {
+    text-align: center;
+}
+
