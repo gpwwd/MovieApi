@@ -5,8 +5,7 @@ import About from './pages/About';
 import Login from './pages/Login';
 import User from  './pages/User';
 import "./App.css";
-import Movie from './components/Movie';
-import MovieDetails from './components/MovieDetails';
+import DetailedMovie from './pages/DetailedMovie'
 
 const App = () => {
   return (
@@ -19,7 +18,7 @@ const App = () => {
           {/* <Route path="*" element={<NotFound/>}/> */}
           <Route exact path="/user" element={<User/>}/>
           
-          <Route exact path="movie/:id" element={<MovieDetails/>}/>
+          <Route exact path="movie/:id" element={<DetailedMovie/>}/>
         </Routes>
     </Router>
   );
