@@ -2,19 +2,19 @@ GET http://localhost:5128/api/movies
 
 ###
 
-GET http://localhost:5128/api/movies/15265ac0-0863-46cb-a590-d0af6227be13
+GET http://localhost:5128/api/movies/32456836-2492-498C-8400-C740EAF1BDF2
 
 ###
 
 PUT http://localhost:5128/api/movies
 Content-Type: application/json
-id: 15265ac0-0863-46cb-a590-d0af6227be13
+id: d97222b3-702f-4c1f-84b4-2117e94729f9
 
 {
-  "name": "Updatedsssss Movie Title",
-  "type": "Movie",
-  "Year": "1992",
-  "rate": 8.5
+  "name": "Приключения Реми Updated",
+  "type": "movie",
+  "Year": "2018",
+  "rate": 8.4
 }
 
 ###
@@ -33,7 +33,15 @@ DELETE http://localhost:5128/api/movies/9C9591A6-0CF9-409B-9B5D-A1E675E46974
 
 ###
 
+POST http://localhost:5128/api/users/login
+Content-Type: application/json
 
+{
+  "Email": "john.doe@example.com",
+  "Password": "hashed_password"
+}
+
+###
 
 GET http://localhost:5128/api/users
 Content-Type: application/json
@@ -88,5 +96,11 @@ Content-Type: application/json
   "password": "hashed_password",
   "email": "john.doe@example.com"
 }
+
+###
+
+GET http://localhost:5128/api/users/2b7db517-af90-4a15-a9da-b9b507e84627/watchList
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8iLCJhdWQiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8ifQ.Pi92hSkahkc3uIMia8zsphtucrRrUGE1jWF3PQHpKQa5_8MZIYRj84aJeA_yAjFCnL5ZTO7DLeu7nR3B-fhIfA
 
 ###

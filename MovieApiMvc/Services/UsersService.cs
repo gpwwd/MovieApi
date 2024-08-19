@@ -5,6 +5,7 @@ using MovieApiMvc.Dtos;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.Models.Dtos;
 
 namespace MovieApiMvc.Services;
 
@@ -52,7 +53,7 @@ public class UsersService : IUsersService
         return userEntity;
     }
 
-    public async Task<string> Login(UserDto userDto)
+    public async Task<string> Login(UserLoginDto userDto)
     {
         var userEntity = await _usersRepository.GetByEmail(userDto.Email);
 
@@ -64,7 +65,7 @@ public class UsersService : IUsersService
 
         var IsPasswCorr = PasswordHasher.Verify(userDto.Password, userEntity.PasswHash);
         
-        if(userEntity is null)
+        if(!IsPasswCorr)
         {
             //create new Exception later
             throw new Exception("Not correct passw");
@@ -138,8 +139,9 @@ public class UsersService : IUsersService
         List<MovieDto> movieDtos = new List<MovieDto>();
         var movies = user.WatchLaterMovies;
         foreach(var movie in movies)
-        {
-            movieDtos.Add(EntityToDto.CreateMovieDtoFromEntity(movie));
+        {   
+            var movieDto = EntityToDto.CreateMovieDtoFromEntity(movie); 
+            movieDtos.Add(movieDto);
         }
         return movieDtos;
     } 

@@ -14,7 +14,6 @@ public class MoviesRepository
     {
         _dbContext = dbContext;
     }
-
     public async Task<List<MovieEntity>> GetAll(){
         return await _dbContext.Movies
             .AsNoTracking()
