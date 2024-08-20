@@ -15,6 +15,7 @@ public class MovieDataBaseContext : DbContext
     public DbSet<BudgetEntity> Budgets { get; set; }
     public DbSet<CountryEntity> Countries { get; set; }
     public DbSet<UserEntity> Users { get; set; }
+    public DbSet<ImageInfoEntity> Images { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new MovieConfiguration());

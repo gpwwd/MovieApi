@@ -7,6 +7,7 @@ namespace MovieApiMvc.Services.Interfaces
     {
         public Task<List<MovieDto>> GetAll();
 
+        public Task<List<MovieDto>> GetAllWithImages();
         public Task<MovieDto> GetById(Guid id);
         
         public Task PutMovie(Guid id, MovieDto movie);
@@ -14,5 +15,6 @@ namespace MovieApiMvc.Services.Interfaces
         public Task DeleteMovie(Guid id);
 
         public Task<MovieEntity> CreateMovie(MovieDto movie);
+        public Task<ImageInfoDto> GetImageById(Guid id);
     }
 }

@@ -6,6 +6,10 @@ using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services;
 using MovieApiMvc.Extensions;
 using ExternalAPIServiceSpace;
+using MovieApiMvc.ExternalApi;
+using Newtonsoft.Json;
+using MovieApiMvc.ErrorHandling;
+using System.Linq.Expressions;
 
 public class Program
 {
@@ -59,9 +63,12 @@ public class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=GetAllMovies}/{id?}");
+            pattern: "{controller=Home}/{action=GetAllMovies}/{id?}"
+        );
 
         app.Run();
     }
+
+
 }
 
