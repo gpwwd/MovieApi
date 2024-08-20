@@ -15,6 +15,13 @@ namespace MovieApiMvc.Services.Mappers
                 AlternativeName = movie.AlternativeName,
                 Type = movie.Type,
                 Year = movie.Year,
+                Budget = movie.Budget != null ? new BudgetEntity
+                {
+                    Id = movie.Budget.Id,
+                    Currency = movie.Budget.Currency,
+                    Value = movie.Budget.Value,
+                    MovieId = movie.Id
+                } : null,
                 Rating = movie.Rating != null ? new RatingEntity
                 {
                     Id = movie.Rating.Id,
@@ -22,13 +29,6 @@ namespace MovieApiMvc.Services.Mappers
                     imdb = movie.Rating.Imdb,
                     filmCritics = movie.Rating.FilmCritics,
                     russianFilmCritics = movie.Rating.RussianFilmCritics,
-                    MovieId = movie.Id
-                } : null,
-                Budget = movie.Budget != null ? new BudgetEntity
-                {
-                    Id = movie.Budget.Id,
-                    Currency = movie.Budget.Currency,
-                    Value = movie.Budget.Value,
                     MovieId = movie.Id
                 } : null,
                 MovieLength = movie.MovieLength,
