@@ -4,8 +4,8 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
 import User from  './pages/User';
-import "./App.css";
 import DetailedMovie from './pages/DetailedMovie'
+import "./styles/App.css";
 
 const App = () => {
   return (

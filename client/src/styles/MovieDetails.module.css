@@ -1,0 +1,43 @@
+
+.container {
+    /* box-shadow: inset 0px 10px 10px hsl(203, 26%, 8%); */
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    background-color: #1E2B33;
+    padding: 20px;
+}
+
+.description {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 20px;
+    font-size: 1.5rem;
+    color: hsl(0, 0%, 83%);
+}
+
+.description b{
+    color: white;
+}
+
+.container h1 {
+    text-align: center;
+}
+
+.wlb {
+    font-weight: bold;
+    background-color: hsl(357, 85%, 38%);
+    width: 200px;
+    margin-left: 20px;
+    margin-top: 20px;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.wlb:hover {
+    background-color: hsl(357, 85%, 33%);
+    transform: scale(108%);
+    transition: .5s ease;
+}
