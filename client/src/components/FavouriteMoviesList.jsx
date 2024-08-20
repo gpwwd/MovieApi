@@ -1,7 +1,7 @@
 import Movie from './Movie';
 import {fetchUserLaterMovies} from "../services/Api.js";
 import React, { useEffect, useState } from 'react';
-import "../App.css";
+import "../styles/App.css";
 
 export default function WatchLaterMovies(props) {
     const [moviesWatchLater, setMovies] = useState([]);

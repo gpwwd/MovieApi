@@ -1,16 +1,19 @@
-import '../App.css'
+import { Link } from 'react-router-dom';
+import styles from '../styles/Header.module.css'
 
 export default function Header(props) {
     return(
-        <header className= "header">
-            <ul className="header_buttons_wrapper">
-                <li>
-                    <h1>Hello, {props.name}</h1>
-                </li>
-                <li>О сайте</li>
-                <li>Фильмы</li>
-            </ul>
-            <button className='login_button'></button>
+        <header className={styles.header}>
+            <div className={styles.logo}>
+                <h1>Название Сайта</h1>
+                <nav>
+                    <Link to="/">Главная</Link>
+                    <Link to="/movies">Фильмы</Link>
+                </nav>
+            </div>
+            <div className={styles.login_button_container}>
+                <button>Войти</button>
+            </div>
         </header>
     );
 }
