@@ -6,16 +6,31 @@ namespace MovieApiMvc.Services.Mappers;
 
 public class DtoToEntity
 {
-    public static MovieEntity UpdateMovieEntityFromDto(MovieDto movie)
+    public static MovieEntity UpdateMovieEntityFromDto(Guid id, MovieDto movie)
     {
         return new MovieEntity
         {
-            Id = movie.Id,
+            Id = id,
             Name = movie.Name,
             Rating = new RatingEntity
             {
-                kp = movie.Rate
+                kp = movie.RatingKp,
+                imdb = movie.RatingImdb,
+                filmCritics = movie.RatingFilmCritics
             },
+            Budget = new BudgetEntity
+            {
+                Currency = movie.BudgetCurrency,
+                Value = movie.BudgetValue ?? -1,
+            },
+            AlternativeName = movie.AlternativeName,
+            Type = movie.Type,
+            Year = movie.Year,
+            // genres: genres,
+            //     countries: countries,
+            MovieLength = movie.MovieLength,
+            Top250 = movie.Top250,
+            IsSeries = movie.IsSeries
         };
     }
 
@@ -30,7 +45,7 @@ public class DtoToEntity
             {
                 Id = Guid.NewGuid(),
                 MovieId = newId,
-                kp = movie.Rate
+                kp = movie.RatingKp
             }
         };
         return movieEntity;
@@ -43,12 +58,12 @@ public class DtoToEntity
 
         foreach(var movie in user.FavMovies)
         {
-            moviesDtoFavMovies.Add(UpdateMovieEntityFromDto(movie));
+            moviesDtoFavMovies.Add(UpdateMovieEntityFromDto(movie.Id, movie));
         }
 
         foreach(var movie in user.WatchLaterMovies)
         {
-            moviesDtoWatchLater.Add(UpdateMovieEntityFromDto(movie));
+            moviesDtoWatchLater.Add(UpdateMovieEntityFromDto(movie.Id, movie));
         }
         
         return new UserEntity

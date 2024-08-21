@@ -25,6 +25,10 @@ public class MovieConfiguration : IEntityTypeConfiguration<MovieEntity>
 
         entityTypeBuilder.HasMany(m => m.Genres)
             .WithMany(g => g.Movies);
+            
+        entityTypeBuilder.HasOne(m => m.imageInfoEntity)
+            .WithOne(i => i.Movie)
+            .HasForeignKey<ImageInfoEntity>(i=>i.MovieId);
     
     }
 }

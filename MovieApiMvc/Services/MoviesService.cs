@@ -4,6 +4,7 @@ using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.Models.DomainModels;
+using MovieApiMvc.ErrorHandling;
 
 namespace MovieApiMvc.Services;
 
@@ -25,10 +26,26 @@ public class MoviesService : IMoviesService
         }
         return moviesDto;
     }
+    public async Task<List<MovieDto>> GetAllWithImages()
+    {
+        var movies = await _moviesRepository.GetAllWithImages();
+        List<MovieDto> moviesDto = new List<MovieDto>();
+        foreach(var movie in movies)
+        {
+            moviesDto.Add(EntityToDto.CreateMovieDtoFromEntity(movie));
+        }
+        return moviesDto;
+    }
     
     public async Task<MovieDto> GetById(Guid id)
     {
         var movie = await _moviesRepository.GetById(id);
+
+        if(movie is null )
+        {
+            throw new EntityNotFoundException(404, "Not Found");
+        }
+
         return EntityToDto.CreateMovieDtoFromEntity(movie);
     }
 
@@ -39,7 +56,12 @@ public class MoviesService : IMoviesService
             type: movieDto.Type,
             year: movieDto.Year,
             rating: Rating.Create(movieId: id,
-                                 kp: movieDto.Rate)
+                                    kp: movieDto.RatingKp,
+                                    imdb: movieDto.RatingImdb,
+                                    filmCritics: movieDto.RatingFilmCritics
+                                ),
+            alternativeName: movieDto.AlternativeName,
+            top250: movieDto.Top250
         );
         var movieEntity = ModelToEntity.CreateMovieEntityFromModel(movie);
         movieEntity.Id = id;
@@ -61,5 +83,28 @@ public class MoviesService : IMoviesService
         var movieEntity = ModelToEntity.CreateMovieEntityFromModel(movie);
         await _moviesRepository.Add(movieEntity);
         return movieEntity;
+    }
+
+    public async Task<ImageInfoDto> GetImageById(Guid id)
+    {
+        var movie = await _moviesRepository.GetById(id);
+
+        if(movie is null )
+        {
+            throw new EntityNotFoundException(404, "Not Found");
+        }
+        if(movie.imageInfoEntity is null)
+        {
+            throw new EntityNotFoundException(404, "Not Found Image For Existing Movie");
+        }
+
+        var imageInfoEntity = movie.imageInfoEntity;
+
+        return new ImageInfoDto
+        {
+            Id = imageInfoEntity.Id,
+            Urls = imageInfoEntity.Urls,
+            PreviewUrls = imageInfoEntity.PreviewUrls
+        };
     }
 }

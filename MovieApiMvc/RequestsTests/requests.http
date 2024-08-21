@@ -2,19 +2,31 @@ GET http://localhost:5128/api/movies
 
 ###
 
-GET http://localhost:5128/api/movies/32456836-2492-498C-8400-C740EAF1BDF2
+GET http://localhost:5128/api/movies/images
 
 ###
+
+GET http://localhost:5128/api/movies/7C0C2DE0-3DB6-48E6-971C-47A69E7BF5F6
+
+###
+
+GET http://localhost:5128/api/movies/7C0C2DE0-3DB6-48E6-971C-47A69E7BF5F6/images
+
+###
+
 
 PUT http://localhost:5128/api/movies
 Content-Type: application/json
 id: d97222b3-702f-4c1f-84b4-2117e94729f9
 
 {
-  "name": "Приключения Реми Updated",
+  "name": "Больше это нихуя не приключения рейми",
+  "RatingKp": 8.018,
+  "RatingFilmCritics": 8.018,
   "type": "movie",
-  "Year": "2018",
-  "rate": 8.4
+  "year": 2002,
+  "alternativeName": "fgbjkl",
+  "top250": 122
 }
 
 ###
@@ -104,3 +116,4 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8iLCJhdWQiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8ifQ.Pi92hSkahkc3uIMia8zsphtucrRrUGE1jWF3PQHpKQa5_8MZIYRj84aJeA_yAjFCnL5ZTO7DLeu7nR3B-fhIfA
 
 ###
+
