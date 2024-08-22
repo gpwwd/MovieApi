@@ -31,7 +31,9 @@ public class EntityToDto
                             MovieId = movieEntity.imageInfoEntity?.MovieId ?? movieEntity.Id,
                             Urls = movieEntity.imageInfoEntity?.Urls ?? null,
                             PreviewUrls = movieEntity.imageInfoEntity?.PreviewUrls ?? null,
-                        }
+                        },
+            Description = movieEntity.Description,
+            ShortDescription = movieEntity.ShortDescription
         };
     }
 

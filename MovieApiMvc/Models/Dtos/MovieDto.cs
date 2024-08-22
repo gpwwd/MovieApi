@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Routing.Patterns;
+
 namespace MovieApiMvc.Dtos
 {
     public class MovieDto
@@ -18,7 +20,8 @@ namespace MovieApiMvc.Dtos
         public bool IsSeries { get; set; } = default;
         public ImageInfoDto? ImageInfo { get; set; } = default;
         public Guid Id { get; set; }
-
+        public string? Description { get; set; }
+        public string? ShortDescription { get; set; }
         public MovieDto()
         {
         }

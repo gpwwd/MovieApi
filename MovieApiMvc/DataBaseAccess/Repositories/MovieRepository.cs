@@ -107,7 +107,7 @@ public class MoviesRepository
 
         if(movie is null)
         {
-            throw new EntityNotFoundException(401, "No movie with this id");
+            throw new EntityNotFoundException(401, "No movie with this name");
         }
 
         return movie.Id;
@@ -149,6 +149,24 @@ public class MoviesRepository
             movieEntity.imageInfoEntity.PreviewUrls = image.PreviewUrls;
             _dbContext.Images.Update(movieEntity.imageInfoEntity);
         }
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task PutDescription(Guid? id, string description, string shortDescription)
+    {
+        var movieEntity = await _dbContext.Movies
+                                        .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (movieEntity == null)
+        {
+            throw new Exception("Movie not found");
+        }
+
+        movieEntity.Description = description;
+        movieEntity.ShortDescription = shortDescription;
+        //_dbContext.Movies.Update(movieEntity);
+
 
         await _dbContext.SaveChangesAsync();
     }

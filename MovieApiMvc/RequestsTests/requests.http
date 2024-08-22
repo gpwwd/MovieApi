@@ -2,6 +2,10 @@ GET http://localhost:5128/api/movies
 
 ###
 
+GET http://localhost:5128/api/movies/46F95B7C-CC87-4FB0-8C92-0D49FF931115
+
+###
+
 GET http://localhost:5128/api/movies/images
 
 ###
