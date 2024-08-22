@@ -31,11 +31,23 @@ export default function MoviesList(props) {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
-    const listMovies = movies.map(movie => 
-        <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
-            <Movie name={movie.name} rating={movie.rate} year={movie.year} genres={movie.genres} />
-        </li>
-    );
+    const listMovies = movies.map(movie => {
+        const imageUrl = movie.imageInfo.previewUrls && movie.imageInfo.previewUrls.length > 0 
+            ? movie.imageInfo.previewUrls[0] 
+            : null; 
+
+        return (
+            <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
+                <Movie
+                    name={movie.name}
+                    rating={movie.ratingKp}
+                    year={movie.year}
+                    genres={movie.genres}
+                    image={imageUrl}
+                />
+            </li>
+        );
+    });
 
     return (
         <ul className='movie_list'>

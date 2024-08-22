@@ -1,17 +1,37 @@
 
 .container {
-    /* box-shadow: inset 0px 10px 10px hsl(203, 26%, 8%); */
     margin-top: 80px;
     display: flex;
     flex-direction: column;
     background-color: #1E2B33;
     padding: 20px;
+    color: white;
+
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.descriptionAndImageContainer {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: row;
+}
+
+.descriptionContainer {
+    margin-left: 40px;
+}
+
+.image {
+    margin-left: 20px;
+    max-width: 300px; /* Максимальная ширина изображения */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    border: 2px solid white;
 }
 
 .description {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    margin-left: 20px;
     font-size: 1.5rem;
     color: hsl(0, 0%, 83%);
 }
@@ -24,19 +44,19 @@
     text-align: center;
 }
 
-.wlb {
+.watchLaterButton {
     font-weight: bold;
     background-color: hsl(357, 85%, 38%);
-    width: 200px;
-    margin-left: 20px;
+    width: 300px;
     margin-top: 20px;
+    margin-left: 20px;
     border: none;
     padding: 10px 15px;
     border-radius: 20px;
     cursor: pointer;
 }
 
-.wlb:hover {
+.watchLaterButton:hover {
     background-color: hsl(357, 85%, 33%);
     transform: scale(108%);
     transition: .5s ease;

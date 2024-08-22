@@ -14,6 +14,10 @@
     scrollbar-width: none;
 }
 
+.poster {
+    width: 200px;
+}
+
 .movie:hover {
     transform: translate(-3px, -3px); /* Shift to the upper left corner */
     box-shadow: 10px 10px 10px hsla(0, 0%, 0%, 0.6);

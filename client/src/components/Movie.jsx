@@ -9,7 +9,10 @@ export default function Movie(props) {
 
     return (
         <div className={styles.movie}>
-            <img src="https://ru.kinorium.com/1656658/gallery/poster/?photo=poster" alt="Green Book Poster" />
+            {props.image
+                ? (<img className={styles.poster} src={props.image} alt={`${props.name} poster`} />)
+                : (<div className={styles.placeholder}></div>)
+            }
             <h2 className={styles.title}>{props.name}</h2>
             <h4>Рейтинг: {formatRating(props.rating)}</h4>
             <h4>Год: {props.year}</h4>

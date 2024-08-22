@@ -29,7 +29,7 @@ export default function WatchLaterMovies(props) {
     if (error) return <div>Error: {error.message}</div>;
     
     const listMovies = moviesWatchLater.map(movie => 
-        <Movie key={movie.id} name={movie.name} rating={movie.rate}/>
+        <Movie key={movie.id} name={movie.name} rating={movie.ratingKp} genres={movie.genres} />
     );
 
     return (
