@@ -1,12 +1,17 @@
 const API_URL = "http://localhost:5128/api";
 
 const fetchMovies = async () => {
-    const response = await fetch(`${API_URL}/movies`);;
+    const response = await fetch(`${API_URL}/movies/images`);;
     return response.json();
 };
 
 const fetchMovieById = async (id) => {
     const response = await fetch(`${API_URL}/movies/${id}`);
+    return response.json();
+};
+
+const fetchMovieImageUrlById = async (id) => {
+    const response = await fetch(`${API_URL}/movies/${id}/images`);
     return response.json();
 };
 
@@ -19,7 +24,7 @@ const fetchUserLaterMovies = async (id) => {
     const response = await fetch(`${API_URL}/users/${id}/watchList`, {
         method: 'GET',  // Specify the method, though it's GET by default
         headers: {
-            'Authorization' : 'Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8iLCJhdWQiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8ifQ.Pi92hSkahkc3uIMia8zsphtucrRrUGE1jWF3PQHpKQa5_8MZIYRj84aJeA_yAjFCnL5ZTO7DLeu7nR3B-fhIfA',
+            'Authorization' : 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8iLCJhdWQiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8ifQ.B06iFRXpnt_bPrgjaLNX-DaXv2t_maWTc5v7Sx8h4SnkUzo41JBdEBdSyQiUmrEk_OMqrL3GUWP8Z4hK8ajikQ',
             'Content-Type': 'application/json', // Optional, depending on your API
         },
     });
@@ -31,4 +36,4 @@ const fetchUserLaterMovies = async (id) => {
 }
 
 
-export {fetchUserLaterMovies, fetchMovieById, fetchMovies};
+export {fetchUserLaterMovies, fetchMovieById, fetchMovieImageUrlById, fetchMovies};
