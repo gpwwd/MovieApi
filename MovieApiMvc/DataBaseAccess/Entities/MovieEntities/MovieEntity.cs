@@ -24,5 +24,7 @@ namespace MovieApiMvc.DataBaseAccess.Entities
         public List<UserEntity>? FavMovieUsers { get; set; } = default;
         public List<UserEntity>? WatchLaterUsers { get; set; } = default;
         public ImageInfoEntity? imageInfoEntity { get; set; } = default;
+        public string? Description { get; set; } = string.Empty;
+        public string? ShortDescription { get; set; } = string.Empty;
     }
 }
