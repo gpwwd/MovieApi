@@ -10,6 +10,7 @@ using MovieApiMvc.ExternalApi;
 using Newtonsoft.Json;
 using MovieApiMvc.ErrorHandling;
 using System.Linq.Expressions;
+using MovieApiMvc.FillingBD;
 
 public class Program
 {
@@ -48,6 +49,8 @@ public class Program
             });
 
         var app = builder.Build();  
+
+        ExternalAPIService.GetMoviesUrlsCovers();
 
         app.UseCors("AllowAll");
         app.UseMyExeptionHandling(builder.Environment);
