@@ -1,5 +1,5 @@
 import Header from "../components/Header"
-import WatchLaterMovies from "../components/FavouriteMoviesList";
+import WatchLaterMovies from "../components/WatchLaterMoviesList";
 
 function User(props) {
   return (

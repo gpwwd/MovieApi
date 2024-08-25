@@ -1,4 +1,4 @@
-import Movie from './Movie';
+import Movie from './Movie.jsx';
 import {fetchUserLaterMovies} from "../services/Api.js";
 import React, { useEffect, useState } from 'react';
 import "../styles/App.css";

@@ -15,23 +15,22 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email, password}),
+        body: JSON.stringify({ email, password }),
       });
-          
-    const text = await response.text(); // Получаем ответ как текст
-    console.log(text); // Выводим текст ответа для отладки
-
-      if (!response.ok) {
-        throw new Error('Неправильные учетные данные');
+    
+      if (response.ok) {
+        const data = await response.json();
+        const jwtToken = data.token;
+        localStorage.setItem('authToken', jwtToken);
+        window.location.href = '/';
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Ошибка при авторизации');
       }
-
-      const {token} = await response.json();
-      localStorage.setItem('token', token); 
-      console.log(token);
     } catch (err) {
       setError(err.message);
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="login-form">

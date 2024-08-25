@@ -24,7 +24,7 @@ const fetchUserLaterMovies = async (id) => {
     const response = await fetch(`${API_URL}/users/${id}/watchList`, {
         method: 'GET',  // Specify the method, though it's GET by default
         headers: {
-            'Authorization' : 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8iLCJhdWQiOiJodHRwczovL2pveWRpcGthbmppbGFsLmNvbS8ifQ.B06iFRXpnt_bPrgjaLNX-DaXv2t_maWTc5v7Sx8h4SnkUzo41JBdEBdSyQiUmrEk_OMqrL3GUWP8Z4hK8ajikQ',
+            'Authorization' : `Bearer` + `${localStorage.Authorization}`,
             'Content-Type': 'application/json', // Optional, depending on your API
         },
     });
