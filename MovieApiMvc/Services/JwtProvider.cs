@@ -20,7 +20,8 @@ public class JwtProvider : IJwtProvider
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 signingCredentials: new SigningCredentials (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"])), 
-                                SecurityAlgorithms.HmacSha512)
+                                SecurityAlgorithms.HmacSha512),
+                expires: DateTime.UtcNow.AddMinutes(30)
         );
                 
         return new JwtSecurityTokenHandler().WriteToken(token);
