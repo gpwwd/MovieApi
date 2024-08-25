@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Services.Interfaces;
 
 namespace MovieApiMvc.Services;
@@ -14,14 +16,21 @@ public class JwtProvider : IJwtProvider
         _configuration = configuration;
     }
 
-    public string GenerateToken()//can use User params later as a params for generating token (Claims)
+    public string GenerateToken(UserLoginDto userInfo)
     {
+    
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Email, userInfo.Email),
+        };
+
         var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                signingCredentials: new SigningCredentials (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"])), 
-                                SecurityAlgorithms.HmacSha512),
-                expires: DateTime.UtcNow.AddMinutes(30)
+                claims: claims,
+                signingCredentials: credentials,
+                expires: DateTime.UtcNow.AddDays(1)
         );
                 
         return new JwtSecurityTokenHandler().WriteToken(token);

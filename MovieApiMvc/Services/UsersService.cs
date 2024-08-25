@@ -71,7 +71,7 @@ public class UsersService : IUsersService
             throw new Exception("Not correct passw");
         }
 
-        var token = _jwtProvider.GenerateToken();
+        var token = _jwtProvider.GenerateToken(userDto);
         return token;
     }   
     
@@ -144,8 +144,7 @@ public class UsersService : IUsersService
             movieDtos.Add(movieDto);
         }
         return movieDtos;
-    } 
-
+    }
 
 }
 

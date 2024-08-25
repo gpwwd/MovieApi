@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -141,4 +142,33 @@ public class UsersController : Controller
             return NotFound();
         }
     }
+
+    [HttpGet]
+    [Authorize]
+    [Route("GetTestAuth")]
+    public ActionResult<IEnumerable<string>> GetTestAuth()
+    {
+        var currentUser = HttpContext.User;
+        string curUserEmail = String.Empty;
+
+        if(currentUser is null)
+        {
+            throw new MyExeption(401, "no current user ");
+        }
+
+        if (currentUser.HasClaim(c => c.Type == ClaimTypes.Email))
+        {
+            curUserEmail = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+        }
+
+        if(curUserEmail.Length > 15)
+        {
+            return new string[] { "High Time1", "High Time2", "High Time3", "High Time4", "High Time5" };
+        }
+        else
+        {
+            return new string[] { "value1", "value2", "value3", "value4", $"{curUserEmail}" };
+        }
+    }
+
 }

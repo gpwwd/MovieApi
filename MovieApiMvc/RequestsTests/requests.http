@@ -68,9 +68,9 @@ POST http://localhost:5128/api/users
 Content-Type: application/json
 
 {
-  "UserName": "john_doe",
-  "PasswHash": "hashed_password",
-  "Email": "john.doe@example.com",
+  "UserName": "user2",
+  "Password": "hashed_password",
+  "Email": "short@s.com",
   "FavMovies": [
   ],
   "WatchLaterMovies": [
@@ -107,10 +107,8 @@ POST http://localhost:5128/api/users/login
 Content-Type: application/json
 
 {
-  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "userName": "string",
   "password": "hashed_password",
-  "email": "john.doe@example.com"
+  "email": "short@s.com"
 }
 
 ###
@@ -121,3 +119,8 @@ Authorization: Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW
 
 ###
 
+GET http://localhost:5128/api/users/GetTestAuth
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzaG9ydEBzLmNvbSIsImV4cCI6MTcyNDYwMzYxMH0.-j5-OqmdOuUmlaXniC_VxA32eremis4KMzAvz-XB1ME
+
+### 

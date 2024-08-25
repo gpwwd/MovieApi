@@ -1,0 +1,25 @@
+.movie {
+    border: 1px solid hsl(0, 0%, 80%);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.3);
+    background-color: rgb(30, 43, 51);
+    padding: 20px;
+    margin: 10px;
+    width: 200px; /* Фиксированная ширина */
+    height: 300px; /* Фиксированная высота */
+    color: white; /* Изменяем цвет текста */
+    overflow: scroll;
+    text-overflow: ellipsis;
+    scrollbar-width: none;
+}
+
+.poster {
+    width: 200px;
+}
+
+.movie:hover {
+    transform: translate(-3px, -3px); /* Shift to the upper left corner */
+    box-shadow: 10px 10px 10px hsla(0, 0%, 0%, 0.6);
+    transition: .5s ease;
+}
