@@ -37,15 +37,20 @@ public class UsersController : Controller
     [HttpPost("login")]
     public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {   
-        
-        var token = await _userService.Login(userLoginDto);
-
-        if (token is null)
+        try
         {
-            return Unauthorized();
+            var token = await _userService.Login(userLoginDto);
+            if (token is null)
+            {
+                return Unauthorized();
+            }
+            return Ok(new {token = token});
         }
-        
-        return Ok(new {token = token});
+        catch(MyExeption ex)
+        {
+            return Unauthorized(ex.Message);
+        }
+
     }
 
     [HttpGet]
@@ -138,7 +143,7 @@ public class UsersController : Controller
         {
             return Conflict(new { message = ex.Message});
         } 
-        var location = Url.Action("{userId}/addToWatchList");
+        var location = Url.Action("addToWatchList");
         return Created(location, addedMoviesIds);
     }
     

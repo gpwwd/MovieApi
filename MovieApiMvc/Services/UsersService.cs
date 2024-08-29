@@ -60,16 +60,14 @@ public class UsersService : IUsersService
 
         if(userEntity is null)
         {
-            //create new Exception later
-            throw new Exception("Not registred");
+            throw new MyExeption(401, "Not registred");
         }
 
         var IsPasswCorr = PasswordHasher.Verify(userDto.Password, userEntity.PasswHash);
         
         if(!IsPasswCorr)
         {
-            //create new Exception later
-            throw new Exception("Not correct passw");
+            throw new MyExeption(401, "Incorrect passw");
         }
 
         var token = _jwtProvider.GenerateToken(userDto, userEntity.Id);
