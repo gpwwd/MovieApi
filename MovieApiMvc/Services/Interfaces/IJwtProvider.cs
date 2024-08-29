@@ -4,7 +4,7 @@ namespace MovieApiMvc.Services.Interfaces
 {
     public interface IJwtProvider
     {
-        public string GenerateToken(UserLoginDto userInfo);
+        public string GenerateToken(UserLoginDto userInfo, Guid userId);
 
     }
 }

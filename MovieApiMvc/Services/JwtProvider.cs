@@ -16,7 +16,7 @@ public class JwtProvider : IJwtProvider
         _configuration = configuration;
     }
 
-    public string GenerateToken(UserLoginDto userInfo)
+    public string GenerateToken(UserLoginDto userInfo, Guid userId)
     {
     
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -25,6 +25,7 @@ public class JwtProvider : IJwtProvider
         var claims = new[]
         {
             new Claim(ClaimTypes.Email, userInfo.Email),
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
         };
 
         var token = new JwtSecurityToken(

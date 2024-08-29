@@ -6,6 +6,7 @@ using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieApiMvc.Services;
 
@@ -71,7 +72,7 @@ public class UsersService : IUsersService
             throw new Exception("Not correct passw");
         }
 
-        var token = _jwtProvider.GenerateToken(userDto);
+        var token = _jwtProvider.GenerateToken(userDto, userEntity.Id);
         return token;
     }   
     
@@ -92,17 +93,18 @@ public class UsersService : IUsersService
         await _usersRepository.Delete(id);
     }
 
+    [Authorize]
     public async Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds)
     {   
-        //check if user id authorized
         var user = await _usersRepository.GetById(userId);
-        
+
         if(user is null)
         {
             throw new EntityNotFoundException(404, "Not Found");
         }
 
         List<Guid> moviesAddedIds = new List<Guid>();
+        List<MovieEntity> moviesAdded = new List<MovieEntity>();
         foreach(var movieId in moviesIds)
         {
             var movie = await _moviesRepository.GetById(movieId);
@@ -117,18 +119,18 @@ public class UsersService : IUsersService
             {
                 throw new EntityAlreadyExistException(409, "Watch Later Movie With This Id Already Exists");
             }
-
-            user.WatchLaterMovies.Add(movie);
+            
+            moviesAdded.Add(movie);
             moviesAddedIds.Add(movieId);
         }
 
-        await _usersRepository.Update(user);  
+        await _usersRepository.AddWatchLaterMovies(userId, moviesAdded);  
         return moviesAddedIds;
     }   
 
+    [Authorize]
     public async Task<List<MovieDto>> GetWatchLaterMovies(Guid userId)
     {   
-        //check if user id authorized
         var user = await _usersRepository.GetById(userId);
         
         if(user is null)
