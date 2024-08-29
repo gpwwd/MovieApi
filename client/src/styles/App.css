@@ -9,13 +9,3 @@
     margin-top: 100px;
     align-items: center;
 }
-
-.movie_list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    /* background-color: #1E2B33; */
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-}

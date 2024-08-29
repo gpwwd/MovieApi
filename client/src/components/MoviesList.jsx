@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { fetchMovies } from "../services/Api.js";
 import Movie from './Movie';
+import styles from '../styles/MoviesList.module.css'
 
 export default function MoviesList(props) {
     const [movies, setMovies] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate(); // Используем useNavigate
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const getMovies = async () => {
@@ -24,34 +25,46 @@ export default function MoviesList(props) {
         getMovies();
     }, []);
 
-    const handleMovieClick = (id) => {
-        navigate(`/movie/${id}`); 
-    };
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    }
+
+    const filteredMovies = searchTerm
+        ? movies.filter(movie => movie.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : movies;
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
-    const listMovies = movies.map(movie => {
+    const listMovies = filteredMovies.map(movie => {
         const imageUrl = movie.imageInfo.previewUrls && movie.imageInfo.previewUrls.length > 0 
             ? movie.imageInfo.previewUrls[0] 
             : null; 
 
         return (
-            <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
-                <Movie
-                    name={movie.name}
-                    rating={movie.ratingKp}
-                    year={movie.year}
-                    genres={movie.genres}
-                    image={imageUrl}
-                />
-            </li>
+            <Link to={`/movie/${movie.id}`} style={{textDecoration: "none"}}>
+                <li key={movie.id}>
+                    <Movie
+                        name={movie.name}
+                        rating={movie.ratingKp}
+                        year={movie.year}
+                        genres={movie.genres}
+                        image={imageUrl}
+                    />
+                </li>
+            </Link>
         );
     });
 
     return (
-        <ul className='movie_list'>
-            {listMovies}
-        </ul>
+        <>
+            <input className={styles.searchBar}
+                type='text'
+                placeholder='Поиск фильмов...'
+                value={searchTerm}
+                onChange={handleSearchChange}
+            />
+            <ul className={styles.moviesList}> {listMovies} </ul>
+        </>
     );
 }

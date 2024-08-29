@@ -1,0 +1,25 @@
+.moviesList {
+    display: flex;
+    flex-wrap: wrap;
+    align-items:start;
+    /* justify-content: space-evenly; */
+    /* background-color: #1E2B33; */
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.searchBar {
+    display: flex;
+    width: 50%;
+    margin: auto;
+    margin-bottom: 15px;
+    background-color: var(--background-lighter-color);
+    border-radius: 15px;
+    box-shadow: 5px 5px 5px var(--box-shadow);
+}
+
+.searchBar::placeholder {
+    font-style: italic;
+    color: hsla(0, 0%, 100%, 0.2);
+}
