@@ -23,3 +23,8 @@
     font-style: italic;
     color: hsla(0, 0%, 100%, 0.2);
 }
+
+h2 {
+    text-align: center;
+    font-size: 1.8rem;
+}

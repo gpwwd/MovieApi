@@ -6,10 +6,13 @@ import Login from './pages/Login';
 import User from  './pages/User';
 import DetailedMovie from './pages/DetailedMovie'
 import "./styles/App.css";
+import { Toaster } from 'sonner';
 
 const App = () => {
   return (
-    <Router>
+    <>
+      <Toaster/>
+        <Router>
         <Routes>
           <Route exact path="/" element={<Home/>}/>
           <Route exact path="/login" element={<Login/>}/>
@@ -21,6 +24,8 @@ const App = () => {
           <Route exact path="movie/:id" element={<DetailedMovie/>}/>
         </Routes>
     </Router>
+    </>
+
   );
 }
 

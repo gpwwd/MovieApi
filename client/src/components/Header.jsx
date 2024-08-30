@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styles from '../styles/Header.module.css'
+import UserDropdown from './UserDropdown';
 
 export default function Header(props) {
     const checkUserLoggedIn = () => {
@@ -22,15 +23,19 @@ export default function Header(props) {
     return(
         <header className={styles.header}>
             <div className={styles.logoAndNav}>
-                <h1>Название Сайта</h1>
-                <nav>
-                    <Link to="/">Главная</Link>
-                    <Link to="/movies">Фильмы</Link>
-                </nav>
+                <h1 className={styles.logo}>#bomb gay poit</h1>
+                <div className={styles.navContainer}>
+                    <div className={styles.navElementContainer}>
+                        <Link to="/">Главная</Link>
+                    </div>
+                    <div className={styles.navElementContainer}>
+                        <Link to="/movies">Фильмы</Link>
+                    </div>
+                </div>
             </div>
             <div className={styles.login_button_container}>
                 {checkUserLoggedIn()
-                    ? <Link to="/user">{localStorage.getItem("email")}</Link>
+                    ? <UserDropdown email={localStorage.getItem('email')} />
                     : <Link to="/login"><button>Войти</button></Link>
                 }
 

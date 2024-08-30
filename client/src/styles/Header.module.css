@@ -16,6 +16,7 @@
 
 .logoAndNav {
     display: flex;
+    flex-direction: row;
     align-items: center;
 }
 
@@ -24,24 +25,39 @@
     font-size: 24px;
 }
 
-nav {
+.logo {
+    text-decoration: underline var(--accent-color);
+    text-decoration-thickness: 3px;
+}
+
+.navContainer {
+    display: flex;
+    flex-direction: row;
+    margin-left: 30px;
+}
+
+.navElementContainer {
+    display: block;
     margin-left: 20px;
 }
 
-nav a {
+.navElementContainer a {
+    display: block;
     color: white;
     text-decoration: none;
     margin: 0 10px;
+    font-size: 1.2rem;
 }
 
-nav a:hover {
-    text-decoration: underline;
+.navElementContainer a:hover {
+    transform: scale(110%);
+    transition: .25s ease;
 }
 
 .login_button_container button {
     background-color: var(--accent-color);
     color: white;
-    margin-right: 20px;
+    margin-right: 50px;
     border: none;
     padding: 10px 15px;
     border-radius: 20px;
@@ -54,6 +70,6 @@ nav a:hover {
 
 .login_button_container button:hover {
     background-color: var(--accent-color-hover);
-    transform: scale(108%);
+    transform: scale(110%);
     transition: .5s ease;
 }

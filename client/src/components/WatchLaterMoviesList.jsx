@@ -50,8 +50,9 @@ export default function WatchLaterMovies(props) {
     });
 
     return (
-      <>
-          <ul className={styles.moviesList}> {listMovies} </ul>
-      </>
+		<>
+			<h2>Посмотреть позже</h2>
+          	<ul className={styles.moviesList}> {listMovies} </ul>
+      	</>
     );
 }

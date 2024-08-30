@@ -16,7 +16,7 @@
 }
 
 .errorContainer {
-    background-color: var(accent-color);
+    background-color: var(--accent-color);
     font-size: 1.3rem;
 }
 

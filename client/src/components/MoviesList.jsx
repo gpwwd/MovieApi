@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { fetchMovies } from "../services/Api.js";
 import Movie from './Movie';
 import styles from '../styles/MoviesList.module.css'
+import { toast } from 'sonner';
 
 export default function MoviesList(props) {
     const [movies, setMovies] = useState([]);
