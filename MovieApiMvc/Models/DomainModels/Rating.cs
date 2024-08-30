@@ -27,10 +27,10 @@ public class Rating
         return new Rating(
             id: Guid.NewGuid(),
             movieId: movieId,
-            kp: kp,
-            imdb: imdb, 
-            filmCritics: filmCritics,
-            russianFilmCritics: russianFilmCritics,
+            kp: kp ?? 0,
+            imdb: imdb ?? 0, 
+            filmCritics: filmCritics ?? 0,
+            russianFilmCritics: russianFilmCritics ?? 0,
             movie: movie
         );
     }

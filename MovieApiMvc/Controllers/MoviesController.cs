@@ -4,6 +4,7 @@ using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.Dtos;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Services.Interfaces;
+using MovieApiMvc.ErrorHandling;
 
 namespace MovieApiMvc.Controllers;
 
@@ -24,17 +25,52 @@ public class MoviesController : Controller
         return Ok(movieDTOs);
     }
 
+    [HttpGet("images")]
+    public async Task<ActionResult<List<MovieDto>>> GetAllMoviesWithImages()
+    {
+        var movieDTOs = await _moviesService.GetAllWithImages();
+        return Ok(movieDTOs);
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<MovieDto>> GetMovie(Guid id)
     {
         //HttpResponse response = HttpContext.Response;
         
-        var movieDTO = await _moviesService.GetById(id);
-        if(movieDTO is null)
+        try
+        {
+            var movieDTO = await _moviesService.GetById(id);
+            if(movieDTO is null)
+            {
+                return new NotFoundResult();
+            }
+            return movieDTO;
+        }
+        catch(EntityNotFoundException)
         {
             return new NotFoundResult();
         }
-        return movieDTO;
+    
+    }
+
+    [HttpGet("{id:guid}/images")]
+    public async Task<ActionResult<ImageInfoDto>> GetMoviePoster(Guid id)
+    {
+
+        try
+        {
+            var imageInfoDto = await _moviesService.GetImageById(id);
+            if(imageInfoDto is null)
+            {
+                return new NotFoundResult();
+            }
+            return imageInfoDto;
+        }
+        catch(EntityNotFoundException)
+        {
+            return new NotFoundResult();
+        }
+    
     }
     // it alse can be done like
     // [Produces(typeof(Employee))]
@@ -51,8 +87,15 @@ public class MoviesController : Controller
         {
             return new BadRequestResult();
         }
-        await _moviesService.PutMovie(id, movie);
-        return Ok(movie);
+        try
+        {
+            await _moviesService.PutMovie(id, movie);
+        }
+        catch(ArgumentException ex)
+        {
+            return new BadRequestResult();
+        }
+        return Ok(id);
     } 
     
     [HttpDelete("{id:guid}")]

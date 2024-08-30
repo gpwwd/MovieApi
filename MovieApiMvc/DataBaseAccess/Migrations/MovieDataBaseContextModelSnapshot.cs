@@ -59,7 +59,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.Property<Guid>("MovieId")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("value")
+                    b.Property<double>("Value")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
@@ -77,6 +77,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -91,11 +92,37 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Genres", (string)null);
+                });
+
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.ImageInfoEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreviewUrls")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Urls")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId")
+                        .IsUnique();
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", b =>
@@ -107,6 +134,9 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.Property<string>("AlternativeName")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsSeries")
                         .HasColumnType("INTEGER");
 
@@ -115,6 +145,9 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShortDescription")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Top250")
@@ -141,16 +174,16 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.Property<Guid>("MovieId")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("filmCritics")
+                    b.Property<double?>("filmCritics")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("imdb")
+                    b.Property<double?>("imdb")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("kp")
+                    b.Property<double?>("kp")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("russianFilmCritics")
+                    b.Property<double?>("russianFilmCritics")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
@@ -255,6 +288,17 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.Navigation("Movie");
                 });
 
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.ImageInfoEntity", b =>
+                {
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", "Movie")
+                        .WithOne("imageInfoEntity")
+                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.ImageInfoEntity", "MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.RatingEntity", b =>
                 {
                     b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", "Movie")
@@ -300,7 +344,10 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                 {
                     b.Navigation("Budget");
 
-                    b.Navigation("Rating");
+                    b.Navigation("Rating")
+                        .IsRequired();
+
+                    b.Navigation("imageInfoEntity");
                 });
 #pragma warning restore 612, 618
         }

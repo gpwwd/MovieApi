@@ -1,0 +1,14 @@
+.errorToast, .successToast {
+    font-family: system-ui;
+    color: white;
+    border: none;
+    box-shadow: 8px 0 16px var(--box-shadow), -8px 0 16px var(--box-shadow);
+}
+
+.errorToast {
+    background-color: var(--accent-color);
+}
+
+.successToast {
+    background-color: var(--background-lighter-color);
+}

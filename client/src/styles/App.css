@@ -1,0 +1,11 @@
+#root {
+    align-items: center;
+    /* max-width: 80vw; */
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+main{
+    margin-top: 100px;
+    align-items: center;
+}

@@ -6,15 +6,34 @@ namespace MovieApiMvc.Services.Mappers;
 
 public class EntityToDto
 {
-    public static MovieDto CreateMovieDtoFromEntity(MovieEntity? movieEntity)
+    public static MovieDto CreateMovieDtoFromEntity(MovieEntity movieEntity)
     {
         return new MovieDto()
         {
             Name = movieEntity.Name,
-            Rate = movieEntity.Rating.kp,
+            AlternativeName = movieEntity.AlternativeName,
+            RatingKp = movieEntity.Rating?.kp,
+            RatingImdb = movieEntity.Rating?.imdb,
+            RatingFilmCritics = movieEntity.Rating?.filmCritics,
             Type = movieEntity.Type,
             Year = movieEntity.Year,
-            Id = movieEntity.Id
+            BudgetValue = movieEntity.Budget?.Value ?? null,
+            BudgetCurrency = movieEntity.Budget?.Currency ?? null,
+            MovieLength = movieEntity.MovieLength,
+            Id = movieEntity.Id,
+            IsSeries = movieEntity.IsSeries,
+            Top250 = movieEntity.Top250,
+            Countries = movieEntity.Countries?.Select(c => c.Name).ToList() ?? null,
+            Genres = movieEntity.Genres?.Select(c => c.Name).ToList() ?? null,
+            ImageInfo = new ImageInfoDto
+                        {
+                            Id = movieEntity.imageInfoEntity?.Id ?? null,
+                            MovieId = movieEntity.imageInfoEntity?.MovieId ?? movieEntity.Id,
+                            Urls = movieEntity.imageInfoEntity?.Urls ?? null,
+                            PreviewUrls = movieEntity.imageInfoEntity?.PreviewUrls ?? null,
+                        },
+            Description = movieEntity.Description,
+            ShortDescription = movieEntity.ShortDescription
         };
     }
 

@@ -1,8 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Dtos;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Services.Interfaces;
 
 namespace MovieApiMvc.Controllers;
@@ -31,16 +35,22 @@ public class UsersController : Controller
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login([FromBody] UserDto userLoginDto)
+    public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {   
-        var token = await _userService.Login(userLoginDto);
-
-        if (token is null)
+        try
         {
-            return Unauthorized();
+            var token = await _userService.Login(userLoginDto);
+            if (token is null)
+            {
+                return Unauthorized();
+            }
+            return Ok( token );
         }
-        
-        return Ok(token);
+        catch(MyExeption ex)
+        {
+            return Unauthorized(ex.Message);
+        }
+
     }
 
     [HttpGet]
@@ -103,13 +113,31 @@ public class UsersController : Controller
     }
 
     [HttpPost]
-    [Route("{userId}/addToWatchList")]
-    public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList(Guid userId, [FromBody] Guid[] movieIds)
+    [Route("addToWatchList")]
+    [Authorize]
+    public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] string[] movieIds)
     {
+        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
+
+        Guid userId;
+        Guid[] movieGuids = new Guid[movieIds.Length]; 
+        try
+        {
+            userId = new Guid(userIdClaim);
+            for (int i = 0; i < movieIds.Length; i++)
+            {
+                movieGuids[i] = new Guid(movieIds[i]); 
+            }
+        }
+        catch
+        {
+            userId = Guid.Empty;
+        }
+
         List<Guid> addedMoviesIds = new List<Guid>();
         try
         {
-            addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieIds); 
+            addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieGuids); 
         }
         catch(EntityNotFoundException ex)
         {   
@@ -120,14 +148,27 @@ public class UsersController : Controller
         {
             return Conflict(new { message = ex.Message});
         } 
-        var location = Url.Action("{userId}/course");
+        var location = Url.Action("addToWatchList");
         return Created(location, addedMoviesIds);
     }
     
     [HttpGet]
-    [Route("{userId}/watchList")]
-    public async Task<ActionResult<List<MovieDto>>> GetWatchLaterList(Guid userId)
+    [Route("watchList")]
+    [Authorize]
+    public async Task<ActionResult<List<MovieDto>>> GetWatchLaterList()
     {   
+        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
+
+        Guid userId;
+        try
+        {
+            userId = new Guid(userIdClaim);
+        }
+        catch
+        {
+            userId = Guid.Empty;
+        }
+
         try
         {
             var watchLaterMovies = await _userService.GetWatchLaterMovies(userId);
@@ -139,4 +180,16 @@ public class UsersController : Controller
             return NotFound();
         }
     }
+
+    [HttpGet]
+    [Authorize]
+    [Route("GetTestAuth")]
+    public async Task<ActionResult> GetTestAuth()
+    {
+
+        var emailClaim = User.FindFirst(ClaimTypes.Email)?.Value;
+        string curUserEmail = String.Empty;
+        return Ok();
+    }
+
 }
