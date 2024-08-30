@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovieById, fetchMovieImageUrlById } from '../services/Api.js';
 import styles from '../styles/MovieDetails.module.css'
+import { addToWatchLater } from '../services/Api.js';
 
 export default function MovieDetails(props) {
     const id  = props.id;
@@ -8,6 +9,7 @@ export default function MovieDetails(props) {
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
     
     useEffect(() => {
         const getMovieData = async () => {
@@ -28,6 +30,22 @@ export default function MovieDetails(props) {
 
         getMovieData();
     }, [id]);
+
+
+
+
+    const handleWatchLater = async () => {
+        const movieIds = [id];
+        try {
+            await addToWatchLater(movieIds);
+        } catch (err) {
+            console.error(err);
+        }
+    };//убери куда нибудь это говно пжпжжпжпжпжпжппжпжпжпжжпжпжжоооооооооооооопа
+
+
+
+
 
     const formatMovieLength = (length) => {
         const hours = Math.floor(length / 60);
@@ -71,7 +89,9 @@ export default function MovieDetails(props) {
                 <h2>Про что фильм «{movie.name}»:</h2>
                 <p>{movie.description}</p>
             </div>
-            <button className={styles.watchLaterButton}>Посмотреть позже</button>
+            <button className={styles.watchLaterButton} onClick={handleWatchLater}>
+                Посмотреть позже
+            </button>
         </div>
     );
 }

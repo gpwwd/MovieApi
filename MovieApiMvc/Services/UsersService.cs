@@ -91,7 +91,6 @@ public class UsersService : IUsersService
         await _usersRepository.Delete(id);
     }
 
-    [Authorize]
     public async Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds)
     {   
         var user = await _usersRepository.GetById(userId);

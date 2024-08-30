@@ -42,6 +42,15 @@ public class UsersRepository
         return await _dbContext.Users   
             .AsNoTracking()
             .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Rating)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Countries)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Genres)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Budget)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.imageInfoEntity)
             .Include(u => u.FavMovies)
             .FirstOrDefaultAsync(u => u.Id == id);
     }

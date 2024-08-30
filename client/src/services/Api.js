@@ -20,12 +20,12 @@ const fetchMovieImageUrlById = async (id) => {
 //     return response.json();
 // };
 
-const fetchUserLaterMovies = async (id) => {
-    const response = await fetch(`${API_URL}/users/${id}/watchList`, {
-        method: 'GET',  // Specify the method, though it's GET by default
+const fetchUserLaterMovies = async () => {
+    const response = await fetch(`${API_URL}/users/watchList`, {
+        method: 'GET', 
         headers: {
-            'Authorization' : `Bearer` + `${localStorage.Authorization}`,
-            'Content-Type': 'application/json', // Optional, depending on your API
+            'Authorization' : `Bearer ` + `${localStorage.getItem('authToken')}`,
+            'Content-Type': 'application/json',
         },
     });
 
@@ -35,5 +35,21 @@ const fetchUserLaterMovies = async (id) => {
     return data;
 }
 
+export const addToWatchLater = async (movieId) => {
+    const response = await fetch(`${API_URL}/users/addToWatchList`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ` + `${localStorage.getItem('authToken')}`,
+        },
+        body: JSON.stringify(movieId),
+    });
+
+    if (!response.ok) {
+        throw new Error("Не удалось добавить фильм в список просмотра позже" + response.status);
+    }
+
+    return await response.json();
+};
 
 export {fetchUserLaterMovies, fetchMovieById, fetchMovieImageUrlById, fetchMovies};

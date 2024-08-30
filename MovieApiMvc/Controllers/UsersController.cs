@@ -44,7 +44,7 @@ public class UsersController : Controller
             {
                 return Unauthorized();
             }
-            return Ok(new {token = token});
+            return Ok( token );
         }
         catch(MyExeption ex)
         {
@@ -115,14 +115,19 @@ public class UsersController : Controller
     [HttpPost]
     [Route("addToWatchList")]
     [Authorize]
-    public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] Guid[] movieIds)
+    public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] string[] movieIds)
     {
         string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
 
         Guid userId;
+        Guid[] movieGuids = new Guid[movieIds.Length]; 
         try
         {
             userId = new Guid(userIdClaim);
+            for (int i = 0; i < movieIds.Length; i++)
+            {
+                movieGuids[i] = new Guid(movieIds[i]); 
+            }
         }
         catch
         {
@@ -132,7 +137,7 @@ public class UsersController : Controller
         List<Guid> addedMoviesIds = new List<Guid>();
         try
         {
-            addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieIds); 
+            addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieGuids); 
         }
         catch(EntityNotFoundException ex)
         {   
