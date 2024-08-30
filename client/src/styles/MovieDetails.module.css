@@ -3,7 +3,7 @@
     margin-top: 80px;
     display: flex;
     flex-direction: column;
-    background-color: #1E2B33;
+    background-color: var(--background-lighter-color);
     padding: 20px;
     color: white;
 
@@ -15,13 +15,34 @@
 
 .descriptionAndImageContainer {
     margin-top: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: row;
 }
 
-.descriptionContainer {
+.infoContainer {
     margin-left: 40px;
+}
+
+.descriptionContainer {
+    font-family: system-ui;
+    font-size: 1.3rem;
+    font-weight: 200;
+    color: hsl(0, 0%, 83%);
+    text-align: justify;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.descriptionContainer h2 {
+    margin-top: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 0px;
+}
+
+.descriptionContainer p {
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .image {
@@ -31,22 +52,30 @@
     border: 2px solid white;
 }
 
-.description {
+.info {
     font-size: 1.5rem;
     color: hsl(0, 0%, 83%);
 }
 
-.description b{
+.info b{
     color: white;
 }
 
 .container h1 {
     text-align: center;
+    margin-bottom: 0;
+}
+
+.container h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: hsl(0, 0%, 83%);
+    font-weight: 400;
 }
 
 .watchLaterButton {
     font-weight: bold;
-    background-color: hsl(357, 85%, 38%);
+    background-color: var(--accent-color);
     width: 300px;
     margin-top: 20px;
     margin-left: 20px;
@@ -57,7 +86,7 @@
 }
 
 .watchLaterButton:hover {
-    background-color: hsl(357, 85%, 33%);
+    background-color: var(--accent-color-hover);
     transform: scale(108%);
     transition: .5s ease;
 }

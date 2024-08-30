@@ -1,0 +1,67 @@
+.formContainer, .errorContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Центрирует по горизонтали */
+    align-items: center; /* Центрирует по вертикали */
+    width: 50%;
+    margin: auto;
+    max-width: 320px;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+}
+
+.formContainer {
+    background-color: var(--background-lighter-color);
+}
+
+.errorContainer {
+    background-color: var(accent-color);
+    font-size: 1.3rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+form {
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    font-size: 1.3rem;
+    border: none;
+    border-radius: 10px;
+    min-height: 50px;
+    margin: 10px;
+    padding-left: 15px;
+
+    background-color: var(--background-color);
+}
+
+input::placeholder {
+    color: var(--background-lighter-color);
+}
+
+button {
+    background-color: var(--accent-color);
+    color: white;
+    margin: 20px;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: 500;
+    font-family: inherit;
+}
+
+button:hover {
+    background-color: var(--accent-color-hover);
+    transform: scale(108%);
+    transition: .5s ease;
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovieById, fetchMovieImageUrlById } from '../services/Api.js';
 import styles from '../styles/MovieDetails.module.css'
+import { addToWatchLater } from '../services/Api.js';
 
 export default function MovieDetails(props) {
     const id  = props.id;
@@ -8,6 +9,7 @@ export default function MovieDetails(props) {
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
     
     useEffect(() => {
         const getMovieData = async () => {
@@ -28,6 +30,22 @@ export default function MovieDetails(props) {
 
         getMovieData();
     }, [id]);
+
+
+
+
+    const handleWatchLater = async () => {
+        const movieIds = [id];
+        try {
+            await addToWatchLater(movieIds);
+        } catch (err) {
+            console.error(err);
+        }
+    };//убери куда нибудь это говно пжпжжпжпжпжпжппжпжпжпжжпжпжжоооооооооооооопа
+
+
+
+
 
     const formatMovieLength = (length) => {
         const hours = Math.floor(length / 60);
@@ -54,19 +72,26 @@ export default function MovieDetails(props) {
     return (
         <div className={styles.container}>
             <h1>{movie.name}</h1>
+            <h3>{movie.alternativeName}</h3>
             <div className={styles.descriptionAndImageContainer}>
                 {imageUrl ? <img className={styles.image} src={imageUrl}></img> : <div/>}
-                <div className={styles.descriptionContainer}>
-                    <p className={styles.description}><b>Рейтинг Кинопоиска: </b> {formatRating(movie.ratingKp)}</p>
-                    <p className={styles.description}><b>Рейтинг IMDb: </b> {formatRating(movie.ratingImdb)}</p>
-                    <p className={styles.description}><b>Рейтинг FilmCritics: </b> {formatRating(movie.ratingImdb)}</p>
-                    <p className={styles.description}><b>Год: </b> {movie.year}</p>
-                    <p className={styles.description}><b>Жанры: </b> {movie.genres.join(', ')}</p>
-                    <p className={styles.description}><b>Длительность: </b> {formatMovieLength(movie.movieLength) }</p>
-                    <p className={styles.description}><b>Страны: </b> {movie.countries.join(', ')}</p>
+                <div className={styles.infoContainer}>
+                    {movie.ratingKp ? <p className={styles.info}><b>Рейтинг Кинопоиска: </b> {formatRating(movie.ratingKp)}</p> : <></>}
+                    {movie.ratingImdb ? <p className={styles.info}><b>Рейтинг IMDb: </b> {formatRating(movie.ratingImdb)}</p> : <></>}
+                    {movie.ratingFilmCritics ? <p className={styles.info}><b>Рейтинг FilmCritics: </b> {formatRating(movie.ratingFilmCritics)}</p> : <></>}
+                    <p className={styles.info}><b>Год: </b> {movie.year}</p>
+                    <p className={styles.info}><b>Жанры: </b> {movie.genres.join(', ')}</p>
+                    <p className={styles.info}><b>Длительность: </b> {formatMovieLength(movie.movieLength) }</p>
+                    <p className={styles.info}><b>Страны: </b> {movie.countries.join(', ')}</p>
                 </div>
             </div>
-            <button className={styles.watchLaterButton}>Посмотреть позже</button>
+            <div className={styles.descriptionContainer}>
+                <h2>Про что фильм «{movie.name}»:</h2>
+                <p>{movie.description}</p>
+            </div>
+            <button className={styles.watchLaterButton} onClick={handleWatchLater}>
+                Посмотреть позже
+            </button>
         </div>
     );
 }

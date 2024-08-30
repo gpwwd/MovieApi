@@ -1,19 +1,27 @@
 :root {
-  font-family: system-ui;
-  line-height: 1.5;
-  font-weight: 400;
+	font-family: system-ui;
+	line-height: 1.5;
+	font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: hsl(203, 26%, 8%);
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: var(--background-color);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	--background-color: #0f161a;
+	--background-lighter-color: #1E2B33;
+	--accent-color: hsl(357, 85%, 38%);
+	--accent-color-hover: hsl(357, 85%, 33%);
+	--box-shadow: hsla(0, 0%, 0%, 0.3);
+	--box-shadow-hover: hsla(0, 0%, 0%, 0.6);
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+	font-size: 3.2em;
+	line-height: 1.1;
 }

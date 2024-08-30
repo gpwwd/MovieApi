@@ -3,7 +3,7 @@ import React from 'react';
 function About() {
   return (
     <div>
-      <h2>О нас</h2>
+      <h2>Я гей</h2>
       {/* Здесь можно разместить содержимое для страницы "О нас" */}
     </div>
   );

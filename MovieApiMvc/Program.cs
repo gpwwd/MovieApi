@@ -50,8 +50,6 @@ public class Program
 
         var app = builder.Build();  
 
-        ExternalAPIService.GetMoviesUrlsCovers();
-
         app.UseCors("AllowAll");
         app.UseMyExeptionHandling(builder.Environment);
 
