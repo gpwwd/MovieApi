@@ -12,6 +12,7 @@ public interface IUsersService
     public Task<UserDto> GetById(Guid id);
     public Task DeleteUser(Guid id);
     public Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds);
+    public Task RemoveWatchLaterUser(Guid userId, Guid movieId);
     public Task<List<MovieDto>> GetWatchLaterMovies(Guid userId);
     public Task<UserEntity> Register(UserDto userDto);   
     public Task<string> Login(UserLoginDto userLoginDto);

@@ -7,6 +7,7 @@ using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace MovieApiMvc.Services;
 
@@ -125,7 +126,11 @@ public class UsersService : IUsersService
         return moviesAddedIds;
     }   
 
-    [Authorize]
+    public async Task RemoveWatchLaterUser(Guid userId, Guid movieId)
+    {
+        await _usersRepository.DeleteWatchLaterMovie(userId, movieId);
+    }
+
     public async Task<List<MovieDto>> GetWatchLaterMovies(Guid userId)
     {   
         var user = await _usersRepository.GetById(userId);
