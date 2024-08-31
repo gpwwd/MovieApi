@@ -105,7 +105,7 @@ public class UsersRepository
             throw new EntityNotFoundException(404, "User not found");
         }
     
-        existingUser.WatchLaterMovies.AddRange(moviesAdded);//очень затратно, говнооооооо
+        existingUser.WatchLaterMovies.AddRange(moviesAdded);
 
         var countries = existingUser.WatchLaterMovies
             .SelectMany(m => m.Countries)
@@ -116,6 +116,28 @@ public class UsersRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task DeleteWatchLaterMovie(Guid userId, Guid movieId)
+    {
+        var existingUser = await _dbContext.Users
+            .Include(u => u.WatchLaterMovies)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (existingUser == null)
+        {
+            throw new EntityNotFoundException(404, "User not found");
+        }
+
+        var movie = existingUser.WatchLaterMovies?.FirstOrDefault(m => m.Id == movieId);
+
+        if (movie == null)
+        {
+            throw new EntityNotFoundException(404, "Movie not found");
+        }
+
+        existingUser.WatchLaterMovies.Remove(movie);
+
+        await _dbContext.SaveChangesAsync();
+    }
 
     public async Task Delete(Guid id){
         var user = await _dbContext.Users.Where(u => u.Id == id).FirstOrDefaultAsync();

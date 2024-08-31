@@ -151,6 +151,38 @@ public class UsersController : Controller
         var location = Url.Action("addToWatchList");
         return Created(location, addedMoviesIds);
     }
+
+    [HttpDelete]
+    [Route("{movieId:guid}/removeFromWatchList")]
+    [Authorize]
+    public async Task<ActionResult> RemoveFromWatchList(string movieId)
+    {
+        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
+
+        Guid movieIdGuid;
+        Guid userId;
+        try
+        {
+            movieIdGuid = new Guid(movieId);
+            userId = new Guid(userIdClaim);
+        }
+        catch
+        {
+            movieIdGuid = Guid.Empty;
+            userId = Guid.Empty;
+        }
+
+        try
+        {
+            await _userService.RemoveWatchLaterUser(userId, movieIdGuid);
+            return new NoContentResult();
+        }
+        catch (EntityNotFoundException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return NotFound(ex.Message);
+        }
+    }
     
     [HttpGet]
     [Route("watchList")]
