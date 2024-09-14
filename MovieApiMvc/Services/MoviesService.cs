@@ -5,6 +5,7 @@ using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.Models.DomainModels;
 using MovieApiMvc.ErrorHandling;
+using RequestFeatures;
 
 namespace MovieApiMvc.Services;
 
@@ -26,6 +27,18 @@ public class MoviesService : IMoviesService
         }
         return moviesDto;
     }
+
+    public async Task<List<MovieDto>> GetWithPaging(MovieParameters movieParams)
+    {
+        var movies = await _moviesRepository.GetWithPaging(movieParams);
+        List<MovieDto> moviesDto = new List<MovieDto>();
+        foreach(var movie in movies)
+        {
+            moviesDto.Add(EntityToDto.CreateMovieDtoFromEntity(movie));
+        }
+        return moviesDto;
+    }
+
     public async Task<List<MovieDto>> GetAllWithImages()
     {
         var movies = await _moviesRepository.GetAllWithImages();

@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Context;
-using Microsoft.VisualBasic;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.ExternalApi;
-using System.Linq.Expressions;
+using RequestFeatures;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
 
@@ -25,6 +24,20 @@ public class MoviesRepository
             .Include(m => m.Countries)
             .ToListAsync();
     }
+
+    public async Task<List<MovieEntity>> GetWithPaging(MovieParameters movieParams){
+        return await _dbContext.Movies
+            .AsNoTracking()
+            .Include(m => m.Rating)
+            .Include(m => m.Budget)
+            .Include(m => m.Genres)
+            .Include(m => m.Countries)
+            .OrderBy(m => m.Name)
+            .Skip((movieParams.PageNumber - 1) * movieParams.PageSize)
+            .Take(movieParams.PageSize)
+            .ToListAsync();
+    }
+
     public async Task<List<MovieEntity>> GetAllWithImages()
     {
         return await _dbContext.Movies

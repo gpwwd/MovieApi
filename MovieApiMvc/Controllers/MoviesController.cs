@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using MovieApiMvc.DataBaseAccess.Repositories;
-using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.Dtos;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.ErrorHandling;
+using RequestFeatures;
+using Filters;
 
 namespace MovieApiMvc.Controllers;
 
@@ -22,6 +22,14 @@ public class MoviesController : Controller
     public async Task<ActionResult<List<MovieDto>>> GetAllMovies()
     {
         var movieDTOs = await _moviesService.GetAll();
+        return Ok(movieDTOs);
+    }
+
+    [HttpGet]
+    [Route("page")]
+    public async Task<ActionResult<List<MovieDto>>> GetMoviesPaging([FromQuery] MovieParameters movieParameters)
+    {
+        var movieDTOs = await _moviesService.GetWithPaging(movieParameters);
         return Ok(movieDTOs);
     }
 
@@ -81,6 +89,7 @@ public class MoviesController : Controller
     // }
 
     [HttpPut]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<ActionResult> PutMovie([FromHeader] Guid id, [FromBody] MovieDto movie)
     {       
         if (movie is null)
@@ -114,16 +123,11 @@ public class MoviesController : Controller
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<ActionResult> CreateMovie(MovieDto movie)
     {
-        if (movie is null)
-        {
-            return BadRequest();
-        }
-        
-        var createdEntity = await _moviesService.CreateMovie(movie);
-        var location = Url.Action("Post", new { id = createdEntity.Id });
-        return Created(location, createdEntity);
+        var createdEntity = await _moviesService.CreateMovie(movie);   
+        return CreatedAtRoute("CompanyById", new { id = createdEntity.Id }, createdEntity);
     }
 
 }

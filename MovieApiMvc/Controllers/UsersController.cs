@@ -112,6 +112,15 @@ public class UsersController : Controller
         }
     }
 
+    // [HttpGet]
+    // [Route("testAuth")]
+    // [Authorize]
+    // public async Task<IActionResult> testAuth()
+    // {
+    //     User.AddIdentity
+    //     return Ok();
+    // }
+
     [HttpPost]
     [Route("addToWatchList")]
     [Authorize]

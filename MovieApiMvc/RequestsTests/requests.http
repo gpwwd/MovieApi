@@ -2,6 +2,10 @@ GET http://localhost:5128/api/movies
 
 ###
 
+GET http://localhost:5128/api/movies/page?pageNumber = 2&pageSize = 20
+
+###
+
 GET http://localhost:5128/api/movies/46F95B7C-CC87-4FB0-8C92-0D49FF931115
 
 ###
@@ -39,8 +43,13 @@ POST http://localhost:5128/api/movies
 Content-Type: application/json
 
 {
-  "Name": "New6 Movie Title",
-  "Rate": 8.1
+  "name": null,
+  "RatingKp": 8.018,
+  "RatingFilmCritics": 8.018,
+  "type": "movie",
+  "year": 2002,
+  "alternativeName": "fgbjkl",
+  "top250": 122
 }
 
 ###

@@ -1,12 +1,13 @@
 using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.Dtos;
+using RequestFeatures;
 
 namespace MovieApiMvc.Services.Interfaces
 {
     public interface IMoviesService
     {
         public Task<List<MovieDto>> GetAll();
-
+        public Task<List<MovieDto>> GetWithPaging(MovieParameters movieParams);
         public Task<List<MovieDto>> GetAllWithImages();
         public Task<MovieDto> GetById(Guid id);
         

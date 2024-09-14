@@ -72,6 +72,10 @@ public class UsersService : IUsersService
         }
 
         var token = _jwtProvider.GenerateToken(userDto, userEntity.Id);
+        // If the identifier and secret are valid, the app can set the principal for the
+        // current request, but it also needs a way of storing these details for
+        // subsequent requests. For traditional web apps, this is typically achieved
+        // by storing an encrypted version of the user principal in a cookie.
         return token;
     }   
     

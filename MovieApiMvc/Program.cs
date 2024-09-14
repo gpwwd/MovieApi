@@ -5,12 +5,7 @@ using MovieApiMvc.Middleware;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services;
 using MovieApiMvc.Extensions;
-using ExternalAPIServiceSpace;
-using MovieApiMvc.ExternalApi;
-using Newtonsoft.Json;
-using MovieApiMvc.ErrorHandling;
-using System.Linq.Expressions;
-using MovieApiMvc.FillingBD;
+using Filters;
 
 public class Program
 {
@@ -31,7 +26,7 @@ public class Program
                     });
             });
         // Add services to the container.
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<MoviesRepository>();
         builder.Services.AddScoped<UsersRepository>();
@@ -41,6 +36,8 @@ public class Program
 
         builder.Services.AddScoped<IMoviesService, MoviesService>();
         builder.Services.AddScoped<IUsersService, UsersService>();
+
+        builder.Services.AddScoped<ValidationFilterAttribute>();
 
         builder.Services.AddDbContext<MovieDataBaseContext>(
             opt =>
