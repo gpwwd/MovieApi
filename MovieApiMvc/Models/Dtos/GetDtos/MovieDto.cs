@@ -4,13 +4,10 @@ namespace MovieApiMvc.Models.Dtos.GetDtos
     {
         public required string Name { get; set; }
         public string? AlternativeName { get; set; } = string.Empty;
-        public double? RatingKp { get; set; }
-        public double? RatingImdb { get; set; }
-        public double? RatingFilmCritics { get; set; }
+        public RatingDto Rating { get; set; } = new RatingDto();
         public required string Type { get; set; }
         public required int Year { get; set; }
-        public double? BudgetValue { get; set; }
-        public string? BudgetCurrency { get; set; } = string.Empty;
+        public BudgetDto Budget { get; set; } = new BudgetDto();
         public int MovieLength { get; set; }
         public List<string>? Genres { get; set; } = new List<string>();
         public List<string>? Countries { get; set; } = new List<string>();

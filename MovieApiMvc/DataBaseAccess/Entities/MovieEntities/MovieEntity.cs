@@ -11,7 +11,6 @@ namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities
         public string? AlternativeName { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
         public int Year { get; set; }
-        //один к одному
         public RatingEntity Rating { get; set; } = new RatingEntity();
         //один к одному
         public BudgetEntity? Budget { get; set; }
@@ -22,7 +21,7 @@ namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities
         public bool IsSeries { get; set; }
         public List<UserEntity>? FavMovieUsers { get; set; }
         public List<UserEntity>? WatchLaterUsers { get; set; }
-        public ImageInfoEntity ImageInfoEntity { get; set; } = new ImageInfoEntity();
+        public ImageInfoEntity ImageInfoEntity  { get; set; } = new ImageInfoEntity();
         public string? Description { get; set; } = string.Empty;
         public string? ShortDescription { get; set; } = string.Empty;
     }

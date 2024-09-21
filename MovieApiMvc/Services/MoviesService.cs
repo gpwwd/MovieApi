@@ -1,3 +1,4 @@
+using AutoMapper;
 using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.Services.Interfaces;
@@ -13,41 +14,31 @@ namespace MovieApiMvc.Services;
 public class MoviesService : IMoviesService
 {
     private readonly MoviesRepository _moviesRepository;
-    public MoviesService(MoviesRepository courseRepository)
+    private readonly IMapper _mapper;
+    public MoviesService(MoviesRepository courseRepository, IMapper mapper)
     {
         _moviesRepository = courseRepository;
+        _mapper = mapper;
     }
 
     public async Task<List<MovieDto>> GetAll()
     {
         var movies = await _moviesRepository.GetAll();
-        List<MovieDto> moviesDto = new List<MovieDto>();
-        foreach(var movie in movies)
-        {
-            moviesDto.Add(EntityToDto.CreateMovieDtoFromEntity(movie));
-        }
+        List<MovieDto> moviesDto = _mapper.Map<List<MovieDto>>(movies);
         return moviesDto;
     }
 
     public async Task<List<MovieDto>> GetWithPaging(MovieParameters movieParams)
     {
         var movies = await _moviesRepository.GetWithPaging(movieParams);
-        List<MovieDto> moviesDto = new List<MovieDto>();
-        foreach(var movie in movies)
-        {
-            moviesDto.Add(EntityToDto.CreateMovieDtoFromEntity(movie));
-        }
+        List<MovieDto> moviesDto = _mapper.Map<List<MovieDto>>(movies);
         return moviesDto;
     }
 
     public async Task<List<MovieDto>> GetAllWithImages()
     {
         var movies = await _moviesRepository.GetAllWithImages();
-        List<MovieDto> moviesDto = new List<MovieDto>();
-        foreach(var movie in movies)
-        {
-            moviesDto.Add(EntityToDto.CreateMovieDtoFromEntity(movie));
-        }
+        List<MovieDto> moviesDto = _mapper.Map<List<MovieDto>>(movies);
         return moviesDto;
     }
     
@@ -56,6 +47,7 @@ public class MoviesService : IMoviesService
         var movie = await _moviesRepository.GetById(id);
         if (movie is null)
             throw new MovieNotFoundException(id);
+        return _mapper.Map<MovieDto>(movie);
         return EntityToDto.CreateMovieDtoFromEntity(movie);//use mapper later
     }
 
@@ -66,9 +58,9 @@ public class MoviesService : IMoviesService
             type: movieDto.Type,
             year: movieDto.Year,
             rating: Rating.Create(movieId: id,
-                                    kp: movieDto.RatingKp,
-                                    imdb: movieDto.RatingImdb,
-                                    filmCritics: movieDto.RatingFilmCritics
+                                    kp: movieDto.Rating.Kp,
+                                    imdb: movieDto.Rating.Imdb,
+                                    filmCritics: movieDto.Rating.FilmCritics
                                 ),
             alternativeName: movieDto.AlternativeName,
             top250: movieDto.Top250

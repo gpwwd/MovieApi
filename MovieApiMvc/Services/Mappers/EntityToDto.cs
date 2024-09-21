@@ -13,13 +13,22 @@ public class EntityToDto
         {
             Name = movieEntity.Name,
             AlternativeName = movieEntity.AlternativeName,
-            RatingKp = movieEntity.Rating.Kp,
-            RatingImdb = movieEntity.Rating.Imdb,
-            RatingFilmCritics = movieEntity.Rating.FilmCritics,
+            Rating = new RatingDto
+                {
+                    FilmCritics = movieEntity.Rating.FilmCritics,
+                    Imdb = movieEntity.Rating.Imdb,
+                    Kp = movieEntity.Rating.Kp,
+                    Id = movieEntity.Rating.Id,
+                },
             Type = movieEntity.Type,
             Year = movieEntity.Year,
-            BudgetValue = movieEntity.Budget?.Value ?? null,
-            BudgetCurrency = movieEntity.Budget?.Currency ?? null,
+            Budget = new BudgetDto
+                {
+                    Currency = movieEntity.Budget.Currency,
+                    Id = movieEntity.Budget.Id,
+                    MovieId =  movieEntity.Budget.MovieId,
+                    Value = movieEntity.Budget.Value,
+                },
             MovieLength = movieEntity.MovieLength,
             Id = movieEntity.Id,
             IsSeries = movieEntity.IsSeries,

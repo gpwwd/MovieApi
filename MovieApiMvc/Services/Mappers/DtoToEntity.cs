@@ -16,14 +16,14 @@ public class DtoToEntity
             Name = movie.Name,
             Rating = new RatingEntity
             {
-                Kp = movie.RatingKp,
-                Imdb = movie.RatingImdb,
-                FilmCritics = movie.RatingFilmCritics
+                Kp = movie.Rating.Kp,
+                Imdb = movie.Rating.Imdb,
+                FilmCritics = movie.Rating.FilmCritics,
             },
             Budget = new BudgetEntity
             {
-                Currency = movie.BudgetCurrency,
-                Value = movie.BudgetValue ?? -1,
+                Currency = movie.Budget.Currency,
+                Value = movie.Budget.Value,
             },
             AlternativeName = movie.AlternativeName,
             Type = movie.Type,
@@ -47,7 +47,7 @@ public class DtoToEntity
             {
                 Id = Guid.NewGuid(),
                 MovieId = newId,
-                Kp = movie.RatingKp
+                Kp = movie.Rating.Kp
             }
         };
         return movieEntity;
