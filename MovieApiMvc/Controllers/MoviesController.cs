@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Services.Interfaces;
-using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Filters;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Controllers;
@@ -50,21 +50,8 @@ public class MoviesController : Controller
     [HttpGet("{id:guid}/images")]
     public async Task<ActionResult<ImageInfoDto>> GetMoviePoster(Guid id)
     {
-
-        try
-        {
-            var imageInfoDto = await _moviesService.GetImageById(id);
-            if(imageInfoDto is null)
-            {
-                return new NotFoundResult();
-            }
-            return imageInfoDto;
-        }
-        catch(EntityNotFoundException)
-        {
-            return new NotFoundResult();
-        }
-    
+        var imageInfoDto = await _moviesService.GetImageById(id);
+        return imageInfoDto;
     }
     // it else can be done like
     // [Produces(typeof(Employee))]
@@ -75,21 +62,10 @@ public class MoviesController : Controller
     // }
 
     [HttpPut]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    //  чо это [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<ActionResult> PutMovie([FromHeader] Guid id, [FromBody] MovieDto movie)
     {       
-        if (movie is null)
-        {
-            return new BadRequestResult();
-        }
-        try
-        {
-            await _moviesService.PutMovie(id, movie);
-        }
-        catch(ArgumentException)
-        {
-            return new BadRequestResult();
-        }
+        await _moviesService.PutMovie(id, movie);
         return Ok(id);
     } 
     

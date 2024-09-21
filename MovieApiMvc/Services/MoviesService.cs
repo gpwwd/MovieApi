@@ -5,6 +5,7 @@ using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.Models.DomainModels;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Services;
@@ -104,7 +105,7 @@ public class MoviesService : IMoviesService
         }
         if(movie.ImageInfoEntity is null)
         {
-            throw new EntityNotFoundException(404, "Not Found Image For Existing Movie");
+            throw new ImageNotFoundException(id);
         }
 
         var imageInfoEntity = movie.ImageInfoEntity;

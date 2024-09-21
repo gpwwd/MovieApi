@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Services.Interfaces;
 
 namespace MovieApiMvc.Controllers;
@@ -147,7 +148,7 @@ public class UsersController : Controller
         {
             addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieGuids); 
         }
-        catch(EntityNotFoundException ex)
+        catch(NotFoundException ex)
         {   
             Console.WriteLine(ex.Message);
             return NotFound();
@@ -185,7 +186,7 @@ public class UsersController : Controller
             await _userService.RemoveWatchLaterUser(userId, movieIdGuid);
             return new NoContentResult();
         }
-        catch (EntityNotFoundException ex)
+        catch (NotFoundException ex)
         {
             Console.WriteLine(ex.Message);
             return NotFound(ex.Message);
@@ -214,7 +215,7 @@ public class UsersController : Controller
             var watchLaterMovies = await _userService.GetWatchLaterMovies(userId);
             return Ok(watchLaterMovies);
         }
-        catch(EntityNotFoundException ex)
+        catch(NotFoundException ex)
         {
             Console.WriteLine(ex.Message);
             return NotFound();

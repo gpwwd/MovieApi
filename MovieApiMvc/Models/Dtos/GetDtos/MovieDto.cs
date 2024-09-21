@@ -1,4 +1,4 @@
-namespace MovieApiMvc.Models.Dtos
+namespace MovieApiMvc.Models.Dtos.GetDtos
 {
     public class MovieDto
     {

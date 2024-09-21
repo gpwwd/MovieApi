@@ -77,7 +77,7 @@ public class MoviesRepository
 
         if(movieEntity is null)
         {
-            throw new EntityNotFoundException(404, "Movie to update not found");
+            throw new MovieNotFoundException(movie.Id);
         }
 
         movieEntity.Name = movie.Name;
@@ -85,10 +85,10 @@ public class MoviesRepository
         movieEntity.Type = movie.Type;
         movieEntity.Year = movie.Year;
         //to solve proplem with overwriting id
-        movieEntity.Rating.imdb = movie.Rating.imdb;
-        movieEntity.Rating.kp = movie.Rating.kp;
-        movieEntity.Rating.russianFilmCritics = movie.Rating.russianFilmCritics;
-        movieEntity.Rating.filmCritics = movie.Rating.filmCritics;
+        movieEntity.Rating.Imdb = movie.Rating.Imdb;
+        movieEntity.Rating.Kp = movie.Rating.Kp;
+        movieEntity.Rating.RussianFilmCritics = movie.Rating.RussianFilmCritics;
+        movieEntity.Rating.FilmCritics = movie.Rating.FilmCritics;
         movieEntity.MovieLength = movie.MovieLength;
         movieEntity.Genres = movie.Genres;
         movieEntity.Countries = movie.Countries;
@@ -119,7 +119,7 @@ public class MoviesRepository
 
         if(movie is null)
         {
-            throw new EntityNotFoundException(401, "No movie with this name");
+            throw new MovieNotFoundException(movie.Id);
         }
 
         return movie.Id;

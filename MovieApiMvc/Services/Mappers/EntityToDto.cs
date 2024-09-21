@@ -1,6 +1,7 @@
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
@@ -12,9 +13,9 @@ public class EntityToDto
         {
             Name = movieEntity.Name,
             AlternativeName = movieEntity.AlternativeName,
-            RatingKp = movieEntity.Rating.kp,
-            RatingImdb = movieEntity.Rating.imdb,
-            RatingFilmCritics = movieEntity.Rating.filmCritics,
+            RatingKp = movieEntity.Rating.Kp,
+            RatingImdb = movieEntity.Rating.Imdb,
+            RatingFilmCritics = movieEntity.Rating.FilmCritics,
             Type = movieEntity.Type,
             Year = movieEntity.Year,
             BudgetValue = movieEntity.Budget?.Value ?? null,

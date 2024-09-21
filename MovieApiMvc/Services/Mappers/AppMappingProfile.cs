@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using MovieApiMvc.Models.Dtos;
-using MovieApiMvc.DataBaseAccess.Entities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
-public class AppMappingProfile : Profile
+public class ApplicationMapperProfile : Profile
 {
-    public AppMappingProfile()
-    {			
-        //CreateMap<Person, Student>();
+    public ApplicationMapperProfile()
+    {
+        CreateMap<MovieDto, MovieEntity>();
     }
 }

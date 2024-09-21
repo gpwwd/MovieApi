@@ -26,10 +26,10 @@ namespace MovieApiMvc.Services.Mappers
                 Rating = movie.Rating != null ? new RatingEntity
                 {
                     Id = movie.Rating.Id,
-                    kp = movie.Rating.Kp,
-                    imdb = movie.Rating.Imdb,
-                    filmCritics = movie.Rating.FilmCritics,
-                    russianFilmCritics = movie.Rating.RussianFilmCritics,
+                    Kp = movie.Rating.Kp,
+                    Imdb = movie.Rating.Imdb,
+                    FilmCritics = movie.Rating.FilmCritics,
+                    RussianFilmCritics = movie.Rating.RussianFilmCritics,
                     MovieId = movie.Id
                 } : null,
                 MovieLength = movie.MovieLength,

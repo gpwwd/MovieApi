@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using MovieApiMvc.ErrorHandling;
-using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 
@@ -83,7 +81,7 @@ public class UsersRepository
 
         if (existingUser == null)
         {
-            throw new EntityNotFoundException(404, "User not found");
+            throw new UserNotFoundException(updatedUser.Id);
         }
 
         existingUser.UserName = updatedUser.UserName;
@@ -102,7 +100,7 @@ public class UsersRepository
 
         if (existingUser == null)
         {
-            throw new EntityNotFoundException(404, "User not found");
+            throw new UserNotFoundException(userId);
         }
     
         existingUser.WatchLaterMovies.AddRange(moviesAdded);
@@ -124,14 +122,14 @@ public class UsersRepository
 
         if (existingUser == null)
         {
-            throw new EntityNotFoundException(404, "User not found");
+            throw new UserNotFoundException(userId);
         }
 
         var movie = existingUser.WatchLaterMovies?.FirstOrDefault(m => m.Id == movieId);
 
         if (movie == null)
         {
-            throw new EntityNotFoundException(404, "Movie not found");
+            throw new MovieNotFoundException(movieId);
         }
 
         existingUser.WatchLaterMovies.Remove(movie);

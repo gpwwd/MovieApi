@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Services.Interfaces;
 
 namespace MovieApiMvc.Services;

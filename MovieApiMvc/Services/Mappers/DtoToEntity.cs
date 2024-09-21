@@ -2,6 +2,7 @@ using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
@@ -15,9 +16,9 @@ public class DtoToEntity
             Name = movie.Name,
             Rating = new RatingEntity
             {
-                kp = movie.RatingKp,
-                imdb = movie.RatingImdb,
-                filmCritics = movie.RatingFilmCritics
+                Kp = movie.RatingKp,
+                Imdb = movie.RatingImdb,
+                FilmCritics = movie.RatingFilmCritics
             },
             Budget = new BudgetEntity
             {
@@ -46,7 +47,7 @@ public class DtoToEntity
             {
                 Id = Guid.NewGuid(),
                 MovieId = newId,
-                kp = movie.RatingKp
+                Kp = movie.RatingKp
             }
         };
         return movieEntity;

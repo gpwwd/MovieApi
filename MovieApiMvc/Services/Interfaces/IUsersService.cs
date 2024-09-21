@@ -1,6 +1,7 @@
 using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services.Interfaces;
 

@@ -6,12 +6,14 @@ using MovieApiMvc.Filters;
 using MovieApiMvc.Middleware;
 using MovieApiMvc.Services;
 using MovieApiMvc.Services.Interfaces;
+using MovieApiMvc.Services.Mappers;
+using AutoMapper;
 
 namespace MovieApiMvc;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
 
         var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,8 @@ public class Program
                 });
         });
         // Add services to the container.
+        builder.Services.AddAutoMapper(typeof(ApplicationMapperProfile));
+        
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<MoviesRepository>();

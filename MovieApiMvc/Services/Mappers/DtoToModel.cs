@@ -1,5 +1,6 @@
 using MovieApiMvc.Models.DomainModels;
 using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services.Mappers
 {

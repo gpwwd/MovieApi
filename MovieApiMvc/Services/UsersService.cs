@@ -1,13 +1,11 @@
-using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services;
 
@@ -85,7 +83,7 @@ public class UsersService : IUsersService
 
         if(userEntity is null)
         {
-            throw new EntityNotFoundException(404, "Not Found");
+            throw new UserNotFoundException(user.Id);
         }
 
         await _usersRepository.Update(userEntity);
@@ -102,7 +100,7 @@ public class UsersService : IUsersService
 
         if(user is null)
         {
-            throw new EntityNotFoundException(404, "Not Found");
+            throw new UserNotFoundException(userId);
         }
 
         List<Guid> moviesAddedIds = new List<Guid>();
@@ -141,7 +139,7 @@ public class UsersService : IUsersService
         
         if(user is null)
         {
-            throw new EntityNotFoundException(404, "Not Found");
+            throw new UserNotFoundException(userId);
         }
 
         List<MovieDto> movieDtos = new List<MovieDto>();
