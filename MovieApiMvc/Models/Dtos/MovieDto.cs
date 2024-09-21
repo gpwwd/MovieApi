@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Routing.Patterns;
-
-namespace MovieApiMvc.Dtos
+namespace MovieApiMvc.Models.Dtos
 {
     public class MovieDto
     {
@@ -11,19 +9,16 @@ namespace MovieApiMvc.Dtos
         public double? RatingFilmCritics { get; set; }
         public required string Type { get; set; }
         public required int Year { get; set; }
-        public double? BudgetValue { get; set; } = default;
+        public double? BudgetValue { get; set; }
         public string? BudgetCurrency { get; set; } = string.Empty;
-        public int MovieLength { get; set; } = default;
+        public int MovieLength { get; set; }
         public List<string>? Genres { get; set; } = new List<string>();
-        public List<string>? Countries { get; set; }= new List<string>();
-        public int Top250 { get; set; } = default;
-        public bool IsSeries { get; set; } = default;
-        public ImageInfoDto? ImageInfo { get; set; } = default;
+        public List<string>? Countries { get; set; } = new List<string>();
+        public int Top250 { get; set; }
+        public bool IsSeries { get; set; }
+        public ImageInfoDto? ImageInfo { get; set; }
         public Guid Id { get; set; }
         public string? Description { get; set; }
         public string? ShortDescription { get; set; }
-        public MovieDto()
-        {
-        }
     }
 }

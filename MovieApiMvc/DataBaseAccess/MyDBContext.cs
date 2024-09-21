@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Configurations;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 
-namespace MovieApiMvc.DataBaseAccess.Context;
+namespace MovieApiMvc.DataBaseAccess;
 public class MovieDataBaseContext : DbContext
 {
     public MovieDataBaseContext(DbContextOptions<MovieDataBaseContext> options) : base(options)

@@ -1,5 +1,6 @@
 using MovieApiMvc.DataBaseAccess.Entities;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 using MovieApiMvc.Models.DomainModels;
 
 namespace MovieApiMvc.Services.Mappers

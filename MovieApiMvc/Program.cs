@@ -1,30 +1,31 @@
 using Microsoft.EntityFrameworkCore;
-using MovieApiMvc.DataBaseAccess.Context;
+using MovieApiMvc.DataBaseAccess;
 using MovieApiMvc.DataBaseAccess.Repositories;
-using MovieApiMvc.Middleware;
-using MovieApiMvc.Services.Interfaces;
-using MovieApiMvc.Services;
 using MovieApiMvc.Extensions;
-using Filters;
+using MovieApiMvc.Filters;
+using MovieApiMvc.Middleware;
+using MovieApiMvc.Services;
+using MovieApiMvc.Services.Interfaces;
+
+namespace MovieApiMvc;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
-        
 
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
-            });
+        {
+            options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+        });
         // Add services to the container.
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
@@ -69,4 +70,3 @@ public class Program
 
 
 }
-

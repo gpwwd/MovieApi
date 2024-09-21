@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using MovieApiMvc.DataBaseAccess.Entities;
-using MovieApiMvc.DataBaseAccess.Context;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.ExternalApi;
-using RequestFeatures;
+using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
 
@@ -46,7 +45,7 @@ public class MoviesRepository
             .Include(m => m.Budget)
             .Include(m => m.Genres)
             .Include(m => m.Countries)
-            .Include(m => m.imageInfoEntity)
+            .Include(m => m.ImageInfoEntity)
             .ToListAsync();
     }
     public async Task<MovieEntity?> GetById(Guid id){
@@ -56,7 +55,7 @@ public class MoviesRepository
             .Include(m => m.Budget)
             .Include(m => m.Genres)
             .Include(m => m.Countries)
-            .Include(m => m.imageInfoEntity)
+            .Include(m => m.ImageInfoEntity)
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 
@@ -73,7 +72,7 @@ public class MoviesRepository
                                         .Include(m => m.Budget)
                                         .Include(m => m.Countries)
                                         .Include(m => m.Genres)
-                                        .Include(m => m.imageInfoEntity)
+                                        .Include(m => m.ImageInfoEntity)
                                         .FirstOrDefaultAsync(m => m.Id == movie.Id);
 
         if(movieEntity is null)
@@ -128,7 +127,7 @@ public class MoviesRepository
 
     public async Task PutPoster(Guid? id, ImageInfo image)
     {
-        var movieEntity = await _dbContext.Movies.Include(m => m.imageInfoEntity)
+        var movieEntity = await _dbContext.Movies.Include(m => m.ImageInfoEntity)
                                         .FirstOrDefaultAsync(m => m.Id == id);
 
         if (movieEntity == null)
@@ -136,7 +135,7 @@ public class MoviesRepository
             throw new Exception("Movie not found");
         }
 
-        if (movieEntity.imageInfoEntity == null)
+        if (movieEntity.ImageInfoEntity == null)
         {   
             try
             {
@@ -158,9 +157,9 @@ public class MoviesRepository
         else
         {
             // Обновляем существующие значения
-            movieEntity.imageInfoEntity.Urls = image.Urls;
-            movieEntity.imageInfoEntity.PreviewUrls = image.PreviewUrls;
-            _dbContext.Images.Update(movieEntity.imageInfoEntity);
+            movieEntity.ImageInfoEntity.Urls = image.Urls;
+            movieEntity.ImageInfoEntity.PreviewUrls = image.PreviewUrls;
+            _dbContext.Images.Update(movieEntity.ImageInfoEntity);
         }
 
         await _dbContext.SaveChangesAsync();

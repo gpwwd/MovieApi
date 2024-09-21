@@ -1,4 +1,4 @@
-namespace RequestFeatures;
+namespace MovieApiMvc.RequestFeatures;
 
 public abstract class RequestParameters
 {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace MovieApiMvc.DataBaseAccess.Entities
+namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities
 {
     public class BudgetEntity
     {

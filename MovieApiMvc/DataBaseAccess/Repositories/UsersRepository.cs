@@ -1,9 +1,9 @@
-using MovieApiMvc.DataBaseAccess.Context;
 using Microsoft.EntityFrameworkCore;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 using Microsoft.AspNetCore.Mvc;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.DataBaseAccess.Entities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
 
@@ -50,7 +50,7 @@ public class UsersRepository
             .Include(u => u.WatchLaterMovies)
                 .ThenInclude(m => m.Budget)
             .Include(u => u.WatchLaterMovies)
-                .ThenInclude(m => m.imageInfoEntity)
+                .ThenInclude(m => m.ImageInfoEntity)
             .Include(u => u.FavMovies)
             .FirstOrDefaultAsync(u => u.Id == id);
     }

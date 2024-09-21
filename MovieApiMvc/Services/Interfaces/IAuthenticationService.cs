@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using MovieApiMvc.Dtos;
+using MovieApiMvc.Models.Dtos;
 
 namespace MovieApiMvc.Services.Interfaces;
 public interface IAuthenticationService

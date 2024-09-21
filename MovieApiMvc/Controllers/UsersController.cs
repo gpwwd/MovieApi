@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieApiMvc.Dtos;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Services.Interfaces;

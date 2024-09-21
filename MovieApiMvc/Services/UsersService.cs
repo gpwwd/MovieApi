@@ -1,13 +1,13 @@
 using MovieApiMvc.DataBaseAccess.Entities;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 using MovieApiMvc.DataBaseAccess.Repositories;
-using MovieApiMvc.Dtos;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 
 namespace MovieApiMvc.Services;
 

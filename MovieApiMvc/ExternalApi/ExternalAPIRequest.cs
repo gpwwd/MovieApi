@@ -1,8 +1,4 @@
-using System.Net.Http.Headers;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json.Linq;
-
-namespace ExternalAPIServiceSpace;
+namespace MovieApiMvc.ExternalApi;
 
 public static class ExternalAPIService{
     public static async Task<string> GetData(){

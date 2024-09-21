@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using MovieApiMvc.Dtos;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.ErrorHandling;
-using RequestFeatures;
-using Filters;
+using MovieApiMvc.Filters;
+using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Controllers;
 
@@ -43,22 +43,8 @@ public class MoviesController : Controller
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<MovieDto>> GetMovie(Guid id)
     {
-        //HttpResponse response = HttpContext.Response;
-        
-        try
-        {
-            var movieDTO = await _moviesService.GetById(id);
-            if(movieDTO is null)
-            {
-                return new NotFoundResult();
-            }
-            return movieDTO;
-        }
-        catch(EntityNotFoundException)
-        {
-            return new NotFoundResult();
-        }
-    
+        var movieDTO = await _moviesService.GetById(id);
+        return movieDTO;
     }
 
     [HttpGet("{id:guid}/images")]
@@ -80,7 +66,7 @@ public class MoviesController : Controller
         }
     
     }
-    // it alse can be done like
+    // it else can be done like
     // [Produces(typeof(Employee))]
     // public IActionResult Get(long id)
     // {
@@ -100,7 +86,7 @@ public class MoviesController : Controller
         {
             await _moviesService.PutMovie(id, movie);
         }
-        catch(ArgumentException ex)
+        catch(ArgumentException)
         {
             return new BadRequestResult();
         }

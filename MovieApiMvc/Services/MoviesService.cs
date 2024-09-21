@@ -1,11 +1,11 @@
-using MovieApiMvc.Dtos;
 using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.Services.Interfaces;
-using MovieApiMvc.DataBaseAccess.Entities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.Models.DomainModels;
 using MovieApiMvc.ErrorHandling;
-using RequestFeatures;
+using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Services;
 
@@ -53,13 +53,9 @@ public class MoviesService : IMoviesService
     public async Task<MovieDto> GetById(Guid id)
     {
         var movie = await _moviesRepository.GetById(id);
-
-        if(movie is null )
-        {
-            throw new EntityNotFoundException(404, "Not Found");
-        }
-
-        return EntityToDto.CreateMovieDtoFromEntity(movie);
+        if (movie is null)
+            throw new MovieNotFoundException(id);
+        return EntityToDto.CreateMovieDtoFromEntity(movie);//use mapper later
     }
 
     public async Task PutMovie(Guid id, MovieDto movieDto)
@@ -104,14 +100,14 @@ public class MoviesService : IMoviesService
 
         if(movie is null )
         {
-            throw new EntityNotFoundException(404, "Not Found");
+            throw new MovieNotFoundException(id);
         }
-        if(movie.imageInfoEntity is null)
+        if(movie.ImageInfoEntity is null)
         {
             throw new EntityNotFoundException(404, "Not Found Image For Existing Movie");
         }
 
-        var imageInfoEntity = movie.imageInfoEntity;
+        var imageInfoEntity = movie.ImageInfoEntity;
 
         return new ImageInfoDto
         {

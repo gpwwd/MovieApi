@@ -1,6 +1,6 @@
-using MovieApiMvc.DataBaseAccess.Entities;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
-using MovieApiMvc.Dtos; 
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
+using MovieApiMvc.Models.Dtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
@@ -12,9 +12,9 @@ public class EntityToDto
         {
             Name = movieEntity.Name,
             AlternativeName = movieEntity.AlternativeName,
-            RatingKp = movieEntity.Rating?.kp,
-            RatingImdb = movieEntity.Rating?.imdb,
-            RatingFilmCritics = movieEntity.Rating?.filmCritics,
+            RatingKp = movieEntity.Rating.kp,
+            RatingImdb = movieEntity.Rating.imdb,
+            RatingFilmCritics = movieEntity.Rating.filmCritics,
             Type = movieEntity.Type,
             Year = movieEntity.Year,
             BudgetValue = movieEntity.Budget?.Value ?? null,
@@ -27,10 +27,10 @@ public class EntityToDto
             Genres = movieEntity.Genres?.Select(c => c.Name).ToList() ?? null,
             ImageInfo = new ImageInfoDto
                         {
-                            Id = movieEntity.imageInfoEntity?.Id ?? null,
-                            MovieId = movieEntity.imageInfoEntity?.MovieId ?? movieEntity.Id,
-                            Urls = movieEntity.imageInfoEntity?.Urls ?? null,
-                            PreviewUrls = movieEntity.imageInfoEntity?.PreviewUrls ?? null,
+                            Id = movieEntity.ImageInfoEntity.Id,
+                            MovieId = movieEntity.ImageInfoEntity.MovieId,
+                            Urls = movieEntity.ImageInfoEntity?.Urls ?? null,
+                            PreviewUrls = movieEntity.ImageInfoEntity?.PreviewUrls ?? null,
                         },
             Description = movieEntity.Description,
             ShortDescription = movieEntity.ShortDescription

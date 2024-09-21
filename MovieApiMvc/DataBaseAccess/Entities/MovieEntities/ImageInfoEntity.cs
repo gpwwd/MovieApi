@@ -1,4 +1,4 @@
-namespace MovieApiMvc.DataBaseAccess.Entities
+namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities
 {
     public class ImageInfoEntity
     {

@@ -1,4 +1,4 @@
-using MovieApiMvc.DataBaseAccess.Context;
+using MovieApiMvc.DataBaseAccess;
 using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.ExternalApi;
