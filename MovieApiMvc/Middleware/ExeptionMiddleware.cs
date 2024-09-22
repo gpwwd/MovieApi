@@ -31,12 +31,12 @@ public class ExceptionMiddleware
     { 
         //More log stuff        
 
-        ExceptionResponse response = exception switch
+        ExceptionResponseDevelopment response = exception switch
         {
-            ApplicationException => new ExceptionResponse(HttpStatusCode.BadRequest, "Application exception occurred."),
-            NotFoundException => new ExceptionResponse(HttpStatusCode.NotFound, exception.Message),
-            UnauthorizedAccessException => new ExceptionResponse(HttpStatusCode.Unauthorized, "Unauthorized."),
-            _ => new ExceptionResponse(HttpStatusCode.InternalServerError, "Internal server error. Please retry later.")
+            ApplicationException => new ExceptionResponseDevelopment(HttpStatusCode.BadRequest, "Application exception occurred.", exception.StackTrace),
+            NotFoundException => new ExceptionResponseDevelopment(HttpStatusCode.NotFound, exception.Message, exception.StackTrace),
+            UnauthorizedAccessException => new ExceptionResponseDevelopment(HttpStatusCode.Unauthorized, "Unauthorized.", exception.StackTrace),
+            _ => new ExceptionResponseDevelopment(HttpStatusCode.InternalServerError, exception.Message, exception.StackTrace)
         };
         
         context.Response.ContentType = "application/json";

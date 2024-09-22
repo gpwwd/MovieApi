@@ -34,14 +34,15 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<MoviesRepository>();
-        builder.Services.AddScoped<UsersRepositoryEx>();
+        builder.Services.AddScoped<UsersRepository>();
 
         builder.Services.AddScoped<IJwtProvider, JwtProvider>();
         builder.Services.AddJWTTokenAuthenfication(builder.Configuration);
 
         builder.Services.AddScoped<IMoviesService, MoviesService>();
         builder.Services.AddScoped<IUsersService, UsersService>();
-
+        builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+        
         builder.Services.AddScoped<ValidationFilterAttribute>();
 
         builder.Services.AddDbContext<MovieDataBaseContext>(
@@ -53,6 +54,8 @@ public class Program
         var app = builder.Build();  
 
         app.UseCors("AllowAll");
+        if(app.Environment.IsDevelopment()) 
+            app.UseDeveloperExceptionPage();
         app.UseMyExeptionHandling(builder.Environment);
 
         app.UseAuthentication();

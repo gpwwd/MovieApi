@@ -1,50 +1,47 @@
 using AutoMapper;
-using MovieApiMvc.DataBaseAccess.Repositories;
-using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
-using MovieApiMvc.Models.DomainModels;
 using MovieApiMvc.ErrorHandling;
-using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Services;
 
 public class MoviesService : IMoviesService
 {
-    private readonly MoviesRepository _moviesRepository;
+    private readonly IRepositoryManager _repository;
     private readonly IMapper _mapper;
-    public MoviesService(MoviesRepository courseRepository, IMapper mapper)
+    public MoviesService(IRepositoryManager courseRepository, IMapper mapper)
     {
-        _moviesRepository = courseRepository;
+        _repository = courseRepository;
         _mapper = mapper;
     }
 
     public async Task<List<MovieDto>> GetAll()
     {
-        var movies = await _moviesRepository.GetAll();
+        var movies = await _repository.MovieRepository.GetAll(false);
         List<MovieDto> moviesDto = _mapper.Map<List<MovieDto>>(movies);
         return moviesDto;
     }
 
     public async Task<List<MovieDto>> GetWithPaging(MovieParameters movieParams)
     {
-        var movies = await _moviesRepository.GetWithPaging(movieParams);
+        var movies = await _repository.MovieRepository.GetWithPaging(movieParams, false);
         List<MovieDto> moviesDto = _mapper.Map<List<MovieDto>>(movies);
         return moviesDto;
     }
 
     public async Task<List<MovieDto>> GetAllWithImages()
     {
-        var movies = await _moviesRepository.GetAllWithImages();
+        var movies = await _repository.MovieRepository.GetAllWithImages(false);
         List<MovieDto> moviesDto = _mapper.Map<List<MovieDto>>(movies);
         return moviesDto;
     }
     
     public async Task<MovieDto> GetById(Guid id)
     {
-        var movie = await _moviesRepository.GetById(id);
+        var movie = await _repository.MovieRepository.GetById(id, false);
         if (movie is null)
             throw new MovieNotFoundException(id);
         return _mapper.Map<MovieDto>(movie);
@@ -52,7 +49,7 @@ public class MoviesService : IMoviesService
 
     public async Task PutMovie(Guid id, MovieDto movieDto)
     {
-        var movieEntity = await _moviesRepository.GetById(id);
+        var movieEntity = await _repository.MovieRepository.GetById(id, true);
         if(movieEntity is null)
                 throw new MovieNotFoundException(id);
         _mapper.Map(movieDto, movieEntity);
@@ -63,41 +60,37 @@ public class MoviesService : IMoviesService
 
     public async Task DeleteMovie(Guid id)
     {
-        await _moviesRepository.Delete(id);
+        //await _repository.Delete(id);
     }
 
-    public async Task<MovieEntity> CreateMovie(MovieDto movieDto)
-    {
-        var movie = Movie.Create(
-            name: movieDto.Name,
-            type: movieDto.Type,
-            year: movieDto.Year
-        );
-        var movieEntity = ModelToEntity.CreateMovieEntityFromModel(movie);
-        await _moviesRepository.Add(movieEntity);
-        return movieEntity;
+    public async Task<MovieDto> CreateMovie(PostMovieDto movieDto, IEnumerable<Guid> genresId, 
+        IEnumerable<Guid> countriesId, Guid ratingId)
+    {   
+        var movieEntity = _mapper.Map<MovieEntity>(movieDto);
+        
+        _repository.MovieRepository.CreateMovie(movieEntity);
+        _repository.Save();
+        
+        var movieToReturn = _mapper.Map<MovieDto>(movieEntity);
+        return movieToReturn;
     }
 
     public async Task<ImageInfoDto> GetImageById(Guid id)
     {
-        var movie = await _moviesRepository.GetById(id);
-
-        if(movie is null )
-        {
-            throw new MovieNotFoundException(id);
-        }
-        if(movie.ImageInfoEntity is null)
-        {
-            throw new ImageNotFoundException(id);
-        }
-
-        var imageInfoEntity = movie.ImageInfoEntity;
+        // var movie = await _repository.GetById(id);
+        //
+        // if(movie is null )
+        // {
+        //     throw new MovieNotFoundException(id);
+        // }
+        // if(movie.ImageInfoEntity is null)
+        // {
+        //     throw new ImageNotFoundException(id);
+        // }
+        //
+        // var imageInfoEntity = movie.ImageInfoEntity;
 
         return new ImageInfoDto
-        {
-            Id = imageInfoEntity.Id,
-            Urls = imageInfoEntity.Urls,
-            PreviewUrls = imageInfoEntity.PreviewUrls
-        };
-    }
+        { };
+    }//move to another service and controller later
 }

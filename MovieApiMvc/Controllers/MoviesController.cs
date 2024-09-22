@@ -4,6 +4,7 @@ using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Filters;
 using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Controllers;
@@ -86,7 +87,7 @@ public class MoviesController : Controller
 
     [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<ActionResult> CreateMovie(MovieDto movie)
+    public async Task<ActionResult> CreateMovie(PostMovieDto movie)
     {
         var createdEntity = await _moviesService.CreateMovie(movie);   
         return CreatedAtRoute("CompanyById", new { id = createdEntity.Id }, createdEntity);

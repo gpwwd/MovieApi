@@ -11,19 +11,19 @@ namespace MovieApiMvc.Services;
 
 public class UsersService : IUsersService
 {
-    private readonly UsersRepositoryEx _usersRepositoryEx;
+    private readonly UsersRepository _usersRepository;
     private readonly MoviesRepository _moviesRepository;
     private readonly IJwtProvider _jwtProvider;
-    public UsersService(UsersRepositoryEx usersRepositoryEx, MoviesRepository moviesRepository, IJwtProvider jwtProvider)
+    public UsersService(UsersRepository usersRepository, MoviesRepository moviesRepository, IJwtProvider jwtProvider)
     {
-        _usersRepositoryEx = usersRepositoryEx;
+        _usersRepository = usersRepository;
         _moviesRepository = moviesRepository; 
         _jwtProvider = jwtProvider;
     }
 
     public async Task<List<UserDto>> GetAll()
     {
-        var users = await _usersRepositoryEx.GetAll();
+        var users = await _usersRepository.GetAll();
         List<UserDto> usersDto = new List<UserDto>();
         foreach(var user in users)
         {
@@ -33,13 +33,13 @@ public class UsersService : IUsersService
     }
     public async Task<UserDto> GetById(Guid id)
     {
-        var user = await _usersRepositoryEx.GetById(id);
+        var user = await _usersRepository.GetById(id);
         return EntityToDto.CreateUserDtoFromEntity(user);
     }
     public async Task<UserEntity> CreateUser(UserDto userDto)
     {
         var userEntity = DtoToEntity.CreateUserEntityFromDto(userDto, userDto.Password);
-        await _usersRepositoryEx.Add(userEntity);
+        await _usersRepository.Add(userEntity);
         return userEntity;
     }
 
@@ -49,13 +49,13 @@ public class UsersService : IUsersService
 
         var userEntity = DtoToEntity.CreateUserEntityFromDto(userDto, passwHash);
 
-        await _usersRepositoryEx.Add(userEntity);
+        await _usersRepository.Add(userEntity);
         return userEntity;
     }
 
     public async Task<string> Login(UserLoginDto userDto)
     {
-        var userEntity = await _usersRepositoryEx.GetByEmail(userDto.Email);
+        var userEntity = await _usersRepository.GetByEmail(userDto.Email);
 
         if(userEntity is null)
         {
@@ -79,24 +79,24 @@ public class UsersService : IUsersService
     
     public async Task UpdateUser(UserDto user)
     {
-        UserEntity? userEntity = await _usersRepositoryEx.GetById(user.Id);
+        UserEntity? userEntity = await _usersRepository.GetById(user.Id);
 
         if(userEntity is null)
         {
             throw new UserNotFoundException(user.Id);
         }
 
-        await _usersRepositoryEx.Update(userEntity);
+        await _usersRepository.Update(userEntity);
     }
 
     public async Task DeleteUser(Guid id)
     {
-        await _usersRepositoryEx.Delete(id);
+        await _usersRepository.Delete(id);
     }
 
     public async Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds)
     {   
-        var user = await _usersRepositoryEx.GetById(userId);
+        var user = await _usersRepository.GetById(userId);
 
         if(user is null)
         {
@@ -124,18 +124,18 @@ public class UsersService : IUsersService
             moviesAddedIds.Add(movieId);
         }
 
-        await _usersRepositoryEx.AddWatchLaterMovies(userId, moviesAdded);  
+        await _usersRepository.AddWatchLaterMovies(userId, moviesAdded);  
         return moviesAddedIds;
     }   
 
     public async Task RemoveWatchLaterUser(Guid userId, Guid movieId)
     {
-        await _usersRepositoryEx.DeleteWatchLaterMovie(userId, movieId);
+        await _usersRepository.DeleteWatchLaterMovie(userId, movieId);
     }
 
     public async Task<List<MovieDto>> GetWatchLaterMovies(Guid userId)
     {   
-        var user = await _usersRepositoryEx.GetById(userId);
+        var user = await _usersRepository.GetById(userId);
         
         if(user is null)
         {

@@ -5,10 +5,10 @@ using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
 
-public class UsersRepositoryEx
+public class UsersRepository
 {
     private readonly MovieDataBaseContext _dbContext;
-    public UsersRepositoryEx(MovieDataBaseContext dbContext)
+    public UsersRepository(MovieDataBaseContext dbContext)
     {
         _dbContext = dbContext;
     }

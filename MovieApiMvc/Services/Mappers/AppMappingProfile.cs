@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
@@ -29,5 +30,14 @@ public class ApplicationMapperProfile : Profile
             .ReverseMap();
         CreateMap<ImageInfoDto, ImageInfoEntity>()
             .ReverseMap();
+
+
+        CreateMap<PostMovieDto, MovieEntity>()
+            .ForMember(dest => dest.Countries, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.Genres, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.Rating, opt
+                => opt.Ignore());
     }
 }
