@@ -48,26 +48,17 @@ public class MoviesService : IMoviesService
         if (movie is null)
             throw new MovieNotFoundException(id);
         return _mapper.Map<MovieDto>(movie);
-        return EntityToDto.CreateMovieDtoFromEntity(movie);//use mapper later
     }
 
     public async Task PutMovie(Guid id, MovieDto movieDto)
     {
-        var movie = Movie.Create(
-            name: movieDto.Name,
-            type: movieDto.Type,
-            year: movieDto.Year,
-            rating: Rating.Create(movieId: id,
-                                    kp: movieDto.Rating.Kp,
-                                    imdb: movieDto.Rating.Imdb,
-                                    filmCritics: movieDto.Rating.FilmCritics
-                                ),
-            alternativeName: movieDto.AlternativeName,
-            top250: movieDto.Top250
-        );
-        var movieEntity = ModelToEntity.CreateMovieEntityFromModel(movie);
-        movieEntity.Id = id;
-        await _moviesRepository.Update(movieEntity);
+        var movieEntity = await _moviesRepository.GetById(id);
+        if(movieEntity is null)
+                throw new MovieNotFoundException(id);
+        _mapper.Map(movieDto, movieEntity);
+        Console.WriteLine(movieEntity.Genres[0].Name);
+        //call saving repo method
+        //await _moviesRepository.Update(movieEntity);
     }
 
     public async Task DeleteMovie(Guid id)
