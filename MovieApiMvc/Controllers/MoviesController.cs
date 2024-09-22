@@ -87,7 +87,7 @@ public class MoviesController : Controller
 
     [HttpPost]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<ActionResult> CreateMovie(PostMovieDto movie)
+    public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {
         var createdEntity = await _moviesService.CreateMovie(movie);   
         return CreatedAtRoute("CompanyById", new { id = createdEntity.Id }, createdEntity);

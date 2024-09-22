@@ -57,12 +57,31 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 
-    public void CreateMovie(MovieEntity movieEntity, IEnumerable<Guid> genresId, 
-        IEnumerable<Guid> countriesId, Guid ratingId)
+    public async Task CreateMovie(MovieEntity movieEntity, IEnumerable<Guid> genresId,
+        IEnumerable<Guid> countriesId, Guid? ratingId)
     {
-        var genres = _context.Genres.Where(g => genresId.Contains(g.Id));
-        var countries = _context.Countries.Where(c => countriesId.Contains(c.Id));
-        var rating = _context.Ratings.FirstOrDefaultAsync(r => r.Id == ratingId);
+        var genres = await _context.Genres.Where(g => genresId.Contains(g.Id)).ToListAsync();
+        var countries = await _context.Countries.Where(c => countriesId.Contains(c.Id)).ToListAsync();
+        var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.Id == ratingId);
+
+        movieEntity.Rating = rating;
+        movieEntity.Genres = genres;
+        movieEntity.Countries = countries;
+        movieEntity.Id = Guid.NewGuid();
+
+        if (movieEntity.Budget != null)
+        {
+            movieEntity.Budget.Id = Guid.NewGuid();
+            movieEntity.Budget.MovieId = movieEntity.Id;
+            _context.Budgets.Add(movieEntity.Budget); 
+        }
+
+        if (movieEntity.ImageInfoEntity != null)
+        {
+            movieEntity.ImageInfoEntity.Id = Guid.NewGuid();
+            movieEntity.ImageInfoEntity.MovieId = movieEntity.Id;
+            _context.Images.Add(movieEntity.ImageInfoEntity);
+        }
         
         Create(movieEntity);
     }

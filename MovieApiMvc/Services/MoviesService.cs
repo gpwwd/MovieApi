@@ -49,11 +49,11 @@ public class MoviesService : IMoviesService
 
     public async Task PutMovie(Guid id, MovieDto movieDto)
     {
-        var movieEntity = await _repository.MovieRepository.GetById(id, true);
-        if(movieEntity is null)
-                throw new MovieNotFoundException(id);
-        _mapper.Map(movieDto, movieEntity);
-        Console.WriteLine(movieEntity.Genres[0].Name);
+        // var movieEntity = await _repository.MovieRepository.GetById(id, true);
+        // if(movieEntity is null)
+        //         throw new MovieNotFoundException(id);
+        // _mapper.Map(movieDto, movieEntity);
+        // Console.WriteLine(movieEntity.Genres[0].Name);
         //call saving repo method
         //await _moviesRepository.Update(movieEntity);
     }
@@ -63,12 +63,11 @@ public class MoviesService : IMoviesService
         //await _repository.Delete(id);
     }
 
-    public async Task<MovieDto> CreateMovie(PostMovieDto movieDto, IEnumerable<Guid> genresId, 
-        IEnumerable<Guid> countriesId, Guid ratingId)
+    public async Task<MovieDto> CreateMovie(PostMovieDto movieDto)
     {   
         var movieEntity = _mapper.Map<MovieEntity>(movieDto);
         
-        _repository.MovieRepository.CreateMovie(movieEntity);
+        await _repository.MovieRepository.CreateMovie(movieEntity, movieDto.GenresIds, movieDto.CountriesIds, movieDto.Rating);
         _repository.Save();
         
         var movieToReturn = _mapper.Map<MovieDto>(movieEntity);

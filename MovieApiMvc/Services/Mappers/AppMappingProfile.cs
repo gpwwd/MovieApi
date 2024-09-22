@@ -38,6 +38,8 @@ public class ApplicationMapperProfile : Profile
             .ForMember(dest => dest.Genres, opt
                 => opt.Ignore())
             .ForMember(dest => dest.Rating, opt
-                => opt.Ignore());
+                => opt.Ignore())
+            .ForMember(dest => dest.ImageInfoEntity, opt
+                => opt.MapFrom(src => src.ImageInfo));
     }
 }
