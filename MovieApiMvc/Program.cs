@@ -1,37 +1,37 @@
 using Microsoft.EntityFrameworkCore;
-using MovieApiMvc.DataBaseAccess.Context;
+using MovieApiMvc.DataBaseAccess;
 using MovieApiMvc.DataBaseAccess.Repositories;
-using MovieApiMvc.Middleware;
-using MovieApiMvc.Services.Interfaces;
-using MovieApiMvc.Services;
 using MovieApiMvc.Extensions;
-using ExternalAPIServiceSpace;
-using MovieApiMvc.ExternalApi;
-using Newtonsoft.Json;
-using MovieApiMvc.ErrorHandling;
-using System.Linq.Expressions;
-using MovieApiMvc.FillingBD;
+using MovieApiMvc.Filters;
+using MovieApiMvc.Middleware;
+using MovieApiMvc.Services;
+using MovieApiMvc.Services.Interfaces;
+using MovieApiMvc.Services.Mappers;
+using AutoMapper;
+
+namespace MovieApiMvc;
 
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
-        
 
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
-            });
+        {
+            options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+        });
         // Add services to the container.
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddAutoMapper(typeof(ApplicationMapperProfile));
+        
+        builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<MoviesRepository>();
         builder.Services.AddScoped<UsersRepository>();
@@ -41,6 +41,9 @@ public class Program
 
         builder.Services.AddScoped<IMoviesService, MoviesService>();
         builder.Services.AddScoped<IUsersService, UsersService>();
+        builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+        
+        builder.Services.AddScoped<ValidationFilterAttribute>();
 
         builder.Services.AddDbContext<MovieDataBaseContext>(
             opt =>
@@ -50,9 +53,9 @@ public class Program
 
         var app = builder.Build();  
 
-        ExternalAPIService.GetMoviesUrlsCovers();
-
         app.UseCors("AllowAll");
+        if(app.Environment.IsDevelopment()) 
+            app.UseDeveloperExceptionPage();
         app.UseMyExeptionHandling(builder.Environment);
 
         app.UseAuthentication();
@@ -74,4 +77,3 @@ public class Program
 
 
 }
-

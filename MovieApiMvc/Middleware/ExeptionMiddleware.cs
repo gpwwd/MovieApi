@@ -1,38 +1,50 @@
+using MovieApiMvc.Models.Dtos;
+using System.Net;
 using MovieApiMvc.ErrorHandling;
-using Newtonsoft.Json;
 
 namespace MovieApiMvc.Middleware;
-public class ExeptionMiddleware
+public class ExceptionMiddleware
 {  
     private readonly RequestDelegate _next;
+    //private readonly ILogger<ExceptionMiddleware> _logger;
     private readonly IWebHostEnvironment _environment;
-
-    public ExeptionMiddleware(RequestDelegate next, IWebHostEnvironment env)
+    public ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment environment)
     {
         _next = next;
-        _environment = env;
+        _environment = environment;
+        //_logger = logger; use later
     }
-    
-    public async Task InvokeAsync(HttpContext context){
+
+    public async Task InvokeAsync(HttpContext context)
+    {
         try
         {
-                await _next.Invoke(context);
+            await _next(context);
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
-            MyExeption? response = null;
-            if(_environment.IsDevelopment())
-            {
-                response =  new MyExeption(context.Response.StatusCode, ex.Message, ex.StackTrace);
-            }
-            else
-            {
-                response = new MyExeption(context.Response.StatusCode, "Internal Server Error");
-            }
-
-            var json = JsonConvert.SerializeObject(response.ToString());
-            await context.Response.WriteAsync(json);
+            await HandleExceptionAsync(context, ex);
         }
+    }
+
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    { 
+        //More log stuff        
+        
+        ExceptionResponseDevelopment response = exception switch
+        {
+            ApplicationException => new ExceptionResponseDevelopment(HttpStatusCode.BadRequest, "Application exception occurred.", exception.StackTrace),
+            NotFoundException => new ExceptionResponseDevelopment(HttpStatusCode.NotFound, exception.Message, exception.StackTrace),
+            UnauthorizedAccessException => new ExceptionResponseDevelopment(HttpStatusCode.Unauthorized, "Unauthorized.", exception.StackTrace),
+            _ => new ExceptionResponseDevelopment(HttpStatusCode.InternalServerError, exception.Message, exception.StackTrace)
+        };
+        
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)response.StatusCode;
+        if(_environment.IsDevelopment())
+            await context.Response.WriteAsJsonAsync(response);
+        if(_environment.IsProduction())
+            await context.Response.WriteAsJsonAsync((ExceptionResponse)response);
     }
 }
 
@@ -40,6 +52,6 @@ public static class ExeptionExtension
 {
     public static IApplicationBuilder UseMyExeptionHandling(this IApplicationBuilder app, IWebHostEnvironment env)
     {
-        return app.UseMiddleware<ExeptionMiddleware>(env);
+        return app.UseMiddleware<ExceptionMiddleware>(env);
     }
 }

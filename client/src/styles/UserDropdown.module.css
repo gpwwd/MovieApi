@@ -1,0 +1,87 @@
+
+.container {
+    position: relative;
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    margin-right: 50px;
+}
+
+.content {
+    font-size: .9rem;
+    display: none;
+    position: absolute;
+    margin-top: 10px;
+    min-width: 200px;
+    background-color: var(--background-lighter-color);
+    border-radius: 10px;
+    box-shadow: 8px 0 16px var(--box-shadow), -8px 0 16px var(--box-shadow);
+    left: 50%; /* Центрирование по горизонтали */
+    transform: translateX(-50%); /* Сдвиг влево на 50% своей ширины */
+    z-index: 1;
+}
+
+.content::before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: -10px;
+    left: 50%;
+    margin-left: -10px;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent var(--background-lighter-color) transparent;
+
+}
+
+.content a {
+    text-align: center;
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    max-height: 20px;
+    font-weight: 500;
+}
+
+.content a:hover {
+    transform: scale(1.1);
+    transition: .25s ease;
+}
+
+.container:hover .content {
+    display: flex;
+    flex-direction: column;
+}
+
+.container:hover .user {
+    color: white;
+}
+
+.user {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+
+}
+
+.logOutOption {
+    background-color: none;
+    cursor: pointer;
+}
+
+.logOutOptionContainer {
+    background-color: var(--accent-color);
+    overflow: hidden;
+    border-radius: 0px 0px 10px 10px;
+}
+
+.logOutOption:hover {
+    background-color: var(--accent-color-hover);
+    transition: .25s ease;
+}

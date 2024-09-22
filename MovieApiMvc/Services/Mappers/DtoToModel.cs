@@ -1,5 +1,6 @@
-using MovieApiMvc.Dtos;
 using MovieApiMvc.Models.DomainModels;
+using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services.Mappers
 {
@@ -32,12 +33,12 @@ namespace MovieApiMvc.Services.Mappers
                 type: movieDto.Type,
                 year: movieDto.Year,
                 rating: Rating.Create(movieId: id,
-                                    kp: movieDto.RatingKp,
-                                    imdb: movieDto.RatingImdb,
-                                    filmCritics: movieDto.RatingFilmCritics),
+                                    kp: movieDto.Rating.Kp,
+                                    imdb: movieDto.Rating.Imdb,
+                                    filmCritics: movieDto.Rating.FilmCritics),
                 budget: Budget.Create(movieId: id,
-                                        currency: movieDto.BudgetCurrency,
-                                        value: movieDto.BudgetValue ?? -1),
+                                        currency: movieDto.Budget.Currency,
+                                        value: movieDto.Budget.Value),
                 genres: genres,
                 countries: countries,
                 movieLength: movieDto.MovieLength,

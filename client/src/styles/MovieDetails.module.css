@@ -1,0 +1,92 @@
+
+.container {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-lighter-color);
+    padding: 20px;
+    color: white;
+
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.descriptionAndImageContainer {
+    margin-top: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.infoContainer {
+    margin-left: 40px;
+}
+
+.descriptionContainer {
+    font-family: system-ui;
+    font-size: 1.3rem;
+    font-weight: 200;
+    color: hsl(0, 0%, 83%);
+    text-align: justify;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.descriptionContainer h2 {
+    margin-top: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 0px;
+}
+
+.descriptionContainer p {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.image {
+    margin-left: 20px;
+    max-width: 300px; /* Максимальная ширина изображения */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    border: 2px solid white;
+}
+
+.info {
+    font-size: 1.5rem;
+    color: hsl(0, 0%, 83%);
+}
+
+.info b{
+    color: white;
+}
+
+.container h1 {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.container h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: hsl(0, 0%, 83%);
+    font-weight: 400;
+}
+
+.watchLaterButton {
+    font-weight: bold;
+    background-color: var(--accent-color);
+    width: 300px;
+    margin-top: 20px;
+    margin-left: 20px;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.watchLaterButton:hover {
+    background-color: var(--accent-color-hover);
+    transform: scale(108%);
+    transition: .5s ease;
+}

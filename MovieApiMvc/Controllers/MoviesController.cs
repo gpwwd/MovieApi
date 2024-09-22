@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using MovieApiMvc.DataBaseAccess.Repositories;
-using MovieApiMvc.DataBaseAccess.Entities;
-using MovieApiMvc.Dtos;
-using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Services.Interfaces;
-using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.Filters;
+using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
+using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Controllers;
 
@@ -25,6 +24,14 @@ public class MoviesController : Controller
         return Ok(movieDTOs);
     }
 
+    [HttpGet]
+    [Route("page")]
+    public async Task<ActionResult<List<MovieDto>>> GetMoviesPaging([FromQuery] MovieParameters movieParameters)
+    {
+        var movieDTOs = await _moviesService.GetWithPaging(movieParameters);
+        return Ok(movieDTOs);
+    }
+
     [HttpGet("images")]
     public async Task<ActionResult<List<MovieDto>>> GetAllMoviesWithImages()
     {
@@ -35,44 +42,17 @@ public class MoviesController : Controller
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<MovieDto>> GetMovie(Guid id)
     {
-        //HttpResponse response = HttpContext.Response;
-        
-        try
-        {
-            var movieDTO = await _moviesService.GetById(id);
-            if(movieDTO is null)
-            {
-                return new NotFoundResult();
-            }
-            return movieDTO;
-        }
-        catch(EntityNotFoundException)
-        {
-            return new NotFoundResult();
-        }
-    
+        var movieDTO = await _moviesService.GetById(id);
+        return movieDTO;
     }
 
     [HttpGet("{id:guid}/images")]
     public async Task<ActionResult<ImageInfoDto>> GetMoviePoster(Guid id)
     {
-
-        try
-        {
-            var imageInfoDto = await _moviesService.GetImageById(id);
-            if(imageInfoDto is null)
-            {
-                return new NotFoundResult();
-            }
-            return imageInfoDto;
-        }
-        catch(EntityNotFoundException)
-        {
-            return new NotFoundResult();
-        }
-    
+        var imageInfoDto = await _moviesService.GetImageById(id);
+        return imageInfoDto;
     }
-    // it alse can be done like
+    // it else can be done like
     // [Produces(typeof(Employee))]
     // public IActionResult Get(long id)
     // {
@@ -81,49 +61,26 @@ public class MoviesController : Controller
     // }
 
     [HttpPut]
+    //  чо это [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<ActionResult> PutMovie([FromHeader] Guid id, [FromBody] MovieDto movie)
     {       
-        if (movie is null)
-        {
-            return new BadRequestResult();
-        }
-        try
-        {
-            await _moviesService.PutMovie(id, movie);
-        }
-        catch(ArgumentException ex)
-        {
-            return new BadRequestResult();
-        }
+        await _moviesService.PutMovie(id, movie);
         return Ok(id);
     } 
     
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteMovie(Guid id)
     {
-        try
-        {
-            await _moviesService.DeleteMovie(id);
-            return new NoContentResult();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return StatusCode(500);
-        }
+        await _moviesService.DeleteMovie(id);
+        return new NoContentResult();
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateMovie(MovieDto movie)
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {
-        if (movie is null)
-        {
-            return BadRequest();
-        }
-        
-        var createdEntity = await _moviesService.CreateMovie(movie);
-        var location = Url.Action("Post", new { id = createdEntity.Id });
-        return Created(location, createdEntity);
+        var createdEntity = await _moviesService.CreateMovie(movie);   
+        return CreatedAtRoute("CreateMovie", new { id = createdEntity.Id }, createdEntity);
     }
 
 }

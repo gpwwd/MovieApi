@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieApiMvc.DataBaseAccess.Entities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Configurations;
 
@@ -26,7 +27,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<MovieEntity>
         entityTypeBuilder.HasMany(m => m.Genres)
             .WithMany(g => g.Movies);
             
-        entityTypeBuilder.HasOne(m => m.imageInfoEntity)
+        entityTypeBuilder.HasOne(m => m.ImageInfoEntity)
             .WithOne(i => i.Movie)
             .HasForeignKey<ImageInfoEntity>(i=>i.MovieId);
     

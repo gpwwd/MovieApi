@@ -1,4 +1,4 @@
-using MovieApiMvc.DataBaseAccess.Context;
+using MovieApiMvc.DataBaseAccess;
 using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.ExternalApi;
@@ -48,7 +48,7 @@ namespace MovieApiMvc.FillingBD
 
                         await moviesRepository.PutPoster(dbId, image);
                     }
-                    catch(EntityNotFoundException ex)
+                    catch(MovieNotFoundException ex)
                     {
                         continue;
                     }
@@ -85,16 +85,16 @@ namespace MovieApiMvc.FillingBD
                     {
                         dbId = await moviesRepository.GetIdByName(movie.Name);
                     }
-                    catch(EntityNotFoundException ex)
+                    catch(MovieNotFoundException ex)
                     {
                         continue;
                         notFoundName.Add(ex.Message);
                     }
 
-                    if(dbId is null) 
-                    {
-                        throw new EntityNotFoundException(404, $"{movie.Name}");
-                    }
+                    // if(dbId is null) 
+                    // {
+                    //     throw new MovieNotFoundException(dbId);
+                    // }
 
                     await moviesRepository.PutDescription(dbId, movie.Description, movie.ShortDescription);
                 }
@@ -107,7 +107,7 @@ namespace MovieApiMvc.FillingBD
             {
                 addDescriptions(app);
             }
-            catch(EntityNotFoundException ex)
+            catch(MovieNotFoundException ex)
             {
                 notFoundName.Add(ex.Message);
             }

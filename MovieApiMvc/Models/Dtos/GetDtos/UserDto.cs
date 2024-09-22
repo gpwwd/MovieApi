@@ -1,4 +1,4 @@
-namespace MovieApiMvc.Dtos
+namespace MovieApiMvc.Models.Dtos.GetDtos
 {
     public class UserDto
     {
@@ -6,7 +6,7 @@ namespace MovieApiMvc.Dtos
         public required string UserName { get; set; }
         public required string Password { get; set; } = String.Empty;
         public required string Email { get; set; } = String.Empty;
-        public List<MovieDto>? FavMovies {get; set;} = default;
-        public List<MovieDto>? WatchLaterMovies {get; set;} = default;
+        public List<MovieDto>? FavMovies { get; set; } = new List<MovieDto>();
+        public List<MovieDto>? WatchLaterMovies { get; set; } = new List<MovieDto>();
     }
 }

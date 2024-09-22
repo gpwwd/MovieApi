@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieApiMvc.DataBaseAccess.Entities;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Configurations;
 

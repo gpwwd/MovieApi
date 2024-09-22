@@ -1,8 +1,7 @@
-using MovieApiMvc.DataBaseAccess.Context;
 using Microsoft.EntityFrameworkCore;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
-using Microsoft.AspNetCore.Mvc;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
 
@@ -41,6 +40,15 @@ public class UsersRepository
         return await _dbContext.Users   
             .AsNoTracking()
             .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Rating)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Countries)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Genres)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.Budget)
+            .Include(u => u.WatchLaterMovies)
+                .ThenInclude(m => m.ImageInfoEntity)
             .Include(u => u.FavMovies)
             .FirstOrDefaultAsync(u => u.Id == id);
     }
@@ -73,16 +81,62 @@ public class UsersRepository
 
         if (existingUser == null)
         {
-            throw new EntityNotFoundException(404, "User not found");
+            throw new UserNotFoundException(updatedUser.Id);
         }
 
         existingUser.UserName = updatedUser.UserName;
         existingUser.PasswHash = updatedUser.PasswHash;
         existingUser.Email = updatedUser.Email;
-        
-        _dbContext.Users.Attach(existingUser);
+
+        _dbContext.Users.Update(existingUser);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task AddWatchLaterMovies(Guid userId, List<MovieEntity> moviesAdded)
+    {
+        var existingUser = await _dbContext.Users
+            .Include(u => u.WatchLaterMovies)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (existingUser == null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+    
+        existingUser.WatchLaterMovies.AddRange(moviesAdded);
+
+        var countries = existingUser.WatchLaterMovies
+            .SelectMany(m => m.Countries)
+            .Distinct();
+
+        _dbContext.Countries.AttachRange(countries);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteWatchLaterMovie(Guid userId, Guid movieId)
+    {
+        var existingUser = await _dbContext.Users
+            .Include(u => u.WatchLaterMovies)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (existingUser == null)
+        {
+            throw new UserNotFoundException(userId);
+        }
+
+        var movie = existingUser.WatchLaterMovies?.FirstOrDefault(m => m.Id == movieId);
+
+        if (movie == null)
+        {
+            throw new MovieNotFoundException(movieId);
+        }
+
+        existingUser.WatchLaterMovies.Remove(movie);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task Delete(Guid id){
         var user = await _dbContext.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         _dbContext.Users.Remove(user);

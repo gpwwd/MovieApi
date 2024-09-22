@@ -1,6 +1,7 @@
-using MovieApiMvc.DataBaseAccess.Entities;
-using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
-using MovieApiMvc.Dtos; 
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
+using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Models.Dtos.GetDtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
@@ -12,13 +13,22 @@ public class EntityToDto
         {
             Name = movieEntity.Name,
             AlternativeName = movieEntity.AlternativeName,
-            RatingKp = movieEntity.Rating?.kp,
-            RatingImdb = movieEntity.Rating?.imdb,
-            RatingFilmCritics = movieEntity.Rating?.filmCritics,
+            Rating = new RatingDto
+                {
+                    FilmCritics = movieEntity.Rating.FilmCritics,
+                    Imdb = movieEntity.Rating.Imdb,
+                    Kp = movieEntity.Rating.Kp,
+                    Id = movieEntity.Rating.Id,
+                },
             Type = movieEntity.Type,
             Year = movieEntity.Year,
-            BudgetValue = movieEntity.Budget?.Value ?? null,
-            BudgetCurrency = movieEntity.Budget?.Currency ?? null,
+            Budget = new BudgetDto
+                {
+                    Currency = movieEntity.Budget.Currency,
+                    Id = movieEntity.Budget.Id,
+                    MovieId =  movieEntity.Budget.MovieId,
+                    Value = movieEntity.Budget.Value,
+                },
             MovieLength = movieEntity.MovieLength,
             Id = movieEntity.Id,
             IsSeries = movieEntity.IsSeries,
@@ -27,10 +37,10 @@ public class EntityToDto
             Genres = movieEntity.Genres?.Select(c => c.Name).ToList() ?? null,
             ImageInfo = new ImageInfoDto
                         {
-                            Id = movieEntity.imageInfoEntity?.Id ?? null,
-                            MovieId = movieEntity.imageInfoEntity?.MovieId ?? movieEntity.Id,
-                            Urls = movieEntity.imageInfoEntity?.Urls ?? null,
-                            PreviewUrls = movieEntity.imageInfoEntity?.PreviewUrls ?? null,
+                            Id = movieEntity.ImageInfoEntity.Id,
+                            MovieId = movieEntity.ImageInfoEntity.MovieId,
+                            Urls = movieEntity.ImageInfoEntity?.Urls ?? null,
+                            PreviewUrls = movieEntity.ImageInfoEntity?.PreviewUrls ?? null,
                         },
             Description = movieEntity.Description,
             ShortDescription = movieEntity.ShortDescription
