@@ -11,4 +11,5 @@ public interface IMovieRepository
     public Task<MovieEntity?> GetById(Guid id, bool trackChanges);
     public Task CreateMovie(MovieEntity movieEntity, IEnumerable<Guid> genresId, 
         IEnumerable<Guid> countriesId, Guid? ratingId);
+    public void DeleteMovie(MovieEntity movieEntity);
 }

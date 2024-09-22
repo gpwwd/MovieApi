@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Filters;
-using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.RequestFeatures;
@@ -73,16 +71,8 @@ public class MoviesController : Controller
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteMovie(Guid id)
     {
-        try
-        {
-            await _moviesService.DeleteMovie(id);
-            return new NoContentResult();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return StatusCode(500);
-        }
+        await _moviesService.DeleteMovie(id);
+        return new NoContentResult();
     }
 
     [HttpPost]
@@ -90,7 +80,7 @@ public class MoviesController : Controller
     public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {
         var createdEntity = await _moviesService.CreateMovie(movie);   
-        return CreatedAtRoute("CompanyById", new { id = createdEntity.Id }, createdEntity);
+        return CreatedAtRoute("CreateMovie", new { id = createdEntity.Id }, createdEntity);
     }
 
 }

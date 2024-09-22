@@ -85,4 +85,8 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
         
         Create(movieEntity);
     }
+    public void DeleteMovie(MovieEntity movieEntity)
+    {
+        Delete(movieEntity);
+    }
 }

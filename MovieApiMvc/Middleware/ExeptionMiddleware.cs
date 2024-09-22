@@ -30,7 +30,7 @@ public class ExceptionMiddleware
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     { 
         //More log stuff        
-
+        
         ExceptionResponseDevelopment response = exception switch
         {
             ApplicationException => new ExceptionResponseDevelopment(HttpStatusCode.BadRequest, "Application exception occurred.", exception.StackTrace),
@@ -41,7 +41,10 @@ public class ExceptionMiddleware
         
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)response.StatusCode;
-        await context.Response.WriteAsJsonAsync(response);
+        if(_environment.IsDevelopment())
+            await context.Response.WriteAsJsonAsync(response);
+        if(_environment.IsProduction())
+            await context.Response.WriteAsJsonAsync((ExceptionResponse)response);
     }
 }
 

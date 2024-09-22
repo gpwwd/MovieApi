@@ -60,7 +60,11 @@ public class MoviesService : IMoviesService
 
     public async Task DeleteMovie(Guid id)
     {
-        //await _repository.Delete(id);
+        var movie = await _repository.MovieRepository.GetById(id, false);
+        if (movie is null)
+            throw new MovieNotFoundException(id);
+        _repository.MovieRepository.DeleteMovie(movie);
+        _repository.Save();
     }
 
     public async Task<MovieDto> CreateMovie(PostMovieDto movieDto)
@@ -72,6 +76,7 @@ public class MoviesService : IMoviesService
         
         var movieToReturn = _mapper.Map<MovieDto>(movieEntity);
         return movieToReturn;
+        //genres don`t add
     }
 
     public async Task<ImageInfoDto> GetImageById(Guid id)
