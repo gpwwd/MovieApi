@@ -13,11 +13,11 @@ namespace MovieApiMvc.Controllers
             _moviesService = moviesService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<MovieDto>>> GetAllMovies()
-        {
-            var movieDTOs = await _moviesService.GetAll();
-            return Ok(movieDTOs);
-        }
+        // [HttpGet]
+        // public async Task<ActionResult<List<MovieDto>>> GetAllMovies()
+        // {
+        //     var movieDTOs = await _moviesService.GetAll();
+        //     return Ok(movieDTOs);
+        // }
     }
 }

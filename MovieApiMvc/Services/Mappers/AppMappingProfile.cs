@@ -2,6 +2,7 @@
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Models.Dtos.PostDtos;
+using MovieApiMvc.Models.Dtos.UpdateDtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
@@ -31,7 +32,7 @@ public class ApplicationMapperProfile : Profile
         CreateMap<ImageInfoDto, ImageInfoEntity>()
             .ReverseMap();
 
-
+        ///////////////////////////////POST_DTOS
         CreateMap<PostMovieDto, MovieEntity>()
             .ForMember(dest => dest.Countries, opt
                 => opt.Ignore())
@@ -40,6 +41,37 @@ public class ApplicationMapperProfile : Profile
             .ForMember(dest => dest.Rating, opt
                 => opt.Ignore())
             .ForMember(dest => dest.ImageInfoEntity, opt
-                => opt.MapFrom(src => src.ImageInfo));
+                => opt.MapFrom(src => src.ImageInfo))
+            .ForMember(dest => dest.Budget, opt 
+                => opt.MapFrom(src => src.Budget));
+            
+        CreateMap<BudgetPostDto, BudgetEntity>()
+            .ForMember(dest => dest.Id, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.MovieId, opt
+                => opt.Ignore())
+            .ReverseMap();
+        
+        CreateMap<ImagePostDto, ImageInfoEntity>()
+            .ForMember(dest => dest.Id, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.MovieId, opt
+                => opt.Ignore())
+            .ReverseMap();
+        
+        
+        //////////////////////////////////////UPDATE_DTOS
+        CreateMap<UpdateMovieDto, MovieEntity>()
+            .ForMember(dest => dest.Countries, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.Genres, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.Rating, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.ImageInfoEntity, opt
+                => opt.MapFrom(src => src.ImageInfo))
+            .ForMember(dest => dest.Budget, opt 
+                => opt.MapFrom(src => src.Budget));
+
     }
 }

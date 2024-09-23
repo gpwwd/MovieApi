@@ -3,6 +3,7 @@ using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Filters;
 using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Models.Dtos.PostDtos;
+using MovieApiMvc.Models.Dtos.UpdateDtos;
 using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Controllers;
@@ -62,9 +63,9 @@ public class MoviesController : Controller
 
     [HttpPut]
     //  чо это [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<ActionResult> PutMovie([FromHeader] Guid id, [FromBody] MovieDto movie)
+    public async Task<ActionResult> PutMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
     {       
-        await _moviesService.PutMovie(id, movie);
+        await _moviesService.UpdateMovie(id, movie);
         return Ok(id);
     } 
     
