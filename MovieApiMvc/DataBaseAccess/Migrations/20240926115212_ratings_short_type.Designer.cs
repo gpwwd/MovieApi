@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieApiMvc.DataBaseAccess;
 
@@ -10,9 +11,11 @@ using MovieApiMvc.DataBaseAccess;
 namespace MovieApiMvc.DataBaseAccess.Migrations
 {
     [DbContext(typeof(MovieDataBaseContext))]
-    partial class MovieDataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240926115212_ratings_short_type")]
+    partial class ratings_short_type
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
@@ -178,7 +181,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.Property<short?>("Kp")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("MovieId")
+                    b.Property<Guid>("MovieId")
                         .HasColumnType("TEXT");
 
                     b.Property<short?>("RussianFilmCritics")
@@ -301,7 +304,9 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                 {
                     b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", "Movie")
                         .WithOne("Rating")
-                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.RatingEntity", "MovieId");
+                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.RatingEntity", "MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
                 });

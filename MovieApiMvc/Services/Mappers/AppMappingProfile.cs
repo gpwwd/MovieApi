@@ -38,13 +38,18 @@ public class ApplicationMapperProfile : Profile
                 => opt.Ignore())
             .ForMember(dest => dest.Genres, opt
                 => opt.Ignore())
-            .ForMember(dest => dest.Rating, opt
-                => opt.Ignore())
             .ForMember(dest => dest.ImageInfoEntity, opt
                 => opt.MapFrom(src => src.ImageInfo))
             .ForMember(dest => dest.Budget, opt 
                 => opt.MapFrom(src => src.Budget));
             
+        CreateMap<RatingPostDto, RatingEntity>()
+            .ForMember(dest => dest.Id, opt
+                => opt.Ignore())
+            .ForMember(dest => dest.MovieId, opt
+                => opt.Ignore())
+            .ReverseMap();
+        
         CreateMap<BudgetPostDto, BudgetEntity>()
             .ForMember(dest => dest.Id, opt
                 => opt.Ignore())

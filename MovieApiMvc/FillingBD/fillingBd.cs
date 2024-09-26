@@ -1,14 +1,14 @@
-        // using (StreamReader r = new StreamReader("MovieJson.json"))
-        // {
-        //     var serviceScope = app.Services.CreateScope();
-        //     var services = serviceScope.ServiceProvider;
-        //     var scopedService = services.GetRequiredService<MovieDataBaseContext>();
-        //     MoviesRepository movRep = new MoviesRepository(scopedService);
-        //     string json = r.ReadToEnd();
-        //     MovieApiMvc.DataBaseAccess.Entities.RootObject items = JsonConvert.DeserializeObject<MovieApiMvc.DataBaseAccess.Entities.RootObject>(json);
-        //     foreach (var movie in items.docs){
-        //         movRep.Add(movie.Id, movie.Name, movie.AlternativeName, movie.Type,
-        //                                         movie.Year, movie.Rating, movie.MovieLength, movie.Genres,
-        //                                         movie.Countries, movie.Budget, movie.Top250, movie.IsSeries);
-        //     }
-        // }
+// using (StreamReader r = new StreamReader("ExternalApi/MovieJson.json"))
+// {
+//     var serviceScope = app.Services.CreateScope();
+//     var services = serviceScope.ServiceProvider;
+//     var context = services.GetRequiredService<MovieDataBaseContext>();
+//     IRepositoryManager manager = new RepositoryManager(context);
+//     string json = r.ReadToEnd();
+//     MovieApiMvc.DataBaseAccess.Entities.MovieEntities.RootObject items = 
+//         JsonConvert.DeserializeObject<MovieApiMvc.DataBaseAccess.Entities.MovieEntities.RootObject>(json);
+//     foreach (var item in items.docs)
+//     {
+//         item.Id = Guid.NewGuid();
+//     }
+// }

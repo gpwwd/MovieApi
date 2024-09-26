@@ -73,7 +73,7 @@ public class MoviesService : IMoviesService
     {   
         var movieEntity = _mapper.Map<MovieEntity>(movieDto);
         
-        await _repository.MovieRepository.CreateMovie(movieEntity, movieDto.GenresNames, movieDto.CountriesNames, movieDto.RatingId);
+        await _repository.MovieRepository.CreateMovie(movieEntity, movieDto.GenresNames, movieDto.CountriesNames);
         _repository.Save();
         
         var movieToReturn = _mapper.Map<MovieDto>(movieEntity);

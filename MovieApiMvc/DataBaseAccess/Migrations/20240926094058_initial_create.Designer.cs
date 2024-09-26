@@ -4,20 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MovieApiMvc.DataBaseAccess;
 
 #nullable disable
 
 namespace MovieApiMvc.DataBaseAccess.Migrations
 {
     [DbContext(typeof(MovieDataBaseContext))]
-    [Migration("20240822010827_descriptions")]
-    partial class descriptions
+    [Migration("20240926094058_initial_create")]
+    partial class initial_create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
             modelBuilder.Entity("CountryEntityMovieEntity", b =>
                 {
@@ -49,7 +50,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.ToTable("GenreEntityMovieEntity");
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.BudgetEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.BudgetEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,7 +73,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.ToTable("Budgets", (string)null);
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.CountryEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.CountryEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +88,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.ToTable("Countries", (string)null);
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.GenreEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.GenreEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +103,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.ToTable("Genres", (string)null);
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.ImageInfoEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.ImageInfoEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,11 +113,9 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PreviewUrls")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Urls")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -127,7 +126,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -167,25 +166,25 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.ToTable("Movies", (string)null);
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.RatingEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.RatingEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<double?>("FilmCritics")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("Imdb")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("Kp")
+                        .HasColumnType("REAL");
+
                     b.Property<Guid>("MovieId")
                         .HasColumnType("TEXT");
 
-                    b.Property<double?>("filmCritics")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("imdb")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("kp")
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("russianFilmCritics")
+                    b.Property<double?>("RussianFilmCritics")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
@@ -196,7 +195,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                     b.ToTable("Ratings", (string)null);
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.UsersEntities.UserEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -251,13 +250,13 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
 
             modelBuilder.Entity("CountryEntityMovieEntity", b =>
                 {
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.CountryEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.CountryEntity", null)
                         .WithMany()
                         .HasForeignKey("CountriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", null)
                         .WithMany()
                         .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -266,46 +265,46 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
 
             modelBuilder.Entity("GenreEntityMovieEntity", b =>
                 {
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.GenreEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.GenreEntity", null)
                         .WithMany()
                         .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", null)
                         .WithMany()
                         .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.BudgetEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.BudgetEntity", b =>
                 {
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", "Movie")
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", "Movie")
                         .WithOne("Budget")
-                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.BudgetEntity", "MovieId")
+                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.BudgetEntity", "MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.ImageInfoEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.ImageInfoEntity", b =>
                 {
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", "Movie")
-                        .WithOne("imageInfoEntity")
-                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.ImageInfoEntity", "MovieId")
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", "Movie")
+                        .WithOne("ImageInfoEntity")
+                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.ImageInfoEntity", "MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.RatingEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.RatingEntity", b =>
                 {
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", "Movie")
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", "Movie")
                         .WithOne("Rating")
-                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.RatingEntity", "MovieId")
+                        .HasForeignKey("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.RatingEntity", "MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -314,13 +313,13 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
 
             modelBuilder.Entity("MovieEntityUserEntity", b =>
                 {
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.UsersEntities.UserEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("FavMovieUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", null)
                         .WithMany()
                         .HasForeignKey("FavMoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -329,27 +328,26 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
 
             modelBuilder.Entity("MovieEntityUserEntity1", b =>
                 {
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", null)
                         .WithMany()
                         .HasForeignKey("WatchLaterMoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.UsersEntities.UserEntity", null)
+                    b.HasOne("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("WatchLaterUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntity", b =>
+            modelBuilder.Entity("MovieApiMvc.DataBaseAccess.Entities.MovieEntities.MovieEntity", b =>
                 {
                     b.Navigation("Budget");
 
-                    b.Navigation("Rating")
-                        .IsRequired();
+                    b.Navigation("ImageInfoEntity");
 
-                    b.Navigation("imageInfoEntity");
+                    b.Navigation("Rating");
                 });
 #pragma warning restore 612, 618
         }

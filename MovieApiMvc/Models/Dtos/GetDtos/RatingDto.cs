@@ -3,8 +3,8 @@
 public record RatingDto
 {
     public Guid Id { get; init; } 
-    public double? Kp { get; init; }
-    public double? Imdb { get; init; }
-    public double? FilmCritics { get; init; }
+    public short? Kp { get; init; }
+    public short? Imdb { get; init; }
+    public short? FilmCritics { get; init; }
     public Guid? MovieId { get; init; } 
 }

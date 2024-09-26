@@ -8,6 +8,7 @@ using MovieApiMvc.Services;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services.Mappers;
 using AutoMapper;
+using Newtonsoft.Json;
 
 namespace MovieApiMvc;
 
@@ -52,7 +53,7 @@ public class Program
             });
 
         var app = builder.Build();  
-
+        
         app.UseCors("AllowAll");
         if(app.Environment.IsDevelopment()) 
             app.UseDeveloperExceptionPage();

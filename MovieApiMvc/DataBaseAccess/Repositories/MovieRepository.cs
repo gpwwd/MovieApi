@@ -60,19 +60,43 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
     }
 
     public async Task CreateMovie(MovieEntity movieEntity, List<string> genresNames, 
-        List<string> countriesNames, Guid? ratingId)
+        List<string> countriesNames)
     {
-        var genres = await _context.Genres.Where(g => genresNames.Contains(g.Name)).ToListAsync();
-        var countries = await _context.Countries.Where(c => countriesNames.Contains(c.Name)).ToListAsync();
-        var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.Id == ratingId);//to do search by name not id
+        //the problem is that rating has only 1 movie,
+        //so the entity of movie is useless 
+        //(also when a new movie is inserted with the same rating,
+        //the foreign key of rating doesn't update)
+        //
+        //so that's why rating should have a list of movies like foreign entites 
+        
+        var genres = await _context.Genres
+            .Where(g => genresNames.Contains(g.Name))
+            .ToListAsync();
+        
+        var countries = await _context.Countries
+            .Where(c => countriesNames.Contains(c.Name))
+            .ToListAsync();
         
         genres = genres.DistinctBy(g => g.Name).ToList();
         countries = countries.DistinctBy(c => c.Name).ToList();
         
-        movieEntity.Rating = rating;
+        var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
+        var rating = ratings.FirstOrDefault(r => r.Equals(movieEntity.Rating));
+        
         movieEntity.Genres = genres;
         movieEntity.Countries = countries;
         movieEntity.Id = Guid.NewGuid();
+        
+        if (rating != null)
+        {
+            if (movieEntity.Rating != null)
+                movieEntity.Rating = rating;
+        }
+        else if (movieEntity.Rating != null)
+        {
+            movieEntity.Rating.Id = Guid.NewGuid();
+            _context.Ratings.Add(movieEntity.Rating);
+        }
 
         if (movieEntity.Budget != null)
         {
@@ -87,7 +111,8 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
             movieEntity.ImageInfoEntity.MovieId = movieEntity.Id;
             _context.Images.Add(movieEntity.ImageInfoEntity);
         }
-        
+        _context.Entry(movieEntity).State = EntityState.Added;
+        var entris = _context.ChangeTracker.Entries();
         Create(movieEntity);
     }
 
