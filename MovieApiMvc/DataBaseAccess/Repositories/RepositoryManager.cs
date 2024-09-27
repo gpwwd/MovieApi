@@ -22,6 +22,6 @@ public class RepositoryManager : IRepositoryManager
     public IUserRepository UserRepository => _userRepository.Value;
     public ICountriesRepository CountriesRepository => _countriesRepository.Value;
 
-    public void Save() =>
-        _context.SaveChanges();
+    public async Task SaveAsync() =>
+        await _context.SaveChangesAsync();
 }
