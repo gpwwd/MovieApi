@@ -2,6 +2,7 @@
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.DataBaseAccess.Repositories.Contracts;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.Models.DomainModels;
 using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.RequestFeatures;
 
@@ -60,64 +61,63 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
     }
 
     public async Task CreateMovie(MovieEntity movieEntity, List<string> genresNames, 
-        List<string> countriesNames)
+                              List<string> countriesNames)
+{
+    //the problem is that rating has only 1 movie,
+    //so the entity of movie in rating is useless 
+    //(also when a new movie is inserted with the same rating,
+    //the foreign key of rating (movieEntity) update with the latest inserted movie)
+    //
+    //so that's why rating should have a list of movies like foreign entites 
+    var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
+    var rating = ratings.FirstOrDefault(r => r.Equals(movieEntity.Rating));
+    
+    movieEntity.Id = Guid.NewGuid();
+    
+    if (rating != null)
     {
-        //the problem is that rating has only 1 movie,
-        //so the entity of movie is useless 
-        //(also when a new movie is inserted with the same rating,
-        //the foreign key of rating doesn't update)
-        //
-        //so that's why rating should have a list of movies like foreign entites 
-        
-        var genres = await _context.Genres
-            .Where(g => genresNames.Contains(g.Name))
-            .ToListAsync();
-        
-        var countries = await _context.Countries
-            .Where(c => countriesNames.Contains(c.Name))
-            .ToListAsync();
-        
-        genres = genres.DistinctBy(g => g.Name).ToList();
-        countries = countries.DistinctBy(c => c.Name).ToList();
-        
-        var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
-        var rating = ratings.FirstOrDefault(r => r.Equals(movieEntity.Rating));
-        
-        movieEntity.Genres = genres;
-        movieEntity.Countries = countries;
-        movieEntity.Id = Guid.NewGuid();
-        
-        if (rating != null)
-        {
-            if (movieEntity.Rating != null)
-                movieEntity.Rating = rating;
-        }
-        else if (movieEntity.Rating != null)
-        {
-            movieEntity.Rating.Id = Guid.NewGuid();
-            _context.Ratings.Add(movieEntity.Rating);
-        }
-
-        if (movieEntity.Budget != null)
-        {
-            movieEntity.Budget.Id = Guid.NewGuid();
-            movieEntity.Budget.MovieId = movieEntity.Id;
-            _context.Budgets.Add(movieEntity.Budget); 
-        }
-
-        if (movieEntity.ImageInfoEntity != null)
-        {
-            movieEntity.ImageInfoEntity.Id = Guid.NewGuid();
-            movieEntity.ImageInfoEntity.MovieId = movieEntity.Id;
-            _context.Images.Add(movieEntity.ImageInfoEntity);
-        }
-        _context.Entry(movieEntity).State = EntityState.Added;
-        var entris = _context.ChangeTracker.Entries();
-        Create(movieEntity);
+        _context.Entry(rating).State = EntityState.Modified;
+        movieEntity.Rating = rating; 
     }
+    else if (movieEntity.Rating != null)
+    {
+        movieEntity.Rating.Id = Guid.NewGuid(); 
+        _context.Ratings.Add(movieEntity.Rating); 
+    }
+    
+    if (movieEntity.Budget != null)
+    {
+        movieEntity.Budget.Id = Guid.NewGuid(); 
+        movieEntity.Budget.MovieId = movieEntity.Id;
+        _context.Budgets.Add(movieEntity.Budget);
+    }
+    
+    if (movieEntity.ImageInfoEntity != null)
+    {
+        movieEntity.ImageInfoEntity.Id = Guid.NewGuid(); 
+        movieEntity.ImageInfoEntity.MovieId = movieEntity.Id;
+        _context.Images.Add(movieEntity.ImageInfoEntity);
+    }
+    
+    await _context.Movies.AddAsync(movieEntity);
+    await _context.SaveChangesAsync(); 
+
+    //many-to-many connection after saving the movie 
+    var genres = await _context.Genres
+        .Where(g => genresNames.Contains(g.Name))
+        .ToListAsync();
+    
+    var countries = await _context.Countries
+        .Where(c => countriesNames.Contains(c.Name))
+        .ToListAsync();
+    
+    movieEntity.Genres = genres;
+    movieEntity.Countries = countries;
+}
+
 
     public async Task UpdateMovie(MovieEntity movieEntity, IEnumerable<string>? genresNames,
-        IEnumerable<string>? countriesNames, Guid? ratingId)
+        IEnumerable<string>? countriesNames)
     {   
         var genres = await _context.Genres
                                 .Where(g => genresNames != null && genresNames.Contains(g.Name))
@@ -126,14 +126,18 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
         var countries = await _context.Countries
                                 .Where(c => countriesNames != null && countriesNames.Contains(c.Name))
                                 .ToListAsync();
-        var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.Id == ratingId);//to do search by name not id
         
         genres = genres.DistinctBy(g => g.Name).ToList();
-        countries = countries.DistinctBy(c => c.Name).ToList();
+        countries = countries.DistinctBy(c => c.Name).ToList(); 
         
-        movieEntity.Rating = rating;
+        // var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
+        // var rating = ratings.FirstOrDefault(r => r.Equals(movieEntity.Rating));
+        // проблема с обновлением рейтинга --
+        // отслеживание двух сущностей с одинаковым Id
         movieEntity.Genres = genres;
         movieEntity.Countries = countries;
+        _context.Entry(movieEntity).State = EntityState.Modified;
+        var entries = _context.ChangeTracker.Entries();
     }
     // public async Task PutPoster(Guid id, ImageInfoDto image)
     // {

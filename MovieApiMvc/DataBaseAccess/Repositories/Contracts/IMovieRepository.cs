@@ -14,7 +14,7 @@ public interface IMovieRepository
         List<string> countriesNames);
     public void DeleteMovie(MovieEntity movieEntity);
     public Task UpdateMovie(MovieEntity movieEntity, IEnumerable<string>? genresNames,
-        IEnumerable<string>? countriesNames, Guid? ratingId);
+        IEnumerable<string>? countriesNames);
     // public Task PutPoster(Guid id, ImageInfoDto image);
 
 }

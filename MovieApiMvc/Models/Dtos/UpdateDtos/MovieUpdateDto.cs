@@ -9,7 +9,7 @@ public record UpdateMovieDto
     //and use model.IsValid() method in controller
     public required string Name { get; init; }
     public string? AlternativeName { get; init; } = string.Empty;
-    public Guid? Rating { get; init; }//сделать контроллер рейтингов, предоставить возможность выбирать только из 10 вариантов
+    public RatingPostDto? Rating { get; init; }//сделать контроллер рейтингов, предоставить возможность выбирать только из 10 вариантов
     public required string Type { get; init; }
     public required int Year { get; init; }
     public BudgetPostDto Budget { get; init; } = new BudgetPostDto();//создаем новый
