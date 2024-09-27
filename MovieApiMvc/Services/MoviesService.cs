@@ -56,8 +56,16 @@ public class MoviesService : IMoviesService
         
         _mapper.Map(movieDto, movieEntity);
         
-        await _repository.MovieRepository.UpdateMovie(movieEntity, movieDto.GenresNames, movieDto.CountriesNames);
-        _repository.Save();
+        //have to pass information about new rating 
+        //would be nice to find ratingEntity in service layer
+        //but as a temporary option only numbers as shorts are passed
+        await _repository.MovieRepository.UpdateMovie(movieEntity, 
+            movieDto.GenresNames,
+            movieDto.CountriesNames,
+            movieDto.Rating?.Imdb,
+            movieDto.Rating?.Kp,
+            movieDto.Rating?.FilmCritics);
+        await _repository.SaveAsync();
     }
 
     public async Task DeleteMovie(Guid id)
@@ -66,7 +74,8 @@ public class MoviesService : IMoviesService
         if (movie is null)
             throw new MovieNotFoundException(id);
         _repository.MovieRepository.DeleteMovie(movie);
-        _repository.Save();
+        //определится с каскадным удалением или некаскадным
+        await _repository.SaveAsync();
     }
 
     public async Task<MovieDto> CreateMovie(PostMovieDto movieDto)
@@ -74,11 +83,10 @@ public class MoviesService : IMoviesService
         var movieEntity = _mapper.Map<MovieEntity>(movieDto);
         
         await _repository.MovieRepository.CreateMovie(movieEntity, movieDto.GenresNames, movieDto.CountriesNames);
-        _repository.Save();
+        await _repository.SaveAsync();
         
         var movieToReturn = _mapper.Map<MovieDto>(movieEntity);
         return movieToReturn;
-        //genres don`t add ????????
     }
 
     public async Task<ImageInfoDto> GetImageById(Guid id)

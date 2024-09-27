@@ -4,6 +4,7 @@ using MovieApiMvc.DataBaseAccess.Repositories.Contracts;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.DomainModels;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
@@ -117,8 +118,8 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
 
 
     public async Task UpdateMovie(MovieEntity movieEntity, IEnumerable<string>? genresNames,
-        IEnumerable<string>? countriesNames)
-    {   
+        IEnumerable<string>? countriesNames, short? Imdb, short? Kp, short? FilmCritics)
+    {
         var genres = await _context.Genres
                                 .Where(g => genresNames != null && genresNames.Contains(g.Name))
                                 .ToListAsync();
@@ -128,16 +129,22 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
                                 .ToListAsync();
         
         genres = genres.DistinctBy(g => g.Name).ToList();
-        countries = countries.DistinctBy(c => c.Name).ToList(); 
+        countries = countries.DistinctBy(c => c.Name).ToList();
+
+        var tempRating = new RatingEntity();
+        tempRating.Imdb = Imdb;
+        tempRating.Kp = Kp;
+        tempRating.FilmCritics = FilmCritics;
+        var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
+        var rating = ratings.FirstOrDefault(r => r.Equals(tempRating));
         
-        // var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
-        // var rating = ratings.FirstOrDefault(r => r.Equals(movieEntity.Rating));
-        // проблема с обновлением рейтинга --
-        // отслеживание двух сущностей с одинаковым Id
+        if(rating != null)
+            _context.Entry(rating).State = EntityState.Modified;//MovieId is changed by changing navigation field 
+
+        movieEntity.Rating = rating;
         movieEntity.Genres = genres;
         movieEntity.Countries = countries;
         _context.Entry(movieEntity).State = EntityState.Modified;
-        var entries = _context.ChangeTracker.Entries();
     }
     // public async Task PutPoster(Guid id, ImageInfoDto image)
     // {

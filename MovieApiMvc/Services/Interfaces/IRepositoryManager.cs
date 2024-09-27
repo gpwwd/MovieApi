@@ -7,5 +7,5 @@ public interface IRepositoryManager
     IMovieRepository MovieRepository { get; }
     IUserRepository UserRepository { get; }
     ICountriesRepository CountriesRepository { get; }
-    void Save();
+    Task SaveAsync();
 }
