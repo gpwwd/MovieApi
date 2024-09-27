@@ -56,7 +56,7 @@ public class MoviesService : IMoviesService
         
         _mapper.Map(movieDto, movieEntity);
         
-        await _repository.MovieRepository.UpdateMovie(movieEntity, movieDto.GenresNames, movieDto.CountriesNames, movieDto.Rating);
+        await _repository.MovieRepository.UpdateMovie(movieEntity, movieDto.GenresNames, movieDto.CountriesNames);
         _repository.Save();
     }
 
