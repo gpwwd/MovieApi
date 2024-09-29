@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
-using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
+using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
+using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
 

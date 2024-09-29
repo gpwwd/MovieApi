@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.ExternalApi;
 using MovieApiMvc.RequestFeatures;
 

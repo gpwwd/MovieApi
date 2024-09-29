@@ -1,4 +1,4 @@
-﻿namespace MovieApiMvc.ErrorHandling;
+﻿namespace MovieApiMvc.ErrorHandling.NotFoundExceptions;
 
 public sealed class ImageNotFoundException : NotFoundException
 {

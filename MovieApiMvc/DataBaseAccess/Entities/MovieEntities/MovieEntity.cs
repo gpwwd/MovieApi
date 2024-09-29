@@ -1,4 +1,4 @@
-using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
+using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 using Newtonsoft.Json;
 
 namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities

@@ -1,6 +1,7 @@
 using MovieApiMvc.DataBaseAccess;
 using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.ExternalApi;
 using Newtonsoft.Json;
 

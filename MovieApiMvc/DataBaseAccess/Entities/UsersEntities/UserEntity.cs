@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
+using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 
-namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities
+namespace MovieApiMvc.DataBaseAccess.Entities.UsersEntities
 {
     public class UserEntity
     {

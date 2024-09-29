@@ -30,7 +30,7 @@ public class Program
                 });
         });
         // Add services to the container.
-        builder.Services.AddAutoMapper(typeof(ApplicationMapperProfile));
+        builder.Services.AddAutoMapper(typeof(MovieMapperProfile), typeof(UserMapperProfile));
         
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();

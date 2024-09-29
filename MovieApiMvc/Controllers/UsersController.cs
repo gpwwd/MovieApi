@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
+using MovieApiMvc.Models.Dtos.UpdateDtos;
 using MovieApiMvc.Services.Interfaces;
 
 namespace MovieApiMvc.Controllers;
@@ -24,14 +27,8 @@ public class UsersController : Controller
     [HttpPost("register")]
     public async Task<ActionResult> Register([FromBody] UserDto user)
     {
-        if (user is null)
-        {
-            return BadRequest();
-        }
-        
         var createdEntity = await _userService.Register(user);
-        var location = Url.Action("Post", new { id = createdEntity.Id });
-        return Created(location, createdEntity);
+        return CreatedAtRoute("users/register", new { id = createdEntity.Id }, createdEntity);
     }
 
     [HttpPost("login")]
@@ -62,25 +59,16 @@ public class UsersController : Controller
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateUser([FromBody] UserDto user)
+    public async Task<ActionResult> CreateUser([FromBody] UserForRegistrationDto user)
     {
-        if (user is null)
-        {
-            return BadRequest();
-        }
-        
         var createdEntity = await _userService.CreateUser(user);
         var location = Url.Action("Post", new { id = createdEntity.Id });
         return Created(location, createdEntity);
     }
 
     [HttpPut]
-    public async Task<ActionResult> UpdateMovie([FromBody] UserDto user)
+    public async Task<ActionResult> UpdateMovie([FromBody] UserUpdateDto user)
     {       
-        if (user is null)
-        {
-            return new BadRequestResult();
-        }
         await _userService.UpdateUser(user);
         return Ok(user);
     } 
