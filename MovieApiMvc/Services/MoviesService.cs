@@ -2,6 +2,7 @@ using AutoMapper;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.Models.Dtos.UpdateDtos;

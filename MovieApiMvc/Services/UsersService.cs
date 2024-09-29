@@ -1,21 +1,31 @@
+using AutoMapper;
 using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services.Mappers;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
-using MovieApiMvc.DataBaseAccess.Entities.MovieEntities.UsersEntities;
+using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
+using MovieApiMvc.ErrorHandling.AuthenticationExtensions;
+using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
+using MovieApiMvc.Models.Dtos.UpdateDtos;
 
 namespace MovieApiMvc.Services;
 
 public class UsersService : IUsersService
 {
+    private readonly IRepositoryManager _repository;
     private readonly UsersRepository _usersRepository;
     private readonly MoviesRepository _moviesRepository;
     private readonly IJwtProvider _jwtProvider;
-    public UsersService(UsersRepository usersRepository, MoviesRepository moviesRepository, IJwtProvider jwtProvider)
+    private readonly IMapper _mapper;
+    public UsersService(UsersRepository usersRepository, MoviesRepository moviesRepository,
+        IJwtProvider jwtProvider, IMapper mapper, IRepositoryManager repository)
     {
+        _repository = repository;
+        _mapper = mapper;
         _usersRepository = usersRepository;
         _moviesRepository = moviesRepository; 
         _jwtProvider = jwtProvider;
@@ -23,75 +33,87 @@ public class UsersService : IUsersService
 
     public async Task<List<UserDto>> GetAll()
     {
-        var users = await _usersRepository.GetAll();
-        List<UserDto> usersDto = new List<UserDto>();
-        foreach(var user in users)
-        {
-            usersDto.Add(EntityToDto.CreateUserDtoFromEntity(user));
-        }
+        var users = await _repository.UserRepository.GetAll();
+        var usersDto = _mapper.Map<List<UserDto>>(users);
+        //<summury> test with innerconnected entities </summury>
         return usersDto;
     }
     public async Task<UserDto> GetById(Guid id)
     {
-        var user = await _usersRepository.GetById(id);
-        return EntityToDto.CreateUserDtoFromEntity(user);
+        var user = await _repository.UserRepository.GetById(id, false);
+        return _mapper.Map<UserDto>(user);
     }
-    public async Task<UserEntity> CreateUser(UserDto userDto)
+    public async Task<UserDto> CreateUser(UserForRegistrationDto userDto)
     {
-        var userEntity = DtoToEntity.CreateUserEntityFromDto(userDto, userDto.Password);
-        await _usersRepository.Add(userEntity);
-        return userEntity;
+        var userEntity = _mapper.Map<UserEntity>(userDto);
+        userEntity.PasswHash = PasswordHasher.GeneratePasswHash(userDto.Password);
+        
+        await _repository.UserRepository.AddAsync(userEntity);
+        await _repository.SaveAsync();
+        
+        var userToReturn = _mapper.Map<UserDto>(userEntity);
+        return userToReturn;
     }
 
-    public async Task<UserEntity> Register(UserDto userDto)
+    public async Task<UserDto> Register(UserDto userDto)
     {
-        var passwHash = PasswordHasher.GeneratePasswHash(userDto.Password);
-
-        var userEntity = DtoToEntity.CreateUserEntityFromDto(userDto, passwHash);
-
-        await _usersRepository.Add(userEntity);
-        return userEntity;
+        var userEntity = _mapper.Map<UserEntity>(userDto);
+        userEntity.PasswHash = PasswordHasher.GeneratePasswHash(userDto.Password);
+        
+        await _repository.UserRepository.AddAsync(userEntity);
+        await _repository.SaveAsync();
+        
+        var userToReturn = _mapper.Map<UserDto>(userEntity);
+        return userToReturn;
     }
 
     public async Task<string> Login(UserLoginDto userDto)
     {
-        var userEntity = await _usersRepository.GetByEmail(userDto.Email);
-
-        if(userEntity is null)
-        {
-            throw new MyExeption(401, "Not registred");
-        }
-
-        var IsPasswCorr = PasswordHasher.Verify(userDto.Password, userEntity.PasswHash);
+        var userEntity = await _repository.UserRepository.GetByEmail(userDto.Email);
         
-        if(!IsPasswCorr)
-        {
+        if(userEntity is null)
+            throw new NotRegistredException(userDto.Email);
+        
+        var IsPasswordCorrect = PasswordHasher.Verify(PasswordHasher.GeneratePasswHash(userDto.Password), userEntity.PasswHash);
+        
+        if(!IsPasswordCorrect)
             throw new MyExeption(401, "Incorrect passw");
-        }
 
         var token = _jwtProvider.GenerateToken(userDto, userEntity.Id);
         // If the identifier and secret are valid, the app can set the principal for the
         // current request, but it also needs a way of storing these details for
         // subsequent requests. For traditional web apps, this is typically achieved
         // by storing an encrypted version of the user principal in a cookie.
+        
+        ////////////////////////////////////////////////////////////////////////////////
+        // <summary>
+        // move token from local storage to cookies
+        // </summary>
         return token;
     }   
     
-    public async Task UpdateUser(UserDto user)
+    public async Task UpdateUser(UserUpdateDto userDto)
     {
-        UserEntity? userEntity = await _usersRepository.GetById(user.Id);
-
+        var userEntity = await _repository.UserRepository.GetById(userDto.Id, true);
         if(userEntity is null)
-        {
-            throw new UserNotFoundException(user.Id);
-        }
-
-        await _usersRepository.Update(userEntity);
+            throw new UserNotFoundException(userDto.Id);
+    
+        _mapper.Map(userDto, userEntity);
+        userEntity.PasswHash = PasswordHasher.GeneratePasswHash(userDto.Password);
+        
+        await _repository.UserRepository.Update(userEntity, userDto.FavMoviesIds, userDto.WatchLaterMoviesIds);
+        await _repository.SaveAsync();
     }
 
+    //<summary>
+    // add async in delete methods
+    //</summary>
     public async Task DeleteUser(Guid id)
     {
-        await _usersRepository.Delete(id);
+        var user = await _repository.UserRepository.GetById(id, false);
+        if(user is null)
+            throw new UserNotFoundException(id);
+        _repository.UserRepository.DeleteUser(user);
     }
 
     public async Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds)

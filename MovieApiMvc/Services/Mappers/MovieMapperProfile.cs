@@ -6,9 +6,9 @@ using MovieApiMvc.Models.Dtos.UpdateDtos;
 
 namespace MovieApiMvc.Services.Mappers;
 
-public class ApplicationMapperProfile : Profile
+public class MovieMapperProfile : Profile
 {
-    public ApplicationMapperProfile()
+    public MovieMapperProfile()
     {
         CreateMap<MovieDto, MovieEntity>()
             .ForMember(dest => dest.Genres, opt

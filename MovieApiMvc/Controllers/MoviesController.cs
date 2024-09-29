@@ -10,7 +10,7 @@ namespace MovieApiMvc.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MoviesController : Controller
+public class MoviesController : ControllerBase
 {
     private readonly IMoviesService _moviesService;
     public MoviesController(IMoviesService moviesService)

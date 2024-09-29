@@ -1,6 +1,8 @@
 using MovieApiMvc.Models.Dtos;
 using System.Net;
 using MovieApiMvc.ErrorHandling;
+using MovieApiMvc.ErrorHandling.AuthenticationExtensions;
+using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 
 namespace MovieApiMvc.Middleware;
 public class ExceptionMiddleware
@@ -35,7 +37,7 @@ public class ExceptionMiddleware
         {
             ApplicationException => new ExceptionResponseDevelopment(HttpStatusCode.BadRequest, "Application exception occurred.", exception.StackTrace),
             NotFoundException => new ExceptionResponseDevelopment(HttpStatusCode.NotFound, exception.Message, exception.StackTrace),
-            UnauthorizedAccessException => new ExceptionResponseDevelopment(HttpStatusCode.Unauthorized, "Unauthorized.", exception.StackTrace),
+            AuthenticationException => new ExceptionResponseDevelopment(HttpStatusCode.Unauthorized, exception.Message, exception.StackTrace),
             _ => new ExceptionResponseDevelopment(HttpStatusCode.InternalServerError, exception.Message, exception.StackTrace)
         };
         
