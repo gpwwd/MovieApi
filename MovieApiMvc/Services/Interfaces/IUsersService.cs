@@ -8,7 +8,6 @@ namespace MovieApiMvc.Services.Interfaces;
 public interface IUsersService
 {
     public Task<List<UserDto>> GetAll();
-    public Task<UserDto> CreateUser(UserForRegistrationDto userDto);
     public Task<UserDto> GetById(Guid id);
     public Task DeleteUser(Guid id);
     public Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds);

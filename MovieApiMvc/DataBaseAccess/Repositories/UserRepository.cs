@@ -89,10 +89,23 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
         
         var entries2 = _context.ChangeTracker.Entries();
     }
-
-    public Task AddWatchLaterMovies(Guid userId, List<MovieEntity> moviesAdded)
+    
+    /// <summary>
+    /// Привязывает добавляемые фильмы к контексту
+    /// с статусом отслеживания Unchanged
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="moviesAdded"></param>
+    public void AddWatchLaterMovies(UserEntity user, List<MovieEntity> moviesAdded)
     {
-        throw new NotImplementedException();
+        foreach (var movie in moviesAdded)
+            _context.Entry(movie).State = EntityState.Unchanged;
+        _context.Entry(user).State = EntityState.Unchanged;
+        
+        if (user.WatchLaterMovies != null) 
+            user.WatchLaterMovies.AddRange(moviesAdded);
+        else
+            user.WatchLaterMovies = moviesAdded;
     }
 
     public Task DeleteWatchLaterMovie(Guid userId, Guid movieId)

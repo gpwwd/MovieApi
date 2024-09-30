@@ -13,7 +13,7 @@ public interface IUserRepository
     public Task<UserEntity?> GetByIdWithWatchLaterMovies(Guid? id);
     public Task AddAsync(UserEntity userEntity);
     public Task Update(UserEntity updatedUser, List<Guid>? FavMoviesIds, List<Guid>? WatchLaterMoviesIds);
-    public Task AddWatchLaterMovies(Guid userId, List<MovieEntity> moviesAdded);
+    public void AddWatchLaterMovies(UserEntity user, List<MovieEntity> moviesAdded);
     public Task DeleteWatchLaterMovie(Guid userId, Guid movieId);
     public void DeleteUser(UserEntity user);
 }

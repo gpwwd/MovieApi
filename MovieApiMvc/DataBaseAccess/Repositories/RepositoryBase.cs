@@ -7,8 +7,8 @@ namespace MovieApiMvc.DataBaseAccess.Repositories;
 public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
 { 
     protected MovieDataBaseContext _context;
-    
-    public RepositoryBase(MovieDataBaseContext context)
+
+    protected RepositoryBase(MovieDataBaseContext context)
         => _context = context;
 
     public IQueryable<T> FindAll(bool trackChanges) =>
@@ -25,11 +25,10 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
             _context.Set<T>()
                 .Where(expression);
     
-    public async Task CreateAsync(T entity)
-    {
-        await _context.Set<T>().AddAsync(entity);
-    }
-
+    public async Task CreateAsync(T entity) => await _context.Set<T>().AddAsync(entity);
     public void Update(T entity) => _context.Set<T>().Update(entity);
+    /// <summary>
+    /// Правильно настроить каскдное удаление сущностей в конфигурациях фильмов
+    /// </summary>>
     public void Delete(T entity) => _context.Set<T>().Remove(entity);
 }
