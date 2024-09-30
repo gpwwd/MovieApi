@@ -7,8 +7,6 @@ using MovieApiMvc.Middleware;
 using MovieApiMvc.Services;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Services.Mappers;
-using AutoMapper;
-using Newtonsoft.Json;
 
 namespace MovieApiMvc;
 
@@ -32,7 +30,7 @@ public class Program
         builder.Services.AddAutoMapper(typeof(MovieMapperProfile), typeof(UserMapperProfile));
         
         builder.Services.AddControllers();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwagger();
         
         builder.Services.AddScoped<IJwtProvider, JwtProvider>();
         builder.Services.AddJWTTokenAuthenfication(builder.Configuration);

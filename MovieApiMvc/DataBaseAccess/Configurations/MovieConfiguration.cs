@@ -13,13 +13,15 @@ public class MovieConfiguration : IEntityTypeConfiguration<MovieEntity>
 
         entityTypeBuilder.HasOne(m => m.Budget)
             .WithOne(b => b.Movie)
-            .HasForeignKey<BudgetEntity>(b => b.MovieId);
+            .HasForeignKey<BudgetEntity>(b => b.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         entityTypeBuilder.ToTable("Movies");
 
         entityTypeBuilder.HasOne(m => m.Rating)
             .WithOne(r => r.Movie)
-            .HasForeignKey<RatingEntity>(r => r.MovieId);
+            .HasForeignKey<RatingEntity>(r => r.MovieId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         entityTypeBuilder.HasMany(m => m.Countries)
             .WithMany(c => c.Movies);
@@ -29,7 +31,8 @@ public class MovieConfiguration : IEntityTypeConfiguration<MovieEntity>
             
         entityTypeBuilder.HasOne(m => m.ImageInfoEntity)
             .WithOne(i => i.Movie)
-            .HasForeignKey<ImageInfoEntity>(i=>i.MovieId);
+            .HasForeignKey<ImageInfoEntity>(i=>i.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
     
     }
 }
