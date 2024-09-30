@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.DataBaseAccess.Repositories.Contracts;
-using MovieApiMvc.ErrorHandling;
-using MovieApiMvc.Models.DomainModels;
-using MovieApiMvc.Models.Dtos.GetDtos;
-using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.DataBaseAccess.Repositories;
