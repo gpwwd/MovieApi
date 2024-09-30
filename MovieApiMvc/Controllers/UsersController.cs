@@ -1,13 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using MovieApiMvc.ErrorHandling;
-using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Models.Dtos.GetDtos;
-using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.Models.Dtos.UpdateDtos;
 using MovieApiMvc.Services.Interfaces;
 
@@ -55,7 +50,6 @@ public class UsersController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<UserDto>> GetUser(Guid id)
     {
-
         var user = await _userService.GetById(id);
         return user;
     }
@@ -73,8 +67,8 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] Guid[] movieIds)
     {
-        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
-
+        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        //проверить userIdClaim если null
         Guid userId = new Guid(userIdClaim);
         
         var addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieIds); 
@@ -84,33 +78,14 @@ public class UsersController : ControllerBase
     [HttpDelete]
     [Route("{movieId:guid}/removeFromWatchList")]
     [Authorize]
-    public async Task<ActionResult> RemoveFromWatchList(string movieId)
+    public async Task<ActionResult> RemoveFromWatchList(Guid movieId)
     {
-        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
-
-        Guid movieIdGuid;
-        Guid userId;
-        try
-        {
-            movieIdGuid = new Guid(movieId);
-            userId = new Guid(userIdClaim);
-        }
-        catch
-        {
-            movieIdGuid = Guid.Empty;
-            userId = Guid.Empty;
-        }
-
-        try
-        {
-            await _userService.RemoveWatchLaterUser(userId, movieIdGuid);
-            return new NoContentResult();
-        }
-        catch (NotFoundException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return NotFound(ex.Message);
-        }
+        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        // проверить userIdClaim если null
+        Guid userId = new Guid(userIdClaim);
+        
+        await _userService.RemoveWatchLaterUser(userId, movieId);
+        return new NoContentResult();
     }
     
     [HttpGet]
@@ -118,39 +93,12 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<ActionResult<List<MovieDto>>> GetWatchLaterList()
     {   
-        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
+        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-        Guid userId;
-        try
-        {
-            userId = new Guid(userIdClaim);
-        }
-        catch
-        {
-            userId = Guid.Empty;
-        }
-
-        try
-        {
-            var watchLaterMovies = await _userService.GetWatchLaterMovies(userId);
-            return Ok(watchLaterMovies);
-        }
-        catch(NotFoundException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return NotFound();
-        }
-    }
-
-    [HttpGet]
-    [Authorize]
-    [Route("GetTestAuth")]
-    public async Task<ActionResult> GetTestAuth()
-    {
-
-        var emailClaim = User.FindFirst(ClaimTypes.Email)?.Value;
-        string curUserEmail = String.Empty;
-        return Ok();
+        Guid userId = new Guid(userIdClaim);
+        
+        var watchLaterMovies = await _userService.GetWatchLaterMovies(userId);
+        return Ok(watchLaterMovies);
     }
 
 }

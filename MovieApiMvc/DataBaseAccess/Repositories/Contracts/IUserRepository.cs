@@ -14,6 +14,6 @@ public interface IUserRepository
     public Task AddAsync(UserEntity userEntity);
     public Task Update(UserEntity updatedUser, List<Guid>? FavMoviesIds, List<Guid>? WatchLaterMoviesIds);
     public void AddWatchLaterMovies(UserEntity user, List<MovieEntity> moviesAdded);
-    public Task DeleteWatchLaterMovie(Guid userId, Guid movieId);
+    public void DeleteWatchLaterMovie(UserEntity user, MovieEntity movie);
     public void DeleteUser(UserEntity user);
 }
