@@ -29,14 +29,11 @@ public class Program
                         .AllowAnyHeader();
                 });
         });
-        // Add services to the container.
         builder.Services.AddAutoMapper(typeof(MovieMapperProfile), typeof(UserMapperProfile));
         
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddScoped<MoviesRepository>();
-        builder.Services.AddScoped<UsersRepository>();
-
+        
         builder.Services.AddScoped<IJwtProvider, JwtProvider>();
         builder.Services.AddJWTTokenAuthenfication(builder.Configuration);
 

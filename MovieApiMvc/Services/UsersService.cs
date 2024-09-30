@@ -1,6 +1,4 @@
 using AutoMapper;
-using Microsoft.IdentityModel.Tokens;
-using MovieApiMvc.DataBaseAccess.Repositories;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
@@ -14,16 +12,14 @@ namespace MovieApiMvc.Services;
 public class UsersService : IUsersService
 {
     private readonly IRepositoryManager _repository;
-    private readonly UsersRepository _usersRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly IMapper _mapper;
     
-    public UsersService(UsersRepository usersRepository, IJwtProvider jwtProvider, IMapper mapper,
+    public UsersService(IJwtProvider jwtProvider, IMapper mapper,
         IRepositoryManager repository)
     {
         _repository = repository;
         _mapper = mapper;
-        _usersRepository = usersRepository;
         _jwtProvider = jwtProvider;
     }
 
@@ -140,7 +136,16 @@ public class UsersService : IUsersService
 
     public async Task RemoveWatchLaterUser(Guid userId, Guid movieId)
     {
-        await _usersRepository.DeleteWatchLaterMovie(userId, movieId);
+        var user = await _repository.UserRepository.GetById(userId, true);
+        if(user is null)
+            throw new UserNotFoundException(userId);
+
+        var deletedMovie = await _repository.MovieRepository.GetById(movieId, false);
+        if(deletedMovie is null)
+            throw new MovieNotFoundException(movieId);
+        
+        _repository.UserRepository.DeleteWatchLaterMovie(user, deletedMovie);
+        await _repository.SaveAsync();
     }
 
     public async Task<List<MovieDto>> GetWatchLaterMovies(Guid userId)

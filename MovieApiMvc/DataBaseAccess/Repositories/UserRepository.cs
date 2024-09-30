@@ -83,11 +83,8 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             .Where(m => WatchLaterMoviesIds != null && WatchLaterMoviesIds.Contains(m.Id))
             .ToListAsync();
         
-        var entries = _context.ChangeTracker.Entries();
         updatedUser.FavMovies = favMovies;
         updatedUser.WatchLaterMovies = watchLaterMovies;
-        
-        var entries2 = _context.ChangeTracker.Entries();
     }
     
     /// <summary>
@@ -108,9 +105,20 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             user.WatchLaterMovies = moviesAdded;
     }
 
-    public Task DeleteWatchLaterMovie(Guid userId, Guid movieId)
+    public void DeleteWatchLaterMovie(UserEntity user, MovieEntity movie)
     {
-        throw new NotImplementedException();
+        // _context.Entry(movie).State = EntityState.Unchanged;
+        // _context.Entry(user).State = EntityState.Unchanged;
+        if (user.WatchLaterMovies != null)
+        {
+            var movieToRemove = user.WatchLaterMovies
+                .FirstOrDefault(m => m.Id == movie.Id);
+
+            if (movieToRemove != null)
+                user.WatchLaterMovies.Remove(movieToRemove);
+        }
+
+        var entries = _context.ChangeTracker.Entries();
     }
 
     //<summary>
