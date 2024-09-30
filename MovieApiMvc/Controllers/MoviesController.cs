@@ -80,8 +80,8 @@ public class MoviesController : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {
-        var createdEntity = await _moviesService.CreateMovie(movie);   
-        return CreatedAtRoute("CreateMovie", new { id = createdEntity.Id }, createdEntity);
+        var createdMovieDto = await _moviesService.CreateMovie(movie);   
+        return CreatedAtRoute("CreateMovie", new { id = createdMovieDto.Id }, createdMovieDto);
     }
 
 }

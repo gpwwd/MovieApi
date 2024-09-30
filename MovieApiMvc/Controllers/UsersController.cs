@@ -1,9 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MovieApiMvc.ErrorHandling;
 using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.Models.Dtos;
@@ -16,7 +15,7 @@ namespace MovieApiMvc.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : Controller
+public class UsersController : ControllerBase
 {
     private readonly IUsersService _userService;
     public UsersController(IUsersService userService)
@@ -34,40 +33,20 @@ public class UsersController : Controller
     [HttpPost("login")]
     public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {   
-        try
-        {
-            var token = await _userService.Login(userLoginDto);
-            if (token is null)
-            {
-                return Unauthorized();
-            }
-            return Ok( token );
-        }
-        catch(MyExeption ex)
-        {
-            return Unauthorized(ex.Message);
-        }
-
+        var token = await _userService.Login(userLoginDto);
+        return Ok( token );
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<List<UserDto>>> GetAllUsers()
     {
         var userDTOs = await _userService.GetAll();
         return Ok(userDTOs);
     }
 
-    [HttpPost]
-    public async Task<ActionResult> CreateUser([FromBody] UserForRegistrationDto user)
-    {
-        var createdEntity = await _userService.CreateUser(user);
-        var location = Url.Action("Post", new { id = createdEntity.Id });
-        return Created(location, createdEntity);
-    }
-
     [HttpPut]
-    public async Task<ActionResult> UpdateMovie([FromBody] UserUpdateDto user)
+    [Authorize]
+    public async Task<ActionResult> UpdateUser([FromBody] UserUpdateDto user)
     {       
         await _userService.UpdateUser(user);
         return Ok(user);
@@ -78,75 +57,28 @@ public class UsersController : Controller
     {
 
         var user = await _userService.GetById(id);
-        if(user is null)
-        {
-            return new NotFoundResult();
-        }
         return user;
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize]
     public async Task<ActionResult> DeleteUser(Guid id)
     {
-        try
-        {
-            await _userService.DeleteUser(id);
-            return new NoContentResult();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            Console.WriteLine(ex.Message);
-            return StatusCode(500);
-        }
+        await _userService.DeleteUser(id);
+        return new NoContentResult();
     }
-
-    // [HttpGet]
-    // [Route("testAuth")]
-    // [Authorize]
-    // public async Task<IActionResult> testAuth()
-    // {
-    //     User.AddIdentity
-    //     return Ok();
-    // }
 
     [HttpPost]
     [Route("addToWatchList")]
     [Authorize]
-    public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] string[] movieIds)
+    public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] Guid[] movieIds)
     {
         string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;//!- переменная не будет null, если null - runtime exception
 
-        Guid userId;
-        Guid[] movieGuids = new Guid[movieIds.Length]; 
-        try
-        {
-            userId = new Guid(userIdClaim);
-            for (int i = 0; i < movieIds.Length; i++)
-            {
-                movieGuids[i] = new Guid(movieIds[i]); 
-            }
-        }
-        catch
-        {
-            userId = Guid.Empty;
-        }
-
-        List<Guid> addedMoviesIds = new List<Guid>();
-        try
-        {
-            addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieGuids); 
-        }
-        catch(NotFoundException ex)
-        {   
-            Console.WriteLine(ex.Message);
-            return NotFound();
-        }
-        catch(EntityAlreadyExistException ex)
-        {
-            return Conflict(new { message = ex.Message});
-        } 
-        var location = Url.Action("addToWatchList");
-        return Created(location, addedMoviesIds);
+        Guid userId = new Guid(userIdClaim);
+        
+        var addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieIds); 
+        return CreatedAtRoute("users/addToWatchList", addedMoviesIds);
     }
 
     [HttpDelete]
