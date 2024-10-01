@@ -5,6 +5,7 @@ using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 using MovieApiMvc.ErrorHandling.AuthenticationExtensions;
 using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.Models.Dtos.UpdateDtos;
 
 namespace MovieApiMvc.Services;
@@ -27,7 +28,6 @@ public class UsersService : IUsersService
     {
         var users = await _repository.UserRepository.GetAll();
         var usersDto = _mapper.Map<List<UserDto>>(users);
-        //<summury> test with innerconnected entities </summury>
         return usersDto;
     }
     
@@ -37,7 +37,7 @@ public class UsersService : IUsersService
         return _mapper.Map<UserDto>(user);
     }
 
-    public async Task<UserDto> Register(UserDto userDto)
+    public async Task<UserDto> Register(UserForRegistrationDto userDto)
     {
         var userEntity = _mapper.Map<UserEntity>(userDto);
         userEntity.PasswHash = PasswordHasher.GeneratePasswordHash(userDto.Password);
@@ -74,11 +74,11 @@ public class UsersService : IUsersService
         return token;
     }   
     
-    public async Task UpdateUser(UserUpdateDto userDto)
+    public async Task UpdateUser(Guid id, UserUpdateDto userDto)
     {
-        var userEntity = await _repository.UserRepository.GetById(userDto.Id, true);
+        var userEntity = await _repository.UserRepository.GetById(id, true);
         if(userEntity is null)
-            throw new UserNotFoundException(userDto.Id);
+            throw new UserNotFoundException(id);
     
         _mapper.Map(userDto, userEntity);
         userEntity.PasswHash = PasswordHasher.GeneratePasswordHash(userDto.Password);

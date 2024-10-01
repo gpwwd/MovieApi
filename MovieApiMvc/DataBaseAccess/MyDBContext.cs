@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.DataBaseAccess.Configurations;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
@@ -16,6 +17,11 @@ public class MovieDataBaseContext : DbContext
     public DbSet<CountryEntity> Countries { get; set; }
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<ImageInfoEntity> Images { get; set; }
+    public DbSet<RoleEntitiy> Roles { get; set; }
+    /// <summary>
+    ///we call the OnModelCreating method from the base class.
+    ///This is required for migration to work properly.
+    /// </summary> 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new MovieConfiguration());

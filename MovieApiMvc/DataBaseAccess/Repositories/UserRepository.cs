@@ -13,7 +13,7 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
         
     }
 
-    public async Task<List<UserEntity>> GetAll()
+    public async Task<List<UserEntity>> GetAllWithMovies()
     {
         return await FindAll(false)
             .Include(u => u.FavMovies)!
@@ -23,7 +23,13 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             .AsSplitQuery()
             .ToListAsync();
     }
-
+    
+    public async Task<List<UserEntity>> GetAll()
+    {
+        return await FindAll(false)
+            .ToListAsync();
+    }
+    
     public async Task<List<UserEntity>>? GetAllWithFavMovies()
     {
         return await FindAll(false)

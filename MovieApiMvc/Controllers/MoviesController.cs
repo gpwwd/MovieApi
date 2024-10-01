@@ -33,7 +33,7 @@ public class MoviesController : ControllerBase
         return Ok(movieDTOs);
     }
 
-    [HttpGet("images")]
+    [HttpGet("get-with-images")]
     public async Task<ActionResult<List<MovieDto>>> GetAllMoviesWithImages()
     {
         var movieDTOs = await _moviesService.GetAllWithImages();
@@ -69,11 +69,10 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPost]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {
         var createdMovieDto = await _moviesService.CreateMovie(movie);   
-        return CreatedAtRoute("CreateMovie", new { id = createdMovieDto.Id }, createdMovieDto);
+        return Created("CreateMovie", createdMovieDto);
     }
 
 }

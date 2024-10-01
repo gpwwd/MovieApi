@@ -5,6 +5,7 @@ namespace MovieApiMvc.DataBaseAccess.Repositories.Contracts;
 
 public interface IUserRepository
 {
+    public Task<List<UserEntity>> GetAllWithMovies();
     public Task<List<UserEntity>> GetAll();
     public Task<List<UserEntity>>? GetAllWithFavMovies();
     public Task<List<UserEntity>>? GetAllWithWatchLaterMovies();
