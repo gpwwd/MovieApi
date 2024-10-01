@@ -24,4 +24,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Legacy\" />
+  </ItemGroup>
+
 </Project>

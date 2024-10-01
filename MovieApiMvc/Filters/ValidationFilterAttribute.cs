@@ -5,27 +5,21 @@ namespace MovieApiMvc.Filters;
 
 public class ValidationFilterAttribute : IAsyncActionFilter 
 {
-public async Task OnActionExecutionAsync(ActionExecutingContext context, 
-                                            ActionExecutionDelegate next)
-{
-
-    // logic before action goes here
-
-    var action = context.RouteData.Values["action"];
-    var controller = context.RouteData.Values["controller"];
-    var param = context.ActionArguments
-        .SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
-    if (param is null)
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, 
+                                                ActionExecutionDelegate next)
     {
-        context.Result = new BadRequestObjectResult($"Object is null. Controller:{controller}, action: {action}");
-        return;
+        var action = context.RouteData.Values["action"];
+        var controller = context.RouteData.Values["controller"];
+        var param = context.ActionArguments
+            .SingleOrDefault(x => x.Value != null && x.Value.ToString()!.Contains("Dto")).Value;
+        if (param is null)
+        {
+            context.Result = new BadRequestObjectResult($"Object is null. Controller:{controller}, action: {action}");
+            return;
+        }
+        if (!context.ModelState.IsValid)
+            context.Result = new UnprocessableEntityObjectResult(context.ModelState);
+
+        await next(); 
     }
-    if (!context.ModelState.IsValid)
-        context.Result = new UnprocessableEntityObjectResult(context.ModelState);
-        
-
-    await next(); 
-
-    // logic after the action goes here
-}
 }

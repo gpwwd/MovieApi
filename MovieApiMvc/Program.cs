@@ -10,7 +10,7 @@ using MovieApiMvc.Services.Mappers;
 
 namespace MovieApiMvc;
 
-public class Program
+public abstract class Program
 {
     public static void Main(string[] args)
     {
@@ -20,9 +20,9 @@ public class Program
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",
-                builder =>
+                policyBuilder =>
                 {
-                    builder.AllowAnyOrigin()
+                    policyBuilder.AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });

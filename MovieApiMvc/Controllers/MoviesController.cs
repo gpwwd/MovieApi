@@ -53,17 +53,9 @@ public class MoviesController : ControllerBase
         var imageInfoDto = await _moviesService.GetImageById(id);
         return imageInfoDto;
     }
-    // it else can be done like
-    // [Produces(typeof(Employee))]
-    // public IActionResult Get(long id)
-    // {
-    //     var employee = GetEmployee(id);
-    //     return Ok(employee);
-    // }
 
     [HttpPut]
-    //  чо это [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<ActionResult> PutMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
+    public async Task<ActionResult> UpdateMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
     {       
         await _moviesService.UpdateMovie(id, movie);
         return Ok(id);

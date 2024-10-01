@@ -1,18 +1,15 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities
+namespace MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+
+public class BudgetEntity
 {
-    public class BudgetEntity
-    {
-        [JsonIgnore]
-        public Guid Id { get; set; }
-        public string? Currency { get; set; }
-        public double Value { get; set; }
-        //зависимая от Movie сущность 
-        //отношение один к одному
-        public Guid MovieId { get; set; }
-        [ForeignKey("MovieId")]
-        public MovieEntity? Movie { get; set; } = default;
-    }
+    [JsonIgnore]
+    public Guid Id { get; set; }
+    public string? Currency { get; set; }
+    public double Value { get; set; }
+    public Guid MovieId { get; set; }
+    [ForeignKey("MovieId")]
+    public MovieEntity? Movie { get; set; } = default;
 }
