@@ -34,6 +34,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<List<UserDto>>> GetAllUsers()
     {
         var userDTOs = await _userService.GetAll();

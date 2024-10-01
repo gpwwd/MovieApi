@@ -19,8 +19,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                 name: "RoleId",
                 table: "Users",
                 type: "TEXT",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                nullable: true);
 
             migrationBuilder.CreateTable(
                 name: "Roles",
@@ -52,8 +51,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                 table: "Users",
                 column: "RoleId",
                 principalTable: "Roles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />

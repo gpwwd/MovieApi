@@ -221,7 +221,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid?>("RoleId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
@@ -331,9 +331,7 @@ namespace MovieApiMvc.DataBaseAccess.Migrations
                 {
                     b.HasOne("MovieApiMvc.DataBaseAccess.Entities.UsersEntities.RoleEntitiy", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });
