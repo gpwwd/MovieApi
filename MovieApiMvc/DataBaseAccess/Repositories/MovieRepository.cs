@@ -136,7 +136,13 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
         
         if(rating != null)
             _context.Entry(rating).State = EntityState.Modified;//MovieId is changed by changing navigation field 
-
+        else
+        {
+            rating = new RatingEntity();
+            rating = tempRating;
+            _context.Ratings.Add(rating);
+        }
+        
         movieEntity.Rating = rating;
         movieEntity.Genres = genres;
         movieEntity.Countries = countries;

@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Configurations;
@@ -33,7 +32,6 @@ public class MovieConfiguration : IEntityTypeConfiguration<MovieEntity>
             .WithOne(i => i.Movie)
             .HasForeignKey<ImageInfoEntity>(i=>i.MovieId)
             .OnDelete(DeleteBehavior.Cascade);
-    
     }
 }
 

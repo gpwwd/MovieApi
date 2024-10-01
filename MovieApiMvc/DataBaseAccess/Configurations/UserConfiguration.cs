@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MovieApiMvc.DataBaseAccess.Entities;
 using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Configurations;
@@ -17,7 +16,6 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             
         entityTypeBuilder.HasMany(u => u.WatchLaterMovies)
             .WithMany(m => m.WatchLaterUsers);
-
     }
 }
 
