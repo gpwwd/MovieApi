@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MovieApiMvc.DataBaseAccess;
@@ -10,6 +11,16 @@ namespace MovieApiMvc.Extensions
 {
     public static class AuthenticationExtension
     {
+        /// <summary>
+        /// new AuthorizationPolicyBuilder
+        /// (JwtBearerDefaults.AuthenticationScheme)
+        /// .RequireAuthenticatedUser()
+        /// решает проблему с редиректом на страницу login
+        /// Иначе авторизация пытается работать с cookies схемой аутенфикации
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static IServiceCollection AddJWTTokenAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
@@ -33,8 +44,12 @@ namespace MovieApiMvc.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
                     };
                 });
-
-            services.AddAuthorization();
+            
+            services.AddAuthorization(opt => opt.DefaultPolicy =
+                new AuthorizationPolicyBuilder
+                        (JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build());
             
             return services;
         }
@@ -57,15 +72,6 @@ namespace MovieApiMvc.Extensions
                 })
                 .AddEntityFrameworkStores<MovieDataBaseContext>()
                 .AddDefaultTokenProviders();
-            
-            // services.ConfigureApplicationCookie(options =>
-            // {
-            //     options.Events.OnRedirectToLogin = context =>
-            //     {
-            //         context.Response.StatusCode = 401;
-            //         return Task.CompletedTask;
-            //     };
-            // });;
         }
     }
 }
