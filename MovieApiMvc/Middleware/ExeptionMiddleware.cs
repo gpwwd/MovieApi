@@ -37,7 +37,7 @@ public class ExceptionMiddleware
         {
             ApplicationException => new ExceptionResponseDevelopment(HttpStatusCode.BadRequest, "Application exception occurred.", exception.StackTrace),
             NotFoundException => new ExceptionResponseDevelopment(HttpStatusCode.NotFound, exception.Message, exception.StackTrace),
-            AuthenticationException => new ExceptionResponseDevelopment(HttpStatusCode.Unauthorized, exception.Message, exception.StackTrace),
+            MyAuthenticationException => new ExceptionResponseDevelopment(HttpStatusCode.Unauthorized, exception.Message, exception.StackTrace),
             _ => new ExceptionResponseDevelopment(HttpStatusCode.InternalServerError, exception.Message, exception.StackTrace)
         };
         

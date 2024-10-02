@@ -15,20 +15,13 @@ public class JwtProvider : IJwtProvider
     {
         _configuration = configuration;
     }
-
-    public string GenerateToken(UserLoginDto userInfo, Guid userId)
-    {
     
+    public string GenerateToken(List<Claim> claims)
+    {
+        //getting SigningCredentials
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Email, userInfo.Email),
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            new Claim(ClaimTypes.Role, "Admin"),
-        };
-
+        
         var token = new JwtSecurityToken(
                 claims: claims,
                 signingCredentials: credentials,

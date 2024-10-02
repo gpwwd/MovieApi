@@ -1,9 +1,9 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Extensions;
 using MovieApiMvc.Models.Dtos.GetDtos;
-using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.Models.Dtos.UpdateDtos;
 using MovieApiMvc.Services.Interfaces;
 
@@ -18,23 +18,9 @@ public class UsersController : ControllerBase
     {
         _userService = userService;
     }
-    
-    [HttpPost("register")]
-    public async Task<ActionResult> Register([FromBody] UserForRegistrationDto user)
-    {
-        var createdEntity = await _userService.Register(user);
-        return Created("users/register", createdEntity);
-    }
-
-    [HttpPost("login")]
-    public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
-    {   
-        var token = await _userService.Login(userLoginDto);
-        return Ok( token );
-    }
 
     [HttpGet]
-    [Authorize(Policy = "AdminPolicy")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
     public async Task<ActionResult<List<UserDto>>> GetAllUsers()
     {
         var userDTOs = await _userService.GetAll();
@@ -42,10 +28,20 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateUser([FromHeader] Guid id, [FromBody] UserUpdateDto user)
     {       
         await _userService.UpdateUser(id, user);
+        return Ok(user);
+    } 
+    
+    [HttpPut]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("update-profile")]
+    public async Task<ActionResult> UpdateUser([FromBody] UserUpdateDto userDto)
+    {
+        var name = User.Identity!.Name!;
+        var user = await _userService.GetByName(User.Identity!.Name!);
         return Ok(user);
     } 
 

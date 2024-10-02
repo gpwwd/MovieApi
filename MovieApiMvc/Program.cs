@@ -30,30 +30,30 @@ public abstract class Program
         builder.Services.AddAutoMapper(typeof(MovieMapperProfile), typeof(UserMapperProfile));
         
         builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwagger();
         
         builder.Services.AddScoped<IJwtProvider, JwtProvider>();
-        builder.Services.AddJWTTokenAuthenfication(builder.Configuration);
-
         builder.Services.AddScoped<IMoviesService, MoviesService>();
         builder.Services.AddScoped<IUsersService, UsersService>();
+        builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-        
-        builder.Services.AddScoped<ValidationFilterAttribute>();
 
         builder.Services.AddDbContext<MovieDataBaseContext>(
             opt =>
             {
                 opt.UseSqlite(builder.Configuration.GetConnectionString("Data Source"));
             });
-
+        builder.Services.AddJWTTokenAuthentication(builder.Configuration);
+        builder.Services.ConfigureIdentity();
+        
         var app = builder.Build();  
         
+        app.UseRouting();
+        
         app.UseCors("AllowAll");
-        if(app.Environment.IsDevelopment()) 
-            app.UseDeveloperExceptionPage();
         app.UseMyExeptionHandling(builder.Environment);
-
+        
         app.UseAuthentication();
         app.UseAuthorization();
 

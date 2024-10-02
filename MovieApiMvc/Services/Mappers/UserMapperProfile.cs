@@ -13,21 +13,21 @@ public class UserMapperProfile : Profile
     public UserMapperProfile()
     {
         CreateMap<UserDto, UserEntity>()
-            .ForMember(dest => dest.PasswHash, opt
+            .ForMember(dest => dest.PasswordHash, opt
                 => opt.Ignore())
             .ReverseMap()
             .ForMember(dest => dest.Password, opt
                 => opt.Ignore());
         
         CreateMap<UserForRegistrationDto, UserEntity>()
-            .ForMember(dest => dest.PasswHash, opt
+            .ForMember(dest => dest.PasswordHash, opt
                 => opt.Ignore())
             .ReverseMap()
             .ForMember(dest => dest.Password, opt
                 => opt.Ignore());
         
         CreateMap<UserUpdateDto, UserEntity>()
-            .ForMember(dest => dest.PasswHash, opt
+            .ForMember(dest => dest.PasswordHash, opt
                 => opt.Ignore())
             .ForMember(dest => dest.WatchLaterMovies, opt
                 => opt.Ignore())

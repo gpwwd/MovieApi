@@ -4,14 +4,29 @@ using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 
 namespace MovieApiMvc.DataBaseAccess.Configurations;
 
-public class RoleConfiguration : IEntityTypeConfiguration<RoleEntitiy>
+public class RoleConfiguration : IEntityTypeConfiguration<RoleEntity>
 {
-    public void Configure(EntityTypeBuilder<RoleEntitiy> entityTypeBuilder)
+    public void Configure(EntityTypeBuilder<RoleEntity> builder)
     {
-        entityTypeBuilder.HasKey(u => u.Id);
-
-        entityTypeBuilder.HasMany(u => u.Users)
-            .WithOne(m => m.Role)
-            .HasForeignKey(u => u.Role);
+        builder.HasData(
+            new RoleEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "User",
+                NormalizedName = "USER"
+            },
+            new RoleEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Administrator",
+                NormalizedName = "ADMINISTRATOR"
+            },
+            new RoleEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Subscriber",
+                NormalizedName = "SUBSCRIBER"
+            }
+        );
     }
 }

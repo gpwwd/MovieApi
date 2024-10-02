@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApiMvc.Services.Interfaces;
 using MovieApiMvc.Filters;
