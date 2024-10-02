@@ -12,7 +12,7 @@ public interface IUserRepository
     public Task<UserEntity?> GetById(Guid id, bool trackChanges);
     public Task<ICollection<RoleEntity>?> GetRolesAsync(UserEntity userEntity);
     public Task<UserEntity?> GetByEmail(string email);
-    public Task<UserEntity?> GetByName(string name);
+    public Task<UserEntity?> GetByName(string name, bool trackChanges);
     public Task<UserEntity?> GetByIdWithWatchLaterMovies(Guid? id);
     public Task AddAsync(UserEntity userEntity);
     public Task AddToRolesAsync(UserEntity userEntity, ICollection<string>? roleNames);

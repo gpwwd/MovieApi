@@ -34,10 +34,10 @@ public class UsersService : IUsersService
         return _mapper.Map<UserDto>(user);
     }
     
-    public async Task<UserDto> GetByName(string name)
+    public async Task<UserEntity?> GetByNameAsync(string name)
     {
-        var user = await _repository.UserRepository.GetByName(name);
-        return _mapper.Map<UserDto>(user);
+        var user = await _repository.UserRepository.GetByName(name, true);
+        return user;
     }
 
     /// <summary>

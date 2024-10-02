@@ -9,7 +9,7 @@ using MovieApiMvc.RequestFeatures;
 
 namespace MovieApiMvc.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/movies")]
 [ApiController]
 public class MoviesController : ControllerBase
 {
@@ -56,6 +56,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> UpdateMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
     {       
         await _moviesService.UpdateMovie(id, movie);
@@ -63,6 +64,7 @@ public class MoviesController : ControllerBase
     } 
     
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> DeleteMovie(Guid id)
     {
         await _moviesService.DeleteMovie(id);
@@ -70,6 +72,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {
         var createdMovieDto = await _moviesService.CreateMovie(movie);   

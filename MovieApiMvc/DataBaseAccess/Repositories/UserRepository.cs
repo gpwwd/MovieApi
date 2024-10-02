@@ -81,9 +81,9 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             .FirstOrDefaultAsync(u => u.Email == email);
     }
     
-    public async Task<UserEntity?> GetByName(string name)
+    public async Task<UserEntity?> GetByName(string name, bool trackChanges)
     {
-        return await FindAll(false)   
+        return await FindAll(trackChanges)   
             .FirstOrDefaultAsync(u => u.UserName == name);
     }
     
