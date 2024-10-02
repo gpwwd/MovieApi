@@ -54,7 +54,7 @@ namespace MovieApiMvc.Extensions
             return services;
         }
         /// <summary>
-        /// It seems that SignInManager uses cookie authentication
+        /// It seems that authorization identity uses cookie authentication
         /// internally and unauthorized requests are redirected to Login page which I have not implemented, hence 404 response.!!!!!!!!!!
         /// !!!!!!!!!!!!!!!!!!!!!!!!! 
         /// </summary>

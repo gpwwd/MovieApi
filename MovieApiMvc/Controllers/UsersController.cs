@@ -1,8 +1,6 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieApiMvc.Extensions;
 using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Models.Dtos.UpdateDtos;
 using MovieApiMvc.Services.Interfaces;
@@ -10,7 +8,7 @@ using MovieApiMvc.Services.Interfaces;
 namespace MovieApiMvc.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/users")]
 public class UsersController : ControllerBase
 {
     private readonly IUsersService _userService;
@@ -21,7 +19,6 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    //(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")
     public async Task<ActionResult<List<UserDto>>> GetAllUsers()
     {
         var userDTOs = await _userService.GetAll();
@@ -29,23 +26,13 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> UpdateUser([FromHeader] Guid id, [FromBody] UserUpdateDto user)
     {       
         await _userService.UpdateUser(id, user);
         return Ok(user);
     } 
     
-    [HttpPut]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("update-profile")]
-    public async Task<ActionResult> UpdateUser([FromBody] UserUpdateDto userDto)
-    {
-        var name = User.Identity!.Name!;
-        var user = await _userService.GetByName(User.Identity!.Name!);
-        return Ok(user);
-    } 
-
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<UserDto>> GetUser(Guid id)
     {
@@ -54,7 +41,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public async Task<ActionResult> DeleteUser(Guid id)
     {
         await _userService.DeleteUser(id);

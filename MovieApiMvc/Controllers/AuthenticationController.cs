@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MovieApiMvc.Services.Interfaces;
+﻿using MovieApiMvc.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using MovieApiMvc.Models.Dtos;
 using MovieApiMvc.Models.Dtos.PostDtos;

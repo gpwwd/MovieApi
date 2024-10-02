@@ -6,4 +6,8 @@ public class UserNotFoundException : NotFoundException
         :base ($"The user with id: {userId} doesn't exist in the database.")
     {
     }
+    public UserNotFoundException()
+        :base ($"The user doesn't exist in the database.")
+    {
+    }
 }
