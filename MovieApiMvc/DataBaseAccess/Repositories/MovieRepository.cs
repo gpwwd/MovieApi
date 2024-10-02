@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
+using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 using MovieApiMvc.DataBaseAccess.Repositories.Contracts;
 using MovieApiMvc.RequestFeatures;
 
@@ -12,7 +13,8 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
     {
     }
     
-    public async Task<List<MovieEntity>> GetAll(bool trackChanges){
+    public async Task<List<MovieEntity>> GetAll(bool trackChanges)
+    {
         return await FindAll(trackChanges)//get DbSet<T>
             .Include(m => m.Rating)
             .Include(m => m.Budget) 

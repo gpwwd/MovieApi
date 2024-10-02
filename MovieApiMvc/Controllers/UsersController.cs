@@ -1,7 +1,8 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieApiMvc.Models.Dtos;
+using MovieApiMvc.Extensions;
 using MovieApiMvc.Models.Dtos.GetDtos;
 using MovieApiMvc.Models.Dtos.UpdateDtos;
 using MovieApiMvc.Services.Interfaces;
@@ -17,22 +18,9 @@ public class UsersController : ControllerBase
     {
         _userService = userService;
     }
-    
-    [HttpPost("register")]
-    public async Task<ActionResult> Register([FromBody] UserDto user)
-    {
-        var createdEntity = await _userService.Register(user);
-        return CreatedAtRoute("users/register", new { id = createdEntity.Id }, createdEntity);
-    }
-
-    [HttpPost("login")]
-    public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
-    {   
-        var token = await _userService.Login(userLoginDto);
-        return Ok( token );
-    }
 
     [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
     public async Task<ActionResult<List<UserDto>>> GetAllUsers()
     {
         var userDTOs = await _userService.GetAll();
@@ -40,10 +28,20 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize]
-    public async Task<ActionResult> UpdateUser([FromBody] UserUpdateDto user)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    public async Task<ActionResult> UpdateUser([FromHeader] Guid id, [FromBody] UserUpdateDto user)
     {       
-        await _userService.UpdateUser(user);
+        await _userService.UpdateUser(id, user);
+        return Ok(user);
+    } 
+    
+    [HttpPut]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("update-profile")]
+    public async Task<ActionResult> UpdateUser([FromBody] UserUpdateDto userDto)
+    {
+        var name = User.Identity!.Name!;
+        var user = await _userService.GetByName(User.Identity!.Name!);
         return Ok(user);
     } 
 
@@ -63,7 +61,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    [Route("addToWatchList")]
+    [Route("watch-list-movie")]
     [Authorize]
     public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] Guid[] movieIds)
     {
@@ -72,11 +70,11 @@ public class UsersController : ControllerBase
         Guid userId = new Guid(userIdClaim);
         
         var addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieIds); 
-        return CreatedAtRoute("users/addToWatchList", addedMoviesIds);
+        return Created("users/add-to-watch-list", addedMoviesIds);
     }
 
     [HttpDelete]
-    [Route("{movieId:guid}/removeFromWatchList")]
+    [Route("watch-list-movie/{movieId:guid}")]
     [Authorize]
     public async Task<ActionResult> RemoveFromWatchList(Guid movieId)
     {
@@ -89,7 +87,7 @@ public class UsersController : ControllerBase
     }
     
     [HttpGet]
-    [Route("watchList")]
+    [Route("watch-list-movies")]
     [Authorize]
     public async Task<ActionResult<List<MovieDto>>> GetWatchLaterList()
     {   

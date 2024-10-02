@@ -5,6 +5,7 @@ using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 using MovieApiMvc.ErrorHandling.AuthenticationExtensions;
 using MovieApiMvc.ErrorHandling.NotFoundExceptions;
 using MovieApiMvc.Models.Dtos.GetDtos;
+using MovieApiMvc.Models.Dtos.PostDtos;
 using MovieApiMvc.Models.Dtos.UpdateDtos;
 
 namespace MovieApiMvc.Services;
@@ -12,22 +13,18 @@ namespace MovieApiMvc.Services;
 public class UsersService : IUsersService
 {
     private readonly IRepositoryManager _repository;
-    private readonly IJwtProvider _jwtProvider;
     private readonly IMapper _mapper;
     
-    public UsersService(IJwtProvider jwtProvider, IMapper mapper,
-        IRepositoryManager repository)
+    public UsersService(IMapper mapper, IRepositoryManager repository)
     {
         _repository = repository;
         _mapper = mapper;
-        _jwtProvider = jwtProvider;
     }
 
     public async Task<List<UserDto>> GetAll()
     {
         var users = await _repository.UserRepository.GetAll();
         var usersDto = _mapper.Map<List<UserDto>>(users);
-        //<summury> test with innerconnected entities </summury>
         return usersDto;
     }
     
@@ -36,52 +33,31 @@ public class UsersService : IUsersService
         var user = await _repository.UserRepository.GetById(id, false);
         return _mapper.Map<UserDto>(user);
     }
-
-    public async Task<UserDto> Register(UserDto userDto)
+    
+    public async Task<UserDto> GetByName(string name)
     {
-        var userEntity = _mapper.Map<UserEntity>(userDto);
-        userEntity.PasswHash = PasswordHasher.GeneratePasswordHash(userDto.Password);
-        
-        await _repository.UserRepository.AddAsync(userEntity);
-        await _repository.SaveAsync();
-        
-        var userToReturn = _mapper.Map<UserDto>(userEntity);
-        return userToReturn;
+        var user = await _repository.UserRepository.GetByName(name);
+        return _mapper.Map<UserDto>(user);
     }
 
     /// <summary>
     /// 
-    /// move token from local storage to cookies
+    /// move token from local storage to cookies on frontend
     /// /////////////////////////////////////////////////////////////////////////////////
     /// If the identifier and secret are valid, the app can set the principal for the
     /// current request, but it also needs a way of storing these details for
     /// subsequent requests. For traditional web apps, this is typically achieved
     /// by storing an encrypted version of the user principal in a cookie.
     /// </summary>
-    public async Task<string> Login(UserLoginDto userDto)
-    {
-        var userEntity = await _repository.UserRepository.GetByEmail(userDto.Email);
-        
-        if(userEntity is null)
-            throw new NotRegistredException(userDto.Email);
-        
-        var IsPasswordCorrect = PasswordHasher.Verify(PasswordHasher.GeneratePasswordHash(userDto.Password), userEntity.PasswHash);
-        
-        if(!IsPasswordCorrect)
-            throw new IncorrectPasswordException(userDto.Password);
-
-        var token = _jwtProvider.GenerateToken(userDto, userEntity.Id);
-        return token;
-    }   
     
-    public async Task UpdateUser(UserUpdateDto userDto)
+    public async Task UpdateUser(Guid id, UserUpdateDto userDto)
     {
-        var userEntity = await _repository.UserRepository.GetById(userDto.Id, true);
+        var userEntity = await _repository.UserRepository.GetById(id, true);
         if(userEntity is null)
-            throw new UserNotFoundException(userDto.Id);
+            throw new UserNotFoundException(id);
     
         _mapper.Map(userDto, userEntity);
-        userEntity.PasswHash = PasswordHasher.GeneratePasswordHash(userDto.Password);
+        userEntity.PasswordHash = PasswordHasher.GeneratePasswordHash(userDto.Password);
         
         await _repository.UserRepository.Update(userEntity, userDto.FavMoviesIds, userDto.WatchLaterMoviesIds);
         await _repository.SaveAsync();

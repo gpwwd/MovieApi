@@ -9,11 +9,10 @@ public interface IUsersService
 {
     public Task<List<UserDto>> GetAll();
     public Task<UserDto> GetById(Guid id);
+    public Task<UserDto> GetByName(string name);
     public Task DeleteUser(Guid id);
     public Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds);
     public Task RemoveWatchLaterUser(Guid userId, Guid movieId);
     public Task<List<MovieDto>> GetWatchLaterMovies(Guid userId);
-    public Task<UserDto> Register(UserDto userDto);   
-    public Task<string> Login(UserLoginDto userLoginDto);
-    public Task UpdateUser(UserUpdateDto user);
+    public Task UpdateUser(Guid id, UserUpdateDto user);
 }

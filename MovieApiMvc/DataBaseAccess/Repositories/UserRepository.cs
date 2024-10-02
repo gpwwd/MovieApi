@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MovieApiMvc.DataBaseAccess.Entities.MovieEntities;
 using MovieApiMvc.DataBaseAccess.Entities.UsersEntities;
 using MovieApiMvc.DataBaseAccess.Repositories.Contracts;
@@ -13,7 +14,7 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
         
     }
 
-    public async Task<List<UserEntity>> GetAll()
+    public async Task<List<UserEntity>> GetAllWithMovies()
     {
         return await FindAll(false)
             .Include(u => u.FavMovies)!
@@ -23,15 +24,21 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             .AsSplitQuery()
             .ToListAsync();
     }
-
-    public async Task<List<UserEntity>>? GetAllWithFavMovies()
+    
+    public async Task<List<UserEntity>> GetAll()
+    {
+        return await FindAll(false)
+            .ToListAsync();
+    }
+    
+    public async Task<List<UserEntity>> GetAllWithFavMovies()
     {
         return await FindAll(false)
             .Include(u => u.FavMovies)
             .ToListAsync();
     }
 
-    public async Task<List<UserEntity>>? GetAllWithWatchLaterMovies()
+    public async Task<List<UserEntity>> GetAllWithWatchLaterMovies()
     {
         return await FindAll(false)
             .Include(u => u.WatchLaterMovies)
@@ -55,22 +62,55 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task<UserEntity?> GetByEmail(string email)
+    public async Task<ICollection<RoleEntity>?> GetRolesAsync(UserEntity userEntity)
     {
-            return await FindAll(false)   
-                .FirstOrDefaultAsync(u => u.Email == email);
+        var roleIds = _context.UserRoles
+            .Where(u => u.UserId == userEntity.Id)
+            .AsNoTracking()
+            .Select(i => i.RoleId);
+        
+        return await _context.Roles
+            .Where(u => roleIds.Contains(u.Id))
+            .AsNoTracking()
+            .ToListAsync();
     }
 
+    public async Task<UserEntity?> GetByEmail(string email)
+    {
+        return await FindAll(false)   
+            .FirstOrDefaultAsync(u => u.Email == email);
+    }
+    
+    public async Task<UserEntity?> GetByName(string name)
+    {
+        return await FindAll(false)   
+            .FirstOrDefaultAsync(u => u.UserName == name);
+    }
+    
     public async Task<UserEntity?> GetByIdWithWatchLaterMovies(Guid? id)
     {
         return await FindAll(false)  
             .Include(u => u.WatchLaterMovies)
             .FirstOrDefaultAsync(u => u.Id == id);
     }
-
+    
     public async Task AddAsync(UserEntity userEntity)
     {
         await CreateAsync(userEntity);
+    }
+    
+    public async Task AddToRolesAsync(UserEntity userEntity, ICollection<string>? roleNames)
+    {
+        var roles = await _context.Roles
+            .Where(r => roleNames != null && roleNames.Contains(r.Name!)).ToListAsync();
+        
+        var userRoles = roles.Select(role => new IdentityUserRole<Guid>
+        {
+            UserId = userEntity.Id,
+            RoleId = role.Id
+        });
+        
+        _context.UserRoles.AddRange(userRoles); 
     }
 
     public async Task Update(UserEntity updatedUser, List<Guid>? FavMoviesIds, List<Guid>? WatchLaterMoviesIds)
@@ -117,8 +157,6 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             if (movieToRemove != null)
                 user.WatchLaterMovies.Remove(movieToRemove);
         }
-
-        var entries = _context.ChangeTracker.Entries();
     }
 
     //<summary>
