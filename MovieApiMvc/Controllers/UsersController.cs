@@ -20,7 +20,8 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")]
+    [Authorize]
+    //(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User")
     public async Task<ActionResult<List<UserDto>>> GetAllUsers()
     {
         var userDTOs = await _userService.GetAll();
