@@ -34,8 +34,8 @@ public class ProfileController : ControllerBase
     }
     
     /// <summary>
-    /// UserManager ведет поиск по normilizedUserName, поэтому для его ипользования
-    /// нужно создавать пользователей также через UserManager
+    /// UserManager ведет поиск по normalizedUserName, поэтому для его использования
+    /// нужно создавать пользователей также через UserManager.
     /// В этом случае воспользуемся кастомным UserService 
     /// </summary>
     /// <param name="nameDto"></param>
