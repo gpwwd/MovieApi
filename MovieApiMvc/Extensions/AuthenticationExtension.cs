@@ -35,6 +35,8 @@ namespace MovieApiMvc.Extensions
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
+                        // time after token expiration time start validation
+                        ClockSkew = TimeSpan.Zero,
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ValidAudience = configuration["JWT:ValidAudience"],

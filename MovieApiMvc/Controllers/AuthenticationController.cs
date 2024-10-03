@@ -30,8 +30,19 @@ public class AuthenticationController : ControllerBase
     
     [HttpPost("login")]
     public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
-    {   
-        var token = await _authenticationService.Login(userLoginDto);
+    {
+        if (!await _authenticationService.ValidateUser(userLoginDto))
+            return Unauthorized();
+        
+        var token = await _authenticationService.CreateToken(populateExp: true);
         return Ok( token );
+    }
+    
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody]TokenDto tokenDto)
+    {
+        var tokenDtoToReturn = await
+            _authenticationService.RefreshToken(tokenDto);
+        return Ok(tokenDtoToReturn);
     }
 }

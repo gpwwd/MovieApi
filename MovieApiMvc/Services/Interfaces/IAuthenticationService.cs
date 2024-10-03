@@ -7,5 +7,7 @@ namespace MovieApiMvc.Services.Interfaces;
 public interface IAuthenticationService
 {
     public Task<UserDto> Register(UserForRegistrationDto userDto);
-    public Task<string> Login(UserLoginDto userDto);
+    public Task<bool> ValidateUser(UserLoginDto userLoginDto);
+    public Task<TokenDto> CreateToken(bool populateExp);
+    Task<TokenDto> RefreshToken(TokenDto tokenDto);
 }
