@@ -4,6 +4,9 @@ using Application.Mappers;
 using Infrastructure.Database;
 using Infrastructure.Managers;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Web.Extensions;
 using Web.Middleware;
@@ -28,7 +31,10 @@ public abstract class Program
                 });
         });
         builder.Services.AddAutoMapper(typeof(MovieMapperProfile), typeof(UserMapperProfile));
-        
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwagger();
@@ -44,7 +50,7 @@ public abstract class Program
             {
                 opt.UseSqlite(builder.Configuration.GetConnectionString("Data Source"));
             });
-        builder.Services.AddJWTTokenAuthentication(builder.Configuration);
+        builder.Services.AddJwtTokenAuthentication(builder.Configuration);
         builder.Services.ConfigureIdentity();
         
         var app = builder.Build();  

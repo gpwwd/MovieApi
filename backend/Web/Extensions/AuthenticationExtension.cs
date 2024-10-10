@@ -20,7 +20,7 @@ namespace Web.Extensions
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IServiceCollection AddJWTTokenAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddJwtTokenAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
                 {
