@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Application.Dtos.GetDtos;
 using Application.Dtos.UpdateDtos;
 using Application.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +27,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateUser([FromHeader] Guid id, [FromBody] UserUpdateDto user)
     {       
         await _userService.UpdateUser(id, user);
@@ -41,7 +42,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> DeleteUser(Guid id)
     {
         await _userService.DeleteUser(id);
