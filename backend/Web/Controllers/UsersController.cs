@@ -28,7 +28,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut]
-    [ServiceFilter(typeof(ValidationFilter))]
+    [ValidationFilter]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateUser([FromHeader] Guid id, [FromBody] UserUpdateDto user)
     {       

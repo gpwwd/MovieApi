@@ -46,8 +46,6 @@ public class MovieMapperProfile : Profile
         CreateMap<RatingPostDto, RatingEntity>()
             .ForMember(dest => dest.Id, opt
                 => opt.Ignore())
-            .ForMember(dest => dest.MovieId, opt
-                => opt.Ignore())
             .ReverseMap();
         
         CreateMap<BudgetPostDto, BudgetEntity>()

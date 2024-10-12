@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MovieDataBaseContext))]
-    [Migration("20241009225159_initial")]
-    partial class initial
+    [Migration("20241012194435_ratings-many-to-one")]
+    partial class ratingsmanytoone
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -133,6 +133,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("RatingId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ShortDescription")
                         .HasColumnType("TEXT");
 
@@ -147,6 +150,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RatingId");
 
                     b.ToTable("Movies", (string)null);
                 });
@@ -166,16 +171,10 @@ namespace Infrastructure.Migrations
                     b.Property<short?>("Kp")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("MovieId")
-                        .HasColumnType("TEXT");
-
                     b.Property<short?>("RussianFilmCritics")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId")
-                        .IsUnique();
 
                     b.ToTable("Ratings", (string)null);
                 });
@@ -209,19 +208,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("19298604-f264-4ab0-8498-a991a4fd4c3c"),
+                            Id = new Guid("2124ddf3-c11e-49c0-943e-92ad21aac8f8"),
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = new Guid("30491fc2-a40d-4882-a946-2efa598c72a3"),
+                            Id = new Guid("8b7ba6c4-b84c-41ac-87c9-168705027d89"),
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = new Guid("8092178a-ef10-47d7-ac69-0139e65822a9"),
+                            Id = new Guid("0568acb7-8206-4f88-be7b-db627d32b5ef"),
                             Name = "Subscriber",
                             NormalizedName = "SUBSCRIBER"
                         });
@@ -479,14 +478,14 @@ namespace Infrastructure.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("Domain.Entities.MovieEntities.RatingEntity", b =>
+            modelBuilder.Entity("Domain.Entities.MovieEntities.MovieEntity", b =>
                 {
-                    b.HasOne("Domain.Entities.MovieEntities.MovieEntity", "Movie")
-                        .WithOne("Rating")
-                        .HasForeignKey("Domain.Entities.MovieEntities.RatingEntity", "MovieId")
+                    b.HasOne("Domain.Entities.MovieEntities.RatingEntity", "Rating")
+                        .WithMany("Movies")
+                        .HasForeignKey("RatingId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Movie");
+                    b.Navigation("Rating");
                 });
 
             modelBuilder.Entity("GenreEntityMovieEntity", b =>
@@ -590,8 +589,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Budget");
 
                     b.Navigation("ImageInfoEntity");
+                });
 
-                    b.Navigation("Rating");
+            modelBuilder.Entity("Domain.Entities.MovieEntities.RatingEntity", b =>
+                {
+                    b.Navigation("Movies");
                 });
 #pragma warning restore 612, 618
         }

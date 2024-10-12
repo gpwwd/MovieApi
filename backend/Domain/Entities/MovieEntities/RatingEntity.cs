@@ -11,10 +11,7 @@ namespace Domain.Entities.MovieEntities
         public short? Imdb { get; set; }
         public short? FilmCritics { get; set; } 
         public short? RussianFilmCritics { get; set; } 
-        public Guid? MovieId { get; set; }
-        [ForeignKey("MovieId")]
-        public MovieEntity? Movie { get; set; }
-        //сделать лист ссылок на фильм
+        public List<MovieEntity> Movies { get; set; }
         public override bool Equals(Object? obj)
         {
             if (obj == null)
@@ -25,12 +22,6 @@ namespace Domain.Entities.MovieEntities
             RatingEntity? otherRatingEntity = obj as RatingEntity;
             if (otherRatingEntity == null)
                 return false;
-
-            // var otherAvg = GetAvg(otherRatingEntity);
-            // var thisAvg = GetAvg(this);
-            //
-            // if (Math.Abs(otherAvg - thisAvg) > 0)
-            //     return false;
 
             if ( Kp == otherRatingEntity.Kp &&
                  Imdb == otherRatingEntity.Imdb &&
