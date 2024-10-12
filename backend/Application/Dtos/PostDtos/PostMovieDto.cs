@@ -8,7 +8,7 @@ public record PostMovieDto
     [MaxLength(50, ErrorMessage = "Maximum length for the Name is 50 characters.")]
     public required string Name { get; init; }
 
-    [MaxLength(50, ErrorMessage = "Maximum length for the Name is 50 characters.")]
+    [MaxLength(50, ErrorMessage = "Maximum length for the Alternative Name is 50 characters.")]
     public string? AlternativeName { get; init; } = string.Empty;
 
     public RatingPostDto? Rating { get; init; } = null;
@@ -23,7 +23,7 @@ public record PostMovieDto
     public BudgetPostDto? Budget { get; init; } = null;
     
     [Required(ErrorMessage = "Movie Length is required")]
-    [Range(15, 400, ErrorMessage = "Movie length im minutes must be between 15 and 400.")]
+    [Range(15, 400, ErrorMessage = "Movie length in minutes must be between 15 and 400.")]
     public int MovieLength { get; init; }
     public List<string> GenresNames { get; init; } = null!;
     public List<string> CountriesNames { get; init; } = null!;

@@ -10,7 +10,7 @@ public class UrlListAttribute : ValidationAttribute
         var urlList = value as List<string>;
         
         if(urlList == null)
-            return new ValidationResult("url list must be of type List<string>");
+            return ValidationResult.Success;
         
         if (urlList.Any(url => !IsValidUrl(url)))
             return new ValidationResult("url list must be a valid URL");

@@ -59,6 +59,9 @@ public class MoviesController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
     {       
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        
         await _moviesService.UpdateMovie(id, movie);
         return Ok(id);
     } 
