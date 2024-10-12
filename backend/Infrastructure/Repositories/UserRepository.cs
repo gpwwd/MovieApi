@@ -76,16 +76,28 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             .ToListAsync();
     }
 
-    public async Task<UserEntity?> GetByEmail(string email)
+    public async Task<UserEntity?> GetByEmailAsync(string email)
     {
         return await FindAll(false)   
             .FirstOrDefaultAsync(u => u.Email == email);
     }
     
-    public async Task<UserEntity?> GetByName(string name, bool trackChanges)
+    public UserEntity? GetByEmail(string email)
+    {
+        return FindAll(false)   
+            .FirstOrDefault(u => u.Email == email);
+    }
+    
+    public async Task<UserEntity?> GetByNameAsync(string name, bool trackChanges)
     {
         return await FindAll(trackChanges)   
             .FirstOrDefaultAsync(u => u.UserName == name);
+    }
+    
+    public UserEntity? GetByName(string name, bool trackChanges)
+    {
+        return FindAll(trackChanges)   
+            .FirstOrDefault(u => u.UserName == name);
     }
     
     public async Task<UserEntity?> GetByIdWithWatchLaterMovies(Guid? id)

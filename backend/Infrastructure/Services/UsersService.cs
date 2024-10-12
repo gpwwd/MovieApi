@@ -34,7 +34,13 @@ public class UsersService : IUsersService
     
     public async Task<UserEntity?> GetByNameAsync(string name)
     {
-        var user = await _repository.UserRepository.GetByName(name, true);
+        var user = await _repository.UserRepository.GetByNameAsync(name, true);
+        return user;
+    }
+
+    public UserEntity? GetByName(string name)
+    {
+        var user = _repository.UserRepository.GetByName(name, false);
         return user;
     }
 
@@ -59,6 +65,29 @@ public class UsersService : IUsersService
         
         await _repository.UserRepository.Update(userEntity, userDto.FavMoviesIds, userDto.WatchLaterMoviesIds);
         await _repository.SaveAsync();
+    }
+
+    /// <summary>
+    /// async method
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    public async Task<UserEntity?> GetByEmailAsync(string email)
+    {
+        var user = await _repository.UserRepository.GetByEmailAsync(email);
+        return user;
+    }
+    
+    /// <summary>
+    /// not async method, used in email validation
+    /// attribute 
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns></returns>
+    public UserEntity? GetByEmail(string email)
+    {
+        var user = _repository.UserRepository.GetByEmail(email);
+        return user;
     }
 
     ///<summary>

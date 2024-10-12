@@ -38,7 +38,7 @@ public sealed class AuthenticationService : IAuthenticationService
     {
         var userEntity = _mapper.Map<UserEntity>(userDto);
         userEntity.PasswordHash = PasswordHasher.GeneratePasswordHash(userDto.Password);
-        
+
         await _repository.UserRepository.AddAsync(userEntity);
         await _repository.SaveAsync();
         
@@ -62,7 +62,7 @@ public sealed class AuthenticationService : IAuthenticationService
         var claims = await GetClaims();
         var refreshToken = GenerateRefreshToken();
         
-        _user = await _repository.UserRepository.GetByName(_user?.UserName!, true);
+        _user = await _repository.UserRepository.GetByNameAsync(_user?.UserName!, true);
         _user!.RefreshToken = refreshToken;
 
         if (populateExp)
@@ -77,7 +77,7 @@ public sealed class AuthenticationService : IAuthenticationService
     public async Task<TokenDto> RefreshToken(TokenDto tokenDto)
     {
         var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
-        var user =  await _repository.UserRepository.GetByName(principal.Identity!.Name!, true);
+        var user =  await _repository.UserRepository.GetByNameAsync(principal.Identity!.Name!, true);
         if (user == null || user.RefreshToken != tokenDto.RefreshToken ||
             user.RefreshTokenExpiryTime <= DateTime.Now)
             throw new RefreshTokenBadRequest();
@@ -123,7 +123,7 @@ public sealed class AuthenticationService : IAuthenticationService
     
     public async Task<bool> ValidateUser(UserLoginDto userLoginDto)
     {
-        _user = await _repository.UserRepository.GetByEmail(userLoginDto.Email);
+        _user = await _repository.UserRepository.GetByEmailAsync(userLoginDto.Email);
         
         if(_user is null)
             return false;
