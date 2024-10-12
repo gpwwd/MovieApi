@@ -18,8 +18,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<MovieEntity>
         entityTypeBuilder.ToTable("Movies");
 
         entityTypeBuilder.HasOne(m => m.Rating)
-            .WithOne(r => r.Movie)
-            .HasForeignKey<RatingEntity>(r => r.MovieId)
+            .WithMany(r => r.Movies)
             .OnDelete(DeleteBehavior.Restrict);
 
         entityTypeBuilder.HasMany(m => m.Countries)

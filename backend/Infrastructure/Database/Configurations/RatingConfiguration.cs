@@ -10,6 +10,10 @@ public class RatingConfiguration : IEntityTypeConfiguration<RatingEntity>
     {
         entityTypeBuilder.HasKey(r => r.Id);
 
+        entityTypeBuilder.HasMany(m => m.Movies)
+            .WithOne(m => m.Rating)
+            .OnDelete(DeleteBehavior.Restrict);
+
         entityTypeBuilder.ToTable("Ratings");
     }
 }
