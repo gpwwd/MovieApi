@@ -11,9 +11,7 @@ namespace Domain.Entities.MovieEntities
         public short? Imdb { get; set; }
         public short? FilmCritics { get; set; } 
         public short? RussianFilmCritics { get; set; } 
-        public Guid? MovieId { get; set; }
-        [ForeignKey("MovieId")]
-        public MovieEntity? Movie { get; set; }
+        public List<MovieEntity> Movies { get; set; }
         public override bool Equals(Object? obj)
         {
             if (obj == null)
