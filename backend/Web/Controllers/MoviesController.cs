@@ -6,6 +6,7 @@ using Application.RequestFeatures;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Filters;
 
 namespace Web.Controllers;
 
@@ -18,7 +19,7 @@ public class MoviesController : ControllerBase
     {
         _moviesService = moviesService;
     }
-
+    
     [HttpGet]
     public async Task<ActionResult<List<MovieDto>>> GetAllMovies()
     {
@@ -56,12 +57,10 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPut]
+    [ServiceFilter(typeof(ValidationFilter))]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
-    {       
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-        
+    {      
         await _moviesService.UpdateMovie(id, movie);
         return Ok(id);
     } 
@@ -75,18 +74,10 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilter))]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-
-        // movie.Budget.Currency = $"{movie.Budget.Currency[0].ToString().ToUpper()}{movie.Budget.Currency.Substring(1)}";
-        //
-        // ModelState.ClearValidationState(nameof(PostMovieDto));
-        // if (!TryValidateModel(movie, nameof(PostMovieDto)))
-        //     return UnprocessableEntity(ModelState);
-        
         var createdMovieDto = await _moviesService.CreateMovie(movie);   
         return Created("CreateMovie", createdMovieDto);
     }

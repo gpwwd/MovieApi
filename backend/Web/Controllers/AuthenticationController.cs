@@ -2,6 +2,7 @@
 using Application.Dtos.PostDtos;
 using Application.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Web.Filters;
 
 namespace Web.Controllers;
 
@@ -22,21 +23,17 @@ public class AuthenticationController : ControllerBase
     /// <param name="user"></param>
     /// <returns></returns>
     [HttpPost("register")]
+    [ServiceFilter(typeof(ValidationFilter))]
     public async Task<ActionResult> Register([FromBody] UserForRegistrationDto user)
     {
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-        
         var createdEntity = await _authenticationService.Register(user);
         return Created("users/register", createdEntity);
     }
     
     [HttpPost("login")]
+    [ServiceFilter(typeof(ValidationFilter))]
     public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-            
         if (!await _authenticationService.ValidateUser(userLoginDto))
             return Unauthorized();
         

@@ -5,6 +5,14 @@ namespace Application.Validators;
 
 public class UsernameUniqueAttribute : ValidationAttribute
 {
+    /// <summary>
+    /// Проблема с невозможностью асинхронной валидации в аттрибуте контроллера
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="validationContext"></param>
+    /// <returns></returns>
+    /// <exception cref="NullReferenceException"></exception>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var usernameProperty = validationContext.ObjectType.GetProperty("UserName");
