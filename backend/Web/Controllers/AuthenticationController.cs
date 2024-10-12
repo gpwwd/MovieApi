@@ -34,6 +34,9 @@ public class AuthenticationController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+            
         if (!await _authenticationService.ValidateUser(userLoginDto))
             return Unauthorized();
         
