@@ -30,6 +30,9 @@ public class UsersController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateUser([FromHeader] Guid id, [FromBody] UserUpdateDto user)
     {       
+        if(!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+            
         await _userService.UpdateUser(id, user);
         return Ok(user);
     } 
