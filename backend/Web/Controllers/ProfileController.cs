@@ -7,6 +7,7 @@ using Domain.Exceptions.NotFoundExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Web.Filters;
 
 namespace Web.Controllers;
 
@@ -45,6 +46,7 @@ public class ProfileController : ControllerBase
     [HttpPatch]
     [Authorize]
     [Route("update-username")]
+    [ServiceFilter(typeof(ValidationFilter))]
     public async Task<ActionResult> UpdateUsername([FromBody] UpdateNameDto nameDto)
     {
         var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?

@@ -5,6 +5,7 @@ using Application.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Filters;
 
 namespace Web.Controllers;
 
@@ -27,12 +28,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut]
+    [ServiceFilter(typeof(ValidationFilter))]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateUser([FromHeader] Guid id, [FromBody] UserUpdateDto user)
     {       
-        if(!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-            
         await _userService.UpdateUser(id, user);
         return Ok(user);
     } 
@@ -64,7 +63,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<List<MovieDto>>> AddToWatchLaterList([FromBody] Guid[] movieIds)
     {
         string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-        //проверить userIdClaim если null
         Guid userId = new Guid(userIdClaim);
         
         var addedMoviesIds = await _userService.AddToWatchLaterList(userId, movieIds); 
@@ -77,7 +75,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> RemoveFromWatchList(Guid movieId)
     {
         string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-        // проверить userIdClaim если null
         Guid userId = new Guid(userIdClaim);
         
         await _userService.RemoveWatchLaterUser(userId, movieId);
@@ -90,7 +87,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<List<MovieDto>>> GetWatchLaterList()
     {   
         string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
         Guid userId = new Guid(userIdClaim);
         
         var watchLaterMovies = await _userService.GetWatchLaterMovies(userId);

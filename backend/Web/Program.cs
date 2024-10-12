@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Web.Extensions;
+using Web.Filters;
 using Web.Middleware;
 
 namespace Web;
@@ -42,6 +43,7 @@ public abstract class Program
         builder.Services.AddScoped<IJwtProvider, JwtProvider>();
         builder.Services.AddScoped<IMoviesService, MoviesService>();
         builder.Services.AddScoped<IUsersService, UsersService>();
+        builder.Services.AddScoped<ValidationFilter>();
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
