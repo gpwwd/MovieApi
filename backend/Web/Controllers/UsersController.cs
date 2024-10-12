@@ -70,7 +70,7 @@ public class UsersController : ControllerBase
 
     [HttpDelete]
     [Route("watch-list-movie/{movieId:guid}")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> RemoveFromWatchList(Guid movieId)
     {
         string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;

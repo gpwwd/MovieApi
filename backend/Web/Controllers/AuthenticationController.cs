@@ -24,6 +24,9 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult> Register([FromBody] UserForRegistrationDto user)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        
         var createdEntity = await _authenticationService.Register(user);
         return Created("users/register", createdEntity);
     }
