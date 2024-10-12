@@ -46,7 +46,7 @@ public class ProfileController : ControllerBase
     [HttpPatch]
     [Authorize]
     [Route("update-username")]
-    [ServiceFilter(typeof(ValidationFilter))]
+    [ValidationFilter]
     public async Task<ActionResult> UpdateUsername([FromBody] UpdateNameDto nameDto)
     {
         var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?

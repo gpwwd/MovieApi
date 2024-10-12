@@ -23,7 +23,7 @@ public class AuthenticationController : ControllerBase
     /// <param name="user"></param>
     /// <returns></returns>
     [HttpPost("register")]
-    [ServiceFilter(typeof(ValidationFilter))]
+    [ValidationFilter]
     public async Task<ActionResult> Register([FromBody] UserForRegistrationDto user)
     {
         var createdEntity = await _authenticationService.Register(user);
@@ -31,7 +31,7 @@ public class AuthenticationController : ControllerBase
     }
     
     [HttpPost("login")]
-    [ServiceFilter(typeof(ValidationFilter))]
+    [ValidationFilter]
     public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {
         if (!await _authenticationService.ValidateUser(userLoginDto))

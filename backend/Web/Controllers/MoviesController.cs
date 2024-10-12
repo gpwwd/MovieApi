@@ -3,6 +3,7 @@ using Application.Dtos.PostDtos;
 using Application.Dtos.UpdateDtos;
 using Application.IServices;
 using Application.RequestFeatures;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +58,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPut]
-    [ServiceFilter(typeof(ValidationFilter))]
+    [ValidationFilter]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
     {      
@@ -74,7 +75,7 @@ public class MoviesController : ControllerBase
     }
 
     [HttpPost]
-    [ServiceFilter(typeof(ValidationFilter))]
+    [ValidationFilter]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> CreateMovie([FromBody] PostMovieDto movie)
     {

@@ -1,8 +1,10 @@
 using Application.IManagers;
 using Application.IServices;
 using Application.Mappers;
+using Domain.Entities.MovieEntities;
 using Infrastructure.Database;
 using Infrastructure.Managers;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +20,6 @@ public abstract class Program
 {
     public static void Main(string[] args)
     {
-
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddCors(options =>
@@ -55,8 +56,8 @@ public abstract class Program
         builder.Services.AddJwtTokenAuthentication(builder.Configuration);
         builder.Services.ConfigureIdentity();
         
-        var app = builder.Build();  
-        
+        var app = builder.Build();
+
         app.UseRouting();
         
         app.UseCors("AllowAll");
