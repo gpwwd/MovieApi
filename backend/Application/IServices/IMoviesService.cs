@@ -8,7 +8,7 @@ namespace Application.IServices
     public interface IMoviesService
     {
         public Task<List<MovieDto>> GetAll();
-        public Task<List<MovieDto>> GetWithPaging(MovieParameters movieParams);
+        public Task<List<MovieDto>> GetWithQuery(MovieRatingParameters movieRatingParams);
         public Task<List<MovieDto>> GetAllWithImages();
         public Task<MovieDto> GetById(Guid id);
         public Task UpdateMovie(Guid id, UpdateMovieDto movie);

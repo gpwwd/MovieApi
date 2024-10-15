@@ -12,10 +12,12 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         entityTypeBuilder.ToTable("Users");
 
         entityTypeBuilder.HasMany(u => u.FavMovies)
-            .WithMany(m => m.FavMovieUsers);
+            .WithMany(m => m.FavMovieUsers)
+            .UsingEntity(j => j.ToTable("FavMovieUsers"));
             
         entityTypeBuilder.HasMany(u => u.WatchLaterMovies)
-            .WithMany(m => m.WatchLaterUsers);
+            .WithMany(m => m.WatchLaterUsers)
+            .UsingEntity(j => j.ToTable("WatchLaterMoviesUsers"));
     }
 }
 

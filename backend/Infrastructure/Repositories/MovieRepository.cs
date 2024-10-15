@@ -2,6 +2,7 @@
 using Application.RequestFeatures;
 using Domain.Entities.MovieEntities;
 using Infrastructure.Database;
+using Infrastructure.Repositories.RepositoryExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
@@ -15,7 +16,7 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
     
     public async Task<List<MovieEntity>> GetAll(bool trackChanges)
     {
-        return await FindAll(trackChanges)//get DbSet<T>
+        return await FindAll(trackChanges)
             .Include(m => m.Rating)
             .Include(m => m.Budget) 
             .Include(m => m.Genres)
@@ -24,8 +25,9 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
             .ToListAsync();
     }
     
-    public async Task<List<MovieEntity>> GetWithPaging(MovieParameters movieParams, bool trackChanges){
-        return await FindAll(trackChanges)
+    public async Task<List<MovieEntity>> GetWithQuery(MovieRatingParameters movieRatingParams, bool trackChanges){
+        return await FindByCondition(m => m.Rating != null, trackChanges)
+            .FilterMovies(movieRatingParams.MinRating, movieRatingParams.MaxRating, movieRatingParams.RatingPlatform)
             .Include(m => m.Rating)
             .Include(m => m.Budget)
             .Include(m => m.Genres)
@@ -33,8 +35,8 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
             .Include(m => m.ImageInfoEntity)
             .AsSplitQuery()
             .OrderBy(m => m.Name)
-            .Skip((movieParams.PageNumber - 1) * movieParams.PageSize)
-            .Take(movieParams.PageSize)
+            .Skip((movieRatingParams.PageNumber - 1) * movieRatingParams.PageSize)
+            .Take(movieRatingParams.PageSize)
             .ToListAsync();
     }
     

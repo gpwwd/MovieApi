@@ -3,7 +3,6 @@ using Application.Dtos.PostDtos;
 using Application.Dtos.UpdateDtos;
 using Application.IServices;
 using Application.RequestFeatures;
-using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,30 +23,31 @@ public class MoviesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<MovieDto>>> GetAllMovies()
     {
-        var movieDTOs = await _moviesService.GetAll();
-        return Ok(movieDTOs);
+        var movieDtos = await _moviesService.GetAll();
+        return Ok(movieDtos);
     }
 
     [HttpGet]
     [Route("page")]
-    public async Task<ActionResult<List<MovieDto>>> GetMoviesPaging([FromQuery] MovieParameters movieParameters)
+    [TypeFilter(typeof(QueryValidationFilter))]
+    public async Task<ActionResult<List<MovieDto>>> GetMoviesWithQuery([FromQuery] MovieRatingParameters movieRatingParameters)
     {
-        var movieDTOs = await _moviesService.GetWithPaging(movieParameters);
-        return Ok(movieDTOs);
+        var movieDtos = await _moviesService.GetWithQuery(movieRatingParameters);
+        return Ok(movieDtos);
     }
 
     [HttpGet("get-with-images")]
     public async Task<ActionResult<List<MovieDto>>> GetAllMoviesWithImages()
     {
-        var movieDTOs = await _moviesService.GetAllWithImages();
-        return Ok(movieDTOs);
+        var movieDtos = await _moviesService.GetAllWithImages();
+        return Ok(movieDtos);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<MovieDto>> GetMovie(Guid id)
     {
-        var movieDTO = await _moviesService.GetById(id);
-        return movieDTO;
+        var movieDto = await _moviesService.GetById(id);
+        return movieDto;
     }
 
     [HttpGet("{id:guid}/images")]

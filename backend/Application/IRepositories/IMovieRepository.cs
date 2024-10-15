@@ -6,7 +6,7 @@ namespace Application.IRepositories;
 public interface IMovieRepository
 {
     public Task<List<MovieEntity>> GetAll(bool trackChanges);
-    public Task<List<MovieEntity>> GetWithPaging(MovieParameters movieParams, bool trackChanges);
+    public Task<List<MovieEntity>> GetWithQuery(MovieRatingParameters movieRatingParams, bool trackChanges);
     public Task<List<MovieEntity>> GetAllWithImages(bool trackChanges);
     public Task<MovieEntity?> GetById(Guid id, bool trackChanges);
     public Task CreateMovie(MovieEntity movieEntity, List<string> genresNames, 
