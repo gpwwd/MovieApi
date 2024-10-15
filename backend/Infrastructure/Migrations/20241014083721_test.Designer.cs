@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MovieDataBaseContext))]
-    partial class MovieDataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20241014083721_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -205,19 +208,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9a6261f1-aae2-4335-9e4e-a4c36135c19e"),
+                            Id = new Guid("fe58e750-cc57-4171-8b54-24e6d7a36d26"),
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = new Guid("aaf977a4-2138-4d2e-8143-e1fad1359c5f"),
+                            Id = new Guid("e3fedb0d-a919-4ed4-95a9-bc156a529c24"),
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = new Guid("1eea000b-474c-47cc-a551-cf62cb8c6a0b"),
+                            Id = new Guid("0b4eaead-0cdd-41e3-afee-d09afdf239c3"),
                             Name = "Subscriber",
                             NormalizedName = "SUBSCRIBER"
                         });
@@ -420,7 +423,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("FavMoviesId");
 
-                    b.ToTable("FavMovieUsers", (string)null);
+                    b.ToTable("MovieEntityUserEntity");
                 });
 
             modelBuilder.Entity("MovieEntityUserEntity1", b =>
@@ -435,7 +438,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("WatchLaterUsersId");
 
-                    b.ToTable("WatchLaterMoviesUsers", (string)null);
+                    b.ToTable("MovieEntityUserEntity1");
                 });
 
             modelBuilder.Entity("CountryEntityMovieEntity", b =>

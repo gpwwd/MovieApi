@@ -27,9 +27,9 @@ public class MoviesService : IMoviesService
         return moviesDto;
     }
 
-    public async Task<List<MovieDto>> GetWithPaging(MovieParameters movieParams)
+    public async Task<List<MovieDto>> GetWithQuery(MovieRatingParameters movieRatingParams)
     {
-        var movies = await _repository.MovieRepository.GetWithPaging(movieParams, false);
+        var movies = await _repository.MovieRepository.GetWithQuery(movieRatingParams, false);
         List<MovieDto> moviesDto = _mapper.Map<List<MovieDto>>(movies);
         return moviesDto;
     }

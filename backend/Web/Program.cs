@@ -37,7 +37,8 @@ public abstract class Program
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(); 
+        builder.Services.AddScoped<IUsersService, UsersService>();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwagger();
         
@@ -45,14 +46,11 @@ public abstract class Program
         builder.Services.AddScoped<IMoviesService, MoviesService>();
         builder.Services.AddScoped<IUsersService, UsersService>();
         builder.Services.AddScoped<ValidationFilter>();
+        builder.Services.AddScoped<QueryValidationFilter>();
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-
-        builder.Services.AddDbContext<MovieDataBaseContext>(
-            opt =>
-            {
-                opt.UseSqlite(builder.Configuration.GetConnectionString("Data Source"));
-            });
+        
+        builder.Services.AddDbContext<MovieDataBaseContext>();
         builder.Services.AddJwtTokenAuthentication(builder.Configuration);
         builder.Services.ConfigureIdentity();
         

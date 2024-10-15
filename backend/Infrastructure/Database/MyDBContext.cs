@@ -1,14 +1,18 @@
+using Application.IServices;
 using Domain.Entities.MovieEntities;
 using Domain.Entities.UsersEntities;
 using Infrastructure.Database.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Database;
-public class MovieDataBaseContext : IdentityDbContext<UserEntity, RoleEntity, Guid>
+public sealed class MovieDataBaseContext : IdentityDbContext<UserEntity, RoleEntity, Guid>
 {
     public MovieDataBaseContext(DbContextOptions<MovieDataBaseContext> options) : base(options)
-    {}
+    {
+        Database.EnsureCreated();
+    }
 
     public DbSet<MovieEntity> Movies { get; set; }
     public DbSet<GenreEntity> Genres { get; set; }
@@ -27,5 +31,14 @@ public class MovieDataBaseContext : IdentityDbContext<UserEntity, RoleEntity, Gu
         modelBuilder.ApplyConfiguration(new CountryConfiguration());
         modelBuilder.ApplyConfiguration(new BudgetConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .Build();
+        string? connectionString = config.GetConnectionString("Data Source");
+        optionsBuilder.UseSqlite(connectionString);
     }
 }
