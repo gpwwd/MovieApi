@@ -57,9 +57,6 @@ public class MoviesService : IMoviesService
         
         _mapper.Map(movieDto, movieEntity);
         
-        //have to pass information about new rating 
-        //would be nice to find ratingEntity in service layer
-        //but as a temporary option only numbers as shorts are passed
         await _repository.MovieRepository.UpdateMovie(movieEntity, 
             movieDto.GenresNames,
             movieDto.CountriesNames,

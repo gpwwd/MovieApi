@@ -1,8 +1,10 @@
+using Application.ExternalApiInterfaces;
 using Application.IManagers;
 using Application.IServices;
 using Application.Mappers;
 using Domain.Entities.MovieEntities;
 using Infrastructure.Database;
+using Infrastructure.ExternalApi;
 using Infrastructure.Managers;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
@@ -53,6 +55,9 @@ public abstract class Program
         builder.Services.AddDbContext<MovieDataBaseContext>();
         builder.Services.AddJwtTokenAuthentication(builder.Configuration);
         builder.Services.ConfigureIdentity();
+
+        builder.Services.AddScoped<IKinopoiskApiService, KinopoiskApiService>();
+        builder.Services.AddSingleton(typeof(Deserializer));
         
         var app = builder.Build();
 

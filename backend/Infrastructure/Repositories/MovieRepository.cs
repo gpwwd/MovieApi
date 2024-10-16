@@ -63,58 +63,52 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
 
     public async Task CreateMovie(MovieEntity movieEntity, List<string> genresNames, 
                               List<string> countriesNames)
-{
-    //the problem is that rating has only 1 movie,
-    //so the entity of movie in rating is useless 
-    //(also when a new movie is inserted with the same rating,
-    //the foreign key of rating (movieEntity) update with the latest inserted movie)
-    //
-    //so that's why rating should have a list of movies like foreign entites 
-    var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
-    var rating = ratings.FirstOrDefault(r => r.Equals(movieEntity.Rating));
-    
-    movieEntity.Id = Guid.NewGuid();
-    
-    if (rating != null)
     {
-        _context.Entry(rating).State = EntityState.Modified;
-        movieEntity.Rating = rating; 
-    }
-    else if (movieEntity.Rating != null)
-    {
-        movieEntity.Rating.Id = Guid.NewGuid(); 
-        _context.Ratings.Add(movieEntity.Rating); 
-    }
-    
-    if (movieEntity.Budget != null)
-    {
-        movieEntity.Budget.Id = Guid.NewGuid(); 
-        movieEntity.Budget.MovieId = movieEntity.Id;
-        _context.Budgets.Add(movieEntity.Budget);
-    }
-    
-    if (movieEntity.ImageInfoEntity != null)
-    {
-        movieEntity.ImageInfoEntity.Id = Guid.NewGuid(); 
-        movieEntity.ImageInfoEntity.MovieId = movieEntity.Id;
-        _context.Images.Add(movieEntity.ImageInfoEntity);
-    }
-    
-    await _context.Movies.AddAsync(movieEntity);
-    await _context.SaveChangesAsync(); 
+        var ratings = await _context.Ratings.AsNoTracking().ToListAsync();
+        var rating = ratings.FirstOrDefault(r => r.Equals(movieEntity.Rating));
+        
+        movieEntity.Id = Guid.NewGuid();
+        
+        if (rating != null)
+        {
+            _context.Entry(rating).State = EntityState.Modified;
+            movieEntity.Rating = rating; 
+        }
+        else if (movieEntity.Rating != null)
+        {
+            movieEntity.Rating.Id = Guid.NewGuid(); 
+            _context.Ratings.Add(movieEntity.Rating); 
+        }
+        
+        if (movieEntity.Budget != null)
+        {
+            movieEntity.Budget.Id = Guid.NewGuid(); 
+            movieEntity.Budget.MovieId = movieEntity.Id;
+            _context.Budgets.Add(movieEntity.Budget);
+        }
+        
+        if (movieEntity.ImageInfoEntity != null)
+        {
+            movieEntity.ImageInfoEntity.Id = Guid.NewGuid(); 
+            movieEntity.ImageInfoEntity.MovieId = movieEntity.Id;
+            _context.Images.Add(movieEntity.ImageInfoEntity);
+        }
+        
+        await _context.Movies.AddAsync(movieEntity);
+        await _context.SaveChangesAsync(); 
 
-    //many-to-many connection after saving the movie 
-    var genres = await _context.Genres
-        .Where(g => genresNames.Contains(g.Name))
-        .ToListAsync();
-    
-    var countries = await _context.Countries
-        .Where(c => countriesNames.Contains(c.Name))
-        .ToListAsync();
-    
-    movieEntity.Genres = genres;
-    movieEntity.Countries = countries;
-}
+        //many-to-many connection after saving the movie 
+        var genres = await _context.Genres
+            .Where(g => genresNames.Contains(g.Name))
+            .ToListAsync();
+        
+        var countries = await _context.Countries
+            .Where(c => countriesNames.Contains(c.Name))
+            .ToListAsync();
+        
+        movieEntity.Genres = genres;
+        movieEntity.Countries = countries;
+    }
 
 
     public async Task UpdateMovie(MovieEntity movieEntity, IEnumerable<string>? genresNames,
@@ -139,7 +133,7 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
         var rating = ratings.FirstOrDefault(r => r.Equals(tempRating));
         
         if(rating != null)
-            _context.Entry(rating).State = EntityState.Modified;//MovieId is changed by changing navigation field 
+            _context.Entry(rating).State = EntityState.Modified;
         else
         {
             rating = new RatingEntity();
