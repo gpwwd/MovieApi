@@ -1,12 +1,13 @@
 using Application.Dtos.ExternalApiResponses;
+using Domain.Entities.MovieEntities;
 using Newtonsoft.Json;
+using RootObject = Application.Dtos.ExternalApiResponses.RootObject;
 
 namespace Infrastructure.ExternalApi;
 
 public class Deserializer
 {
-    
-    public static List<ImageInfo> GetMoviesUrlsCovers()
+    public List<ImageInfo> GetMoviesUrlsCovers()
     {
         var json = File.ReadAllText("ExternalApi/posters.json");
         var allItems = JsonConvert.DeserializeObject<List<RootObject>>(json);
@@ -41,5 +42,12 @@ public class Deserializer
             
         return result;
     }
-    
+
+    public List<MovieEntity> DeserializeMovies(string unformatedDataString)
+    {
+        var allItems = JsonConvert.DeserializeObject<List<RootMovieObject>>(unformatedDataString);
+        
+        // implement deserialization
+        return new List<MovieEntity>();
+    }
 }
