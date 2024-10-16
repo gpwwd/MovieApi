@@ -58,6 +58,7 @@ public abstract class Program
 
         builder.Services.AddScoped<IKinopoiskApiService, KinopoiskApiService>();
         builder.Services.AddSingleton(typeof(Deserializer));
+        builder.Services.AddSingleton(typeof(ResponseFetcher));
         
         var app = builder.Build();
 

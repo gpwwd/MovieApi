@@ -1,101 +1,40 @@
+using Application.Dtos.ExternalApiResponses;
 using Application.ExternalApiInterfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
+using Infrastructure.Database;
+using Newtonsoft.Json;
 
 namespace Infrastructure.ExternalApi;
 
 public class KinopoiskApiService : IKinopoiskApiService
 {
     private readonly Deserializer _deserializer;
-    private readonly HttpClient _httpClient;
+    private readonly MovieDataBaseContext _context;
+    private readonly ResponseFetcher _responseFetcher;
+    private string FilePath { get; set; } = string.Empty;
 
-    public KinopoiskApiService(Deserializer deserializer)
+    public KinopoiskApiService(Deserializer deserializer, ResponseFetcher responseFetcher, MovieDataBaseContext context)
     {
         _deserializer = deserializer;
-        
-        _httpClient = new HttpClient()
-        {
-            BaseAddress = new Uri("https://api.kinopoisk.dev/v1.4/")
-        };
+        _responseFetcher = responseFetcher;
+        _context = context;
     }
-    
-    public async Task<string> GetMoviesData(){
-        
-        var selectedFileds = new List<string>()
-        {
-            "id", "name", "alternativeName", "type", "isSeries", "rating", "budget", "movieLength",
-            "genres", "countries", "top250", "description", "shortDescription",
-        };
 
-        var notNullFields = new List<string>()
-        {
-            "top250"
-        };
-        var query = CreateStringQuery("1", "2", selectedFileds, notNullFields,
-            "top250", "1", "1", "7.2-10");
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri(query, UriKind.Relative),
-            Headers =
-            {
-                { "accept", "application/json" },
-                { "X-API-KEY",  ""},
-            },
-        };
-        
-        HttpResponseMessage response = await _httpClient.SendAsync(request);
-        if (response.IsSuccessStatusCode)
-        {
-            string data = await response.Content.ReadAsStringAsync();
-            //File.AppendAllText(@"ExternalApi/movieJsonWithDescription.json", data );
-            return data;
-        }
-        throw new BadHttpRequestException("Bad Request To Kinopoisk Api", (int)response.StatusCode);
-    }
-    
-    private string CreateStringQuery(string page, string perPage, List<string> selectFields, List<string> notNullFields,
-        string sortField, string sortType, string typeNumber, string ratingKp)
+    public async Task<string> WriteMoviesToFile()
     {
-        var queryString = new Dictionary<string, List<string>>();
+        var data = await _responseFetcher.GetMoviesData();
         
-        AddQueryParameter(queryString, "page", page);
-        AddQueryParameter(queryString, "limit", perPage);
-        AddQueryParameters(queryString, "selectFields", selectFields);
-        AddQueryParameters(queryString, "notNullFields", notNullFields);
-        AddQueryParameter(queryString, "sortField", sortField);
-        AddQueryParameter(queryString, "sortType", sortType);
-        AddQueryParameter(queryString, "typeNumber", typeNumber);
-        AddQueryParameter(queryString, "rating.kp", ratingKp);
-
-        var requestUri = "movie";
-
-        foreach (var kvp in queryString)
-        {
-            foreach (var value in kvp.Value)
-            {
-                requestUri = QueryHelpers.AddQueryString(requestUri, kvp.Key, value);
-            }
-        }
-
-        return requestUri;
+        FilePath = Directory.GetParent(Directory.GetCurrentDirectory())!.FullName +
+                   "/Infrastructure/ExternalApi/MovieFile.json";
+        if(!File.Exists(FilePath))
+            using (File.Create(FilePath)) { }
+        File.AppendAllText(FilePath, data);
+        
+        return data;
     }
-    
-    private void AddQueryParameter(Dictionary<string, List<string>> queryString, string key, string value)
+
+    public async Task AddMoviesToDatabase()
     {
-        if (!queryString.ContainsKey(key))
-        {
-            queryString[key] = new List<string>();
-        }
-        queryString[key].Add(value);
-    }
-    
-    private void AddQueryParameters(Dictionary<string, List<string>> queryString, string key, List<string> values)
-    {
-        if (!queryString.ContainsKey(key))
-        {
-            queryString[key] = new List<string>();
-        }
-        queryString[key].AddRange(values);
+        var unformatedDataString = await File.ReadAllTextAsync(FilePath);
+        _deserializer.DeserializeMovies(unformatedDataString);
     }
 }

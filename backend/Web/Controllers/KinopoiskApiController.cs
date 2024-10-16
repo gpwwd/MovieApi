@@ -18,6 +18,6 @@ public class KinopoiskApiController
     [HttpGet]
     public async Task GetMoviesData()
     {
-        var data = await _kinopoiskApiService.GetMoviesData();
+        var data = await _kinopoiskApiService.WriteMoviesToFile();
     }
 }
