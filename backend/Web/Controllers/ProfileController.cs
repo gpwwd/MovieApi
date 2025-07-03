@@ -11,13 +11,6 @@ using Web.Filters;
 
 namespace Web.Controllers;
 
-/// <summary>
-/// В качестве пользователя всегда использовать свойство
-/// User контроллера, чтобы получить доступ только к залогинненного пользователю,
-/// так как изменять свой профиль может только залогинненый пользователь.
-/// Осуществлять поиск пользователя в базе данных с помощью передачи в методы UserManager
-/// полей из DTO нельзя, так как в таком случае возможно изменение профиля не залогинненного пользователя
-/// </summary>
 [Route("api/profile")]
 [ApiController]
 public class ProfileController : ControllerBase
@@ -34,15 +27,6 @@ public class ProfileController : ControllerBase
         _userManager = userManager;
     }
     
-    /// <summary>
-    /// UserManager ведет поиск по normalizedUserName, поэтому для его использования
-    /// нужно создавать пользователей также через UserManager.
-    /// В этом случае воспользуемся кастомным UserService 
-    /// </summary>
-    /// <param name="nameDto"></param>
-    /// <returns></returns>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    /// <exception cref="UserNotFoundException"></exception>
     [HttpPatch]
     [Authorize]
     [Route("update-username")]
@@ -63,7 +47,4 @@ public class ProfileController : ControllerBase
 
         return Ok(user);
     } 
-    
-    ////////////////////////////////////////////////////////////////
-    // add other patch methods 
 }

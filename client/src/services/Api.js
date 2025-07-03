@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:5128/api";
 
 const fetchMovies = async () => {
-    const response = await fetch(`${API_URL}/movies/images`);;
+    const response = await fetch(`${API_URL}/movies/get-with-images`);;
     return response.json();
 };
 

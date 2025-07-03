@@ -1,18 +1,22 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.ExternalApi;
 
 public class ResponseFetcher
 {
     private readonly HttpClient _httpClient;
+    private readonly string _apiKey;
     
-    public ResponseFetcher()
+    public ResponseFetcher(IConfiguration configuration)
     {
         _httpClient = new HttpClient()
         {
             BaseAddress = new Uri("https://api.kinopoisk.dev/v1.4/")
         };
+        _apiKey = configuration["KINOPOISK_API_KEY"] ?? 
+            throw new InvalidOperationException("KINOPOISK_API_KEY is not configured");
     }
     
     public async Task<string> GetMoviesData()
@@ -26,7 +30,7 @@ public class ResponseFetcher
             Headers =
             {
                 { "accept", "application/json" },
-                { "X-API-KEY",  "A8CBQ2E-1DZMT6Y-J065YW2-0Y5Y7TA"},
+                { "X-API-KEY", _apiKey },
             },
         };
         

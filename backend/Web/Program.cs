@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Web.Extensions;
 using Web.Filters;
 using Web.Middleware;
+using DotNetEnv;
+using System.IO;
 
 namespace Web;
 
@@ -23,6 +25,10 @@ public abstract class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        var envPath = Path.Combine(AppContext.BaseDirectory, ".env");
+        Console.WriteLine($"Loading .env from: {envPath}");
+        Env.Load(envPath);
 
         builder.Services.AddCors(options =>
         {
@@ -47,6 +53,7 @@ public abstract class Program
         builder.Services.AddScoped<IJwtProvider, JwtProvider>();
         builder.Services.AddScoped<IMoviesService, MoviesService>();
         builder.Services.AddScoped<IUsersService, UsersService>();
+        builder.Services.AddScoped<IGenreService, GenreService>();
         builder.Services.AddScoped<ValidationFilter>();
         builder.Services.AddScoped<QueryValidationFilter>();
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Application.Dtos.PostDtos;
 
 namespace Application.Dtos.UpdateDtos;

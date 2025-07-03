@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Linq;
 
 namespace Web.Filters;
 
@@ -7,18 +8,33 @@ public class ValidationFilter : IActionFilter
 {
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        var param = context.ActionArguments
-            .SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
-        
-        if (param is null)
+        var nullParameters = context.ActionArguments
+            .Where(arg => arg.Value == null)
+            .ToList();
+
+        if (nullParameters.Any())
         {
-            context.Result = new BadRequestObjectResult($"Object is null. Controller:{context.Controller}, " +
-                                                        $"action: {context.RouteData.Values["action"]}, ");
+            var details = new ValidationProblemDetails
+            {
+                Status = 400,
+                Title = "One or more parameters are null",
+                Detail = $"The following parameters are null: {string.Join(", ", nullParameters.Select(p => p.Key))}"
+            };
+            context.Result = new BadRequestObjectResult(details);
             return;
         }
-            
-        if(!context.ModelState.IsValid)
-            context.Result = new UnprocessableEntityObjectResult(context.ModelState);
+
+        if (!context.ModelState.IsValid)
+        {
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Status = 422,
+                Title = "One or more validation errors occurred",
+                Detail = "Please refer to the errors property for additional details"
+            };
+            context.Result = new UnprocessableEntityObjectResult(details);
+            return;
+        }
     }
 
     public void OnActionExecuted(ActionExecutedContext context)

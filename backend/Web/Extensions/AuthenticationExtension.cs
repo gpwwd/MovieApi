@@ -31,18 +31,22 @@ namespace Web.Extensions
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options => 
                 {
                     options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
+                    
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         // time after token expiration time start validation
                         ClockSkew = TimeSpan.Zero,
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidAudience = configuration["JWT:ValidAudience"],
-                        ValidIssuer = configuration["JWT:ValidIssuer"],
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                        ValidIssuer = configuration["JWT_VALID_ISSUER"] ?? 
+                            throw new InvalidOperationException("JWT_VALID_ISSUER is not configured"),
+                        ValidAudience = configuration["JWT_VALID_AUDIENCE"] ?? 
+                            throw new InvalidOperationException("JWT_VALID_AUDIENCE is not configured"),
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(configuration["JWT_SECRET_KEY"] ?? 
+                                throw new InvalidOperationException("JWT_SECRET_KEY is not configured")))
                     };
                 });
             

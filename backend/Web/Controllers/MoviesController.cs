@@ -59,7 +59,7 @@ public class MoviesController : ControllerBase
 
     [HttpPut]
     [ValidationFilter]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
     public async Task<ActionResult> UpdateMovie([FromHeader] Guid id, [FromBody] UpdateMovieDto movie)
     {      
         await _moviesService.UpdateMovie(id, movie);
@@ -82,5 +82,4 @@ public class MoviesController : ControllerBase
         var createdMovieDto = await _moviesService.CreateMovie(movie);   
         return Created("CreateMovie", createdMovieDto);
     }
-
 }

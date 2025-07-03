@@ -51,12 +51,6 @@ public class UsersController : ControllerBase
         return new NoContentResult();
     }
 
-    /// <summary>
-    /// Сделать возможность добавления только одного фильма,
-    /// перенести эти два метода в ProfileController
-    /// </summary>
-    /// <param name="movieIds"></param>
-    /// <returns></returns>
     [HttpPost]
     [Route("watch-list-movie")]
     [Authorize]

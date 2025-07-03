@@ -1,4 +1,4 @@
-﻿namespace Application.Dtos.GetDtos;
+namespace Application.Dtos.GetDtos;
 
 public record BudgetDto
 {

@@ -20,4 +20,10 @@ public class KinopoiskApiController
     {
         var data = await _kinopoiskApiService.WriteMoviesToFile();
     }
+
+    [HttpGet("add-movies")]
+    public async Task AddMoviesToDatabase()
+    {
+        await _kinopoiskApiService.AddMoviesToDatabase();
+    }
 }

@@ -17,11 +17,6 @@ public class AuthenticationController : ControllerBase
         _authenticationService = authenticationService;
     }
     
-    /// <summary>
-    /// Use "UserManager" class later
-    /// </summary>
-    /// <param name="user"></param>
-    /// <returns></returns>
     [HttpPost("register")]
     [ValidationFilter]
     public async Task<ActionResult> Register([FromBody] UserForRegistrationDto user)

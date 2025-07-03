@@ -7,13 +7,11 @@ namespace Web.Middleware;
 public class ExceptionMiddleware
 {  
     private readonly RequestDelegate _next;
-    //private readonly ILogger<ExceptionMiddleware> _logger;
     private readonly IWebHostEnvironment _environment;
     public ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment environment)
     {
         _next = next;
         _environment = environment;
-        //_logger = logger; use later
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -30,8 +28,6 @@ public class ExceptionMiddleware
 
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     { 
-        //More log stuff        
-        
         ExceptionResponseDevelopment response = exception switch
         {
             ApplicationException => new ExceptionResponseDevelopment(HttpStatusCode.BadRequest, "Application exception occurred.", exception.StackTrace),

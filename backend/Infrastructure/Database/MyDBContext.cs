@@ -4,7 +4,6 @@ using Domain.Entities.UsersEntities;
 using Infrastructure.Database.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Database;
 public sealed class MovieDataBaseContext : IdentityDbContext<UserEntity, RoleEntity, Guid>
@@ -34,11 +33,9 @@ public sealed class MovieDataBaseContext : IdentityDbContext<UserEntity, RoleEnt
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .Build();
-        string? connectionString = config.GetConnectionString("Data Source");
+        string? connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? 
+            throw new InvalidOperationException("DB_CONNECTION_STRING is not configured");
+            
         optionsBuilder.UseSqlite(connectionString);
     }
 }

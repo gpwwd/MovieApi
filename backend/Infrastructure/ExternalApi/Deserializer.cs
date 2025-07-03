@@ -45,9 +45,44 @@ public class Deserializer
 
     public List<MovieEntity> DeserializeMovies(string unformatedDataString)
     {
-        var allItems = JsonConvert.DeserializeObject<List<RootMovieObject>>(unformatedDataString);
-        
-        // implement deserialization
-        return new List<MovieEntity>();
+        var root = JsonConvert.DeserializeObject<RootMovieObject>(unformatedDataString);
+        if (root?.Docs == null) return new List<MovieEntity>();
+
+        return root.Docs.Select(item => new MovieEntity
+        {
+            Id = Guid.NewGuid(),
+            Name = item.Name,
+            AlternativeName = item.AlternativeName,
+            Type = item.Type,
+            Description = item.Description,
+            ShortDescription = item.ShortDescription,
+            MovieLength = item.MovieLength,
+            Top250 = item.Top250,
+            IsSeries = item.IsSeries,
+            Rating = new RatingEntity
+            {
+                Id = Guid.NewGuid(),
+                Kp = (short)item.Rating.Kp,
+                Imdb = (short)item.Rating.Imdb,
+                FilmCritics = (short)item.Rating.FilmCritics,
+                RussianFilmCritics = (short)item.Rating.RussianFilmCritics
+            },
+            Budget = item.Budget != null ? new BudgetEntity
+            {
+                Id = Guid.NewGuid(),
+                Currency = item.Budget.Currency,
+                Value = (double)item.Budget.Value
+            } : null,
+            Genres = item.Genres?.Select(g => new GenreEntity 
+            { 
+                Id = Guid.NewGuid(),
+                Name = g.Name 
+            }).ToList() ?? new List<GenreEntity>(),
+            Countries = item.Countries?.Select(c => new CountryEntity 
+            { 
+                Id = Guid.NewGuid(),
+                Name = c.Name 
+            }).ToList() ?? new List<CountryEntity>()
+        }).ToList();
     }
 }

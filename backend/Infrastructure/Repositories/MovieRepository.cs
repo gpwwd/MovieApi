@@ -97,7 +97,6 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
         await _context.Movies.AddAsync(movieEntity);
         await _context.SaveChangesAsync(); 
 
-        //many-to-many connection after saving the movie 
         var genres = await _context.Genres
             .Where(g => genresNames.Contains(g.Name))
             .ToListAsync();
@@ -146,45 +145,7 @@ public class MovieRepository : RepositoryBase<MovieEntity>, IMovieRepository
         movieEntity.Countries = countries;
         _context.Entry(movieEntity).State = EntityState.Modified;
     }
-    // public async Task PutPoster(Guid id, ImageInfoDto image)
-    // {
-    //     var movieEntity = await FindByCondition(m => m.Id == id, true)
-    //         .Include(m => m.ImageInfoEntity)
-    //         .FirstOrDefaultAsync(m => m.Id == id);
-    //
-    //     if (movieEntity == null)
-    //         throw new MovieNotFoundException(id);
-    //
-    //     
-    //     if (movieEntity.ImageInfoEntity == null)
-    //     {   
-    //         try
-    //         {
-    //             var imageInfoEntity = new ImageInfoEntity
-    //             {
-    //                 Id = Guid.NewGuid(),
-    //                 Urls = image.Urls,
-    //                 PreviewUrls = image.PreviewUrls,
-    //                 //MovieId = id ?? throw new MyExeption(404, "no id")
-    //             };
-    //             //_dbContext.Images.Add(imageInfoEntity);
-    //         }
-    //         catch(MyExeption ex)
-    //         {
-    //             Console.WriteLine(ex.Message);
-    //         }
-    //
-    //     }
-    //     else
-    //     {
-    //         // Обновляем существующие значения
-    //         movieEntity.ImageInfoEntity.Urls = image.Urls;
-    //         movieEntity.ImageInfoEntity.PreviewUrls = image.PreviewUrls;
-    //         //_dbContext.Images.Update(movieEntity.ImageInfoEntity);
-    //     }
-    //
-    //     //await _dbContext.SaveChangesAsync();
-    // }
+
     public void DeleteMovie(MovieEntity movieEntity)
     {
         Delete(movieEntity);

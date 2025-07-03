@@ -12,7 +12,6 @@ public class MovieEntity
     public string? AlternativeName { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
     public int Year { get; set; }
-    
     public RatingEntity? Rating { get; set; } = new RatingEntity();
     public BudgetEntity? Budget { get; set; }
     public int MovieLength { get; set; }
