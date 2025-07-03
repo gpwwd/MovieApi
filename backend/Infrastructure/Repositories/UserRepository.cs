@@ -140,12 +140,6 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
         updatedUser.WatchLaterMovies = watchLaterMovies;
     }
     
-    /// <summary>
-    /// Привязывает добавляемые фильмы к контексту
-    /// с статусом отслеживания Unchanged
-    /// </summary>
-    /// <param name="user"></param>
-    /// <param name="moviesAdded"></param>
     public void AddWatchLaterMovies(UserEntity user, List<MovieEntity> moviesAdded)
     {
         foreach (var movie in moviesAdded)
@@ -158,10 +152,20 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
             user.WatchLaterMovies = moviesAdded;
     }
 
+    public void AddFavMovies(UserEntity user, List<MovieEntity> moviesAdded)
+    {
+        foreach (var movie in moviesAdded)
+            _context.Entry(movie).State = EntityState.Unchanged;
+        _context.Entry(user).State = EntityState.Unchanged;
+
+        if (user.FavMovies != null) 
+            user.FavMovies.AddRange(moviesAdded);
+        else
+            user.FavMovies = moviesAdded;
+    }
+
     public void DeleteWatchLaterMovie(UserEntity user, MovieEntity movie)
     {
-        // _context.Entry(movie).State = EntityState.Unchanged;
-        // _context.Entry(user).State = EntityState.Unchanged;
         if (user.WatchLaterMovies != null)
         {
             var movieToRemove = user.WatchLaterMovies
@@ -172,9 +176,6 @@ public class UserRepository : RepositoryBase<UserEntity>, IUserRepository
         }
     }
 
-    //<summary>
-    // add async in delete methods
-    //</summary>
     public void DeleteUser(UserEntity user)
     {
         Delete(user);

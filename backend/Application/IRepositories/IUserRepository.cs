@@ -20,6 +20,7 @@ public interface IUserRepository
     public Task AddToRolesAsync(UserEntity userEntity, ICollection<string>? roleNames);
     public Task Update(UserEntity updatedUser, List<Guid>? FavMoviesIds, List<Guid>? WatchLaterMoviesIds);
     public void AddWatchLaterMovies(UserEntity user, List<MovieEntity> moviesAdded);
+    public void AddFavMovies(UserEntity user, List<MovieEntity> moviesAdded);
     public void DeleteWatchLaterMovie(UserEntity user, MovieEntity movie);
     public void DeleteUser(UserEntity user);
 }

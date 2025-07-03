@@ -18,14 +18,15 @@ public class JwtProvider : IJwtProvider
     
     public string GenerateToken(List<Claim> claims)
     {
-        //getting SigningCredentials
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT_SECRET_KEY"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         
         var token = new JwtSecurityToken(
-                claims: claims,
-                signingCredentials: credentials,
-                expires: DateTime.UtcNow.AddHours(2)
+            issuer: _configuration["JWT_VALID_ISSUER"],
+            audience: _configuration["JWT_VALID_AUDIENCE"],
+            claims: claims,
+            signingCredentials: credentials,
+            expires: DateTime.UtcNow.AddHours(2)
         );
                 
         return new JwtSecurityTokenHandler().WriteToken(token);

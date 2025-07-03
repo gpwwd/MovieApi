@@ -17,6 +17,7 @@ using Web.Filters;
 using Web.Middleware;
 using DotNetEnv;
 using System.IO;
+using System.Collections;
 
 namespace Web;
 
@@ -29,6 +30,11 @@ public abstract class Program
         var envPath = Path.Combine(AppContext.BaseDirectory, ".env");
         Console.WriteLine($"Loading .env from: {envPath}");
         Env.Load(envPath);
+
+        foreach (var envVar in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>())
+        {
+            builder.Configuration[envVar.Key.ToString()!] = envVar.Value?.ToString();
+        }
 
         builder.Services.AddCors(options =>
         {
@@ -58,6 +64,10 @@ public abstract class Program
         builder.Services.AddScoped<QueryValidationFilter>();
         builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
         builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+        
+        builder.Services.AddScoped<IMovieRecommendationService, MovieRecommendationService>();
+        builder.Services.AddHttpClient<OpenRouterService>();
+        builder.Services.AddScoped<OpenRouterService>();
         
         builder.Services.AddDbContext<MovieDataBaseContext>();
         builder.Services.AddJwtTokenAuthentication(builder.Configuration);

@@ -10,16 +10,7 @@ namespace Web.Extensions
 {
     public static class AuthenticationExtension
     {
-        /// <summary>
-        /// new AuthorizationPolicyBuilder
-        /// (JwtBearerDefaults.AuthenticationScheme)
-        /// .RequireAuthenticatedUser()
-        /// решает проблему с редиректом на страницу login
-        /// Иначе авторизация пытается работать с cookies схемой аутенфикации
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
+
         public static IServiceCollection AddJwtTokenAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
@@ -58,12 +49,7 @@ namespace Web.Extensions
             
             return services;
         }
-        /// <summary>
-        /// It seems that authorization identity uses cookie authentication
-        /// internally and unauthorized requests are redirected to Login page which I have not implemented, hence 404 response.!!!!!!!!!!
-        /// !!!!!!!!!!!!!!!!!!!!!!!!! 
-        /// </summary>
-        /// <param name="services"></param>
+
         public static void ConfigureIdentity(this IServiceCollection services)
         {
             var builder = services.AddIdentity<UserEntity, RoleEntity>(o =>

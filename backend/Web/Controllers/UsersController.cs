@@ -63,6 +63,18 @@ public class UsersController : ControllerBase
         return Created("users/add-to-watch-list", addedMoviesIds);
     }
 
+    [HttpPost]
+    [Route("fav-list-movie")]
+    [Authorize]
+    public async Task<ActionResult<List<MovieDto>>> AddToFavList([FromBody] Guid[] movieIds)
+    {
+        string userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        Guid userId = new Guid(userIdClaim);
+        
+        var addedMoviesIds = await _userService.AddToFavMovies(userId, movieIds);
+        return Created("users/add-to-fav-list", addedMoviesIds);
+    }
+
     [HttpDelete]
     [Route("watch-list-movie/{movieId:guid}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]

@@ -32,6 +32,12 @@ public class UsersService : IUsersService
         return _mapper.Map<UserDto>(user);
     }
     
+    public async Task<UserEntity?> GetEntityById(Guid id)
+    {
+        var user = await _repository.UserRepository.GetById(id, false);
+        return user;
+    }
+
     public async Task<UserEntity?> GetByNameAsync(string name)
     {
         var user = await _repository.UserRepository.GetByNameAsync(name, true);
@@ -43,16 +49,6 @@ public class UsersService : IUsersService
         var user = _repository.UserRepository.GetByName(name, false);
         return user;
     }
-
-    /// <summary>
-    /// 
-    /// move token from local storage to cookies on frontend
-    /// /////////////////////////////////////////////////////////////////////////////////
-    /// If the identifier and secret are valid, the app can set the principal for the
-    /// current request, but it also needs a way of storing these details for
-    /// subsequent requests. For traditional web apps, this is typically achieved
-    /// by storing an encrypted version of the user principal in a cookie.
-    /// </summary>
     
     public async Task UpdateUser(Guid id, UserUpdateDto userDto)
     {
@@ -67,32 +63,18 @@ public class UsersService : IUsersService
         await _repository.SaveAsync();
     }
 
-    /// <summary>
-    /// async method
-    /// </summary>
-    /// <param name="email"></param>
-    /// <returns></returns>
     public async Task<UserEntity?> GetByEmailAsync(string email)
     {
         var user = await _repository.UserRepository.GetByEmailAsync(email);
         return user;
     }
-    
-    /// <summary>
-    /// not async method, used in email validation
-    /// attribute 
-    /// </summary>
-    /// <param name="email"></param>
-    /// <returns></returns>
+
     public UserEntity? GetByEmail(string email)
     {
         var user = _repository.UserRepository.GetByEmail(email);
         return user;
     }
 
-    ///<summary>
-    /// add async in delete methods
-    ///</summary>
     public async Task DeleteUser(Guid id)
     {
         var user = await _repository.UserRepository.GetById(id, false);
@@ -102,18 +84,6 @@ public class UsersService : IUsersService
         await _repository.SaveAsync();
     }
 
-    /// <summary>
-    /// Добавляемые фильмы проверяются на уникальность
-    /// путем проверки их вхождения в текцщий список фильмов пользователя
-    /// <see>
-    ///     <cref>(user.WatchLaterMovies == null || !user.WatchLaterMovies.Select(w_m == w_m.Id).Contains(m.Id)))</cref>
-    /// </see>
-    /// Метод репозитория <AddWatchLaterMovies/>> отслеживает сущности и добавляет пользователю фильмы
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="moviesIds"></param>
-    /// <returns>Id добавленных пользователей </returns>
-    /// <exception cref="UserNotFoundException"></exception>
     public async Task<List<Guid>> AddToWatchLaterList(Guid userId, Guid[] moviesIds)
     {   
         var user = await _repository.UserRepository.GetById(userId, false);
@@ -136,6 +106,28 @@ public class UsersService : IUsersService
         
         return addedMovies.Select(m => m.Id).ToList();
     }   
+
+    public async Task<List<Guid>> AddToFavMovies(Guid userId, Guid[] moviesIds)
+    {
+        var user = await _repository.UserRepository.GetById(userId, false);
+        if(user is null)
+            throw new UserNotFoundException(userId);
+
+        var addedMovies = await _repository.MovieRepository
+            .GetAll(false);
+        addedMovies = addedMovies.Where(m => moviesIds.Contains(m.Id) &&
+             (user.FavMovies == null || 
+              !user.FavMovies.Select(f_m => f_m.Id).Contains(m.Id)))
+            .ToList();
+
+        if(!addedMovies.Any())
+            throw new FavMoviesNotFound(moviesIds);
+
+        _repository.UserRepository.AddFavMovies(user, addedMovies);
+        await _repository.SaveAsync();
+
+        return addedMovies.Select(m => m.Id).ToList();
+    }
 
     public async Task RemoveWatchLaterUser(Guid userId, Guid movieId)
     {

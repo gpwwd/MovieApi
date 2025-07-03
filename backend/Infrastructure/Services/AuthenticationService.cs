@@ -48,15 +48,7 @@ public sealed class AuthenticationService : IAuthenticationService
         var userToReturn = _mapper.Map<UserDto>(userEntity);
         return userToReturn;
     }
-    
-    /// <summary>
-    /// 
-    /// Перенести токен из локального хранилища в куки на фронтенде
-    /// /////////////////////////////////////////////////////////////////////////////////
-    ///
-    /// Создает и возвращает JwtToken как string
-    /// 
-    /// </summary>
+
     public async Task<TokenDto> CreateToken(bool populateExp)
     {
         var claims = await GetClaims();
@@ -84,6 +76,7 @@ public sealed class AuthenticationService : IAuthenticationService
         _user = user;
         return await CreateToken(populateExp: false);
     }
+    
     private string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
@@ -93,6 +86,7 @@ public sealed class AuthenticationService : IAuthenticationService
             return Convert.ToBase64String(randomNumber);
         }
     }
+
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
