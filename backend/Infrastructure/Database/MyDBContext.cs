@@ -33,9 +33,12 @@ public sealed class MovieDataBaseContext : IdentityDbContext<UserEntity, RoleEnt
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string? connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? 
-            throw new InvalidOperationException("DB_CONNECTION_STRING is not configured");
-            
-        optionsBuilder.UseSqlite(connectionString);
+        if (!optionsBuilder.IsConfigured)
+        {
+            string? connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? 
+                throw new InvalidOperationException("DB_CONNECTION_STRING is not configured");
+                
+            optionsBuilder.UseNpgsql(connectionString); 
+        }
     }
 }

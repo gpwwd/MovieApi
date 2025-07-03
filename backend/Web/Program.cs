@@ -69,7 +69,9 @@ public abstract class Program
         builder.Services.AddHttpClient<OpenRouterService>();
         builder.Services.AddScoped<OpenRouterService>();
         
-        builder.Services.AddDbContext<MovieDataBaseContext>();
+        builder.Services.AddDbContext<MovieDataBaseContext>(options =>
+            options.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ?? 
+            throw new InvalidOperationException("DB_CONNECTION_STRING is not configured")));    
         builder.Services.AddJwtTokenAuthentication(builder.Configuration);
         builder.Services.ConfigureIdentity();
 
